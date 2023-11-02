@@ -30,7 +30,7 @@ namespace Data.Services.ServiceImpl
             }
         }
 
-        public IEnumerable<Size> GetAll()
+        public List<Size> GetAll()
         {
             return db.Sizes.ToList();
         }

@@ -36,5 +36,20 @@ namespace Data.Services.ServiceImpl
             db.SaveChanges();
             return gallery.Id;
         }
+
+        public void Update(Gallery gallery)
+        {
+            try
+            {
+                var data = db.Galleries.Find(gallery.Id);
+                data.Image1 = gallery.Image1;
+                data.Image2 = gallery.Image2;
+                data.Image3 = gallery.Image3;
+                db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+            }
+        }
     }
 }

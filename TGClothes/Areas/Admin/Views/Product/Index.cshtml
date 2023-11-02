@@ -1,4 +1,4 @@
-﻿@model PagedList.IPagedList<Data.EF.Product>
+﻿@model PagedList.IPagedList<TGClothes.Models.ProductStockViewModel>
 @using PagedList.Mvc;
 @{
     ViewBag.Title = "Index";
@@ -50,26 +50,26 @@
                             <tbody>
                                 @foreach (var item in Model)
                                 {
-                                    <tr id="row_@item.Id">
-                                        <td>@item.Name</td>
+                                    <tr id="row_@item.Product.Id">
+                                        <td>@item.Product.Name</td>
                                         <td>
-                                            <img src=" @Html.DisplayFor(modelItem => item.Image)" height="100px" />
+                                            <img src=" @Html.DisplayFor(modelItem => item.Product.Image)" height="100px" />
                                         </td>
-                                        <td>@item.Price</td>
-                                        <td>@item.Promotion</td>
-                                        <td>@item.PromotionPrice</td>
-                                        <td>@item.CreatedDate</td>
-                                        <td>@item.ModifiedDate</td>
-                                        <td>Progressing</td>
-                                        <td><a href="#" class="btn-active" data-id="@item.Id">@(item.Status ? "Kích hoạt" : "Khóa")</a></td>
+                                        <td>@item.Product.Price</td>
+                                        <td>@item.Product.Promotion</td>
+                                        <td>@item.Product.PromotionPrice</td>
+                                        <td>@item.Product.CreatedDate</td>
+                                        <td>@item.Product.ModifiedDate</td>
+                                        <td>@item.Stock</td>
+                                        <td><a href="#" class="btn-active" data-id="@item.Product.Id">@(item.Product.Status ? "Kích hoạt" : "Khóa")</a></td>
                                         <td>
-                                            <a href="@Url.Action("Detail", "Product", new { id = item.Id })" class="text-primary f2"><i class="fa-solid fa-eye"></i></a>
-                                            <a href="@Url.Action("Edit", "Product", new { id = item.Id })" class="text-primary f2"><i class="fas fa-edit"></i></a>
-                                            <a href="@Url.Action("Delete", "Product", new { id = item.Id })" class="text-primary f2"><i class="fa-solid fa-trash-can"></i></a>\
-                                            @Ajax.ActionLink("Xóa", "Delete", new { @id = item.Id }, new AjaxOptions
+                                            <a href="@Url.Action("Detail", "Product", new { id = item.Product.Id })" class="text-primary f2"><i class="fa-solid fa-eye"></i></a>
+                                            <a href="@Url.Action("Edit", "Product", new { id = item.Product.Id })" class="text-primary f2"><i class="fas fa-edit"></i></a>
+                                            <a href="@Url.Action("Delete", "Product", new { id = item.Product.Id })" class="text-primary f2"><i class="fa-solid fa-trash-can"></i></a>\
+                                            @Ajax.ActionLink("Xóa", "Delete", new { @id = item.Product.Id }, new AjaxOptions
                                        {
                                            Confirm = "Bạn có muốn xóa bản ghi này?",
-                                           OnComplete = "$('#row_" + @item.Id + "').remove()",
+                                           OnComplete = "$('#row_" + @item.Product.Id + "').remove()",
                                            HttpMethod = "Delete"
                                        })
                                         </td>
@@ -90,5 +90,5 @@
 </div>
 
 @section CustomJs {
-    <script src="/Assets/Admin/js/controller/userController.js"></script>
+    <script src="~/Assets/Admin/js/controller/productController.js"></script>
 }

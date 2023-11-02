@@ -48,7 +48,6 @@ namespace Data.EF
         public int? ViewCount { get; set; }
 
         public long? GalleryId { get; set; }
-
         public List<ProductSize> ProductSizes { get; set; }
     }
 }

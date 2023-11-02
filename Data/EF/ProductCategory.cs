@@ -36,7 +36,6 @@ namespace Data.EF
         public string MetaDescription { get; set; }
 
         public bool Status { get; set; }
-
         public IEnumerable<ProductCategory> ParentCategories { get; set; }
     }
 }

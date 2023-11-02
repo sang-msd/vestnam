@@ -217,6 +217,8 @@
     <Compile Include="Models\ProductImageModel.cs" />
     <Compile Include="Models\ProductModel.cs" />
     <Compile Include="Models\ProductRateModel.cs" />
+    <Compile Include="Models\ProductStockViewModel.cs" />
+    <Compile Include="Models\SizeModel.cs" />
     <Compile Include="Models\UserRateModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -230,6 +232,7 @@
     <Content Include="Assets\Admin\img\undraw_profile_3.svg" />
     <Content Include="Assets\Admin\img\undraw_rocket.svg" />
     <Content Include="Assets\Admin\js\controller\productCategoryController.js" />
+    <Content Include="Assets\Admin\js\controller\productController.js" />
     <Content Include="Assets\Admin\js\controller\userController.js" />
     <Content Include="Assets\Admin\js\demo\chart-area-demo.js" />
     <Content Include="Assets\Admin\js\demo\chart-bar-demo.js" />
@@ -3357,6 +3360,7 @@
     <Content Include="Areas\Admin\Views\Product\Create.cshtml" />
     <Content Include="Areas\Admin\Views\Product\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Product\Detail.cshtml" />
+    <Content Include="Areas\Admin\Views\Product\Edit.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />

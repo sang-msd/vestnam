@@ -10,6 +10,7 @@ namespace Data.Services
     public interface IGalleryService
     {
         long Insert(Gallery gallery);
+        void Update(Gallery gallery);
         long GetLastGallery();
         Gallery GetGalleryById(long id);
         List<Gallery> GetAll();

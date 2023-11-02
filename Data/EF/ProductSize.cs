@@ -17,7 +17,7 @@ namespace Data.EF
         [Key]
         [Column(Order = 1)]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int SizeId { get; set; }
+        public long SizeId { get; set; }
 
         public int Stock { get; set; }
     }

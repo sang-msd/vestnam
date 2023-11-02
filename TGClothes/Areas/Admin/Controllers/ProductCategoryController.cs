@@ -110,6 +110,13 @@ namespace TGClothes.Areas.Admin.Controllers
             return View(model);
         }
 
+        [HttpDelete]
+        public ActionResult Delete(long id)
+        {
+            _productCategory.Delete(id);
+            return RedirectToAction("Index");
+        }
+
         [HttpPost]
         public JsonResult ChangeStatus(long id)
         {

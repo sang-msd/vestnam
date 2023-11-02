@@ -1,5 +1,6 @@
 ﻿using Data.EF;
 using Data.Services;
+using PagedList;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,17 +44,44 @@ namespace TGClothes.Areas.Admin.Controllers
         // GET: Admin/Product
         public ActionResult Index(string searchString, int page = 1, int pageSize = 10)
         {
-            var model = _productService.GetAllPaging(searchString, page, pageSize);
-
-            ViewBag.SearchString = searchString;
-            return View(model);
+            if (searchString != null)
+            {
+                var products = (from p in _productService.GetAll()
+                                join ps in _productSizeService.GetAll() on p.Id equals ps.ProductId into psGroup
+                                from ps in psGroup.DefaultIfEmpty()
+                                where p.Name.Contains(searchString)
+                                group new { p, ps } by p.Id into g
+                                select new ProductStockViewModel
+                                {
+                                    Product = g.FirstOrDefault()?.p,
+                                    Stock = g.Sum(item => item.ps?.Stock ?? 0)
+                                }).ToList();
+                ViewBag.Search = searchString;
+                return View(products.ToPagedList(page, pageSize));
+            }
+            else
+            {
+                var products = (from p in _productService.GetAll()
+                                join ps in _productSizeService.GetAll() on p.Id equals ps.ProductId into psGroup
+                                from ps in psGroup.DefaultIfEmpty()
+                                group new { p, ps } by p.Id into g
+                                select new ProductStockViewModel
+                                {
+                                    Product = g.FirstOrDefault()?.p,
+                                    Stock = g.Sum(item => item.ps?.Stock ?? 0)
+                                }).ToList();
+                //var all_sach = (from s in _context.Products select s).OrderBy(m => m.ProductId);
+                return View(products.ToPagedList(page, pageSize));
+            }
         }
 
         [HttpGet]
         public ActionResult Create()
         {
+            var model = new ProductImageModel();
+            model.Sizes = _sizeService.GetAll();
             SetViewBag();
-            return View();
+            return View(model);
         }
 
         [HttpPost]
@@ -63,13 +91,14 @@ namespace TGClothes.Areas.Admin.Controllers
             {
                 var product = new Product
                 {
+                    Id = model.Product.Id,
                     Name = model.Product.Name,
                     MetaTitle = model.Product.MetaTitle,
                     Description = model.Product.Description,
                     Image = model.Product.Image,
                     Price = model.Product.Price,
                     Promotion = model.Product.Promotion,
-                    PromotionPrice = model.Product.PromotionPrice,
+                    PromotionPrice = model.Product.Price - (model.Product.Price * model.Product.Promotion / 100),
                     CategoryId = model.Product.CategoryId,
                     CreatedDate = DateTime.Now,
                     MetaKeywords = model.Product.MetaKeywords,
@@ -82,47 +111,155 @@ namespace TGClothes.Areas.Admin.Controllers
                 long id = _productService.Insert(product);
                 if (id > 0)
                 {
+                    List<ProductSize> productSizeList = model.ProductSizes;
+                    foreach (var sizeStock in productSizeList)
+                    {
+                        long sizeId = sizeStock.SizeId;
+                        int stock = sizeStock.Stock;
+
+                        var productSize = new ProductSize
+                        {
+                            ProductId = id,
+                            SizeId = sizeId,
+                            Stock = stock
+                        };
+
+                        _productSizeService.Insert(productSize);
+                    }
+
+                    var gallery = new Gallery
+                    {
+                        Image1 = model.Gallery.Image1,
+                        Image2 = model.Gallery.Image2,
+                        Image3 = model.Gallery.Image3
+                    };
+
+                    long galleryId = _galleryService.Insert(gallery);
+                    if (galleryId > 0)
+                    {
+                        product.GalleryId = galleryId;
+                        _productService.Update(product);
+                    }
+
                     SetAlert("Thêm mới sản phẩm thành công", "success");
+                    return RedirectToAction("Index", "Product");
                 }
                 else
                 {
                     ModelState.AddModelError("", "Thêm mới sản phẩm không thành công.");
                 }
+            }
+            return View("Index");
+        }
 
-                var gallery = new Gallery
+        [HttpGet]
+        public ActionResult Edit(long id)
+        {
+            var product = _productService.GetProductById(id);
+            var model = new ProductImageModel();
+            model.Product = product;
+            model.ProductSizes = _productSizeService.GetProductSizeByProductId(product.Id);
+            model.Gallery = _galleryService.GetGalleryById(product.GalleryId.Value);
+            model.Sizes = _sizeService.GetAll();
+            SetViewBag();
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(ProductImageModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var product = _productService.GetProductById(model.Product.Id);
+                if (product != null)
                 {
-                    Image1 = model.Gallery.Image1,
-                    Image2 = model.Gallery.Image2,
-                    Image3 = model.Gallery.Image3
-                };
+                    product.Id = model.Product.Id;
+                    product.Name = model.Product.Name;
+                    product.MetaTitle = model.Product.MetaTitle;
+                    product.Description = model.Product.Description;
+                    product.Image = model.Product.Image;
+                    product.Price = model.Product.Price;
+                    product.Promotion = model.Product.Promotion;
+                    product.PromotionPrice = model.Product.Price - (model.Product.Price * model.Product.Promotion / 100);
+                    product.CategoryId = model.Product.CategoryId;
+                    product.ModifiedDate = DateTime.Now;
+                    product.MetaKeywords = model.Product.MetaKeywords;
+                    product.MetaDescription = model.Product.MetaDescription;
+                    product.Status = true;
+                    product.TopHot = model.Product.TopHot;
+                    product.ViewCount = 0;
+                }
 
-                long galleryId = _galleryService.Insert(gallery);
-                if (galleryId > 0)
+                var id = _productService.Update(product);
+                if (id)
                 {
-                    product.GalleryId = galleryId;
-                    _productService.Update(product);
-
-                    List<ProductSize> productSizes = new List<ProductSize>();
-                    foreach (var sizeStock in model.ProductSizes)
+                    List<ProductSize> productSizeList = model.ProductSizes;
+                    foreach (var sizeStock in productSizeList)
                     {
-                        var productSize = new ProductSize
+                        long sizeId = sizeStock.SizeId;
+                        int stock = sizeStock.Stock;
+
+                        // Kiểm tra xem size đã tồn tại cho sản phẩm hay chưa
+                        var existingProductSize = _productSizeService.GetProductSizeByProductIdAndSizeId(model.Product.Id, sizeId);
+
+                        if (existingProductSize != null)
                         {
-                            ProductId = id,
-                            SizeId = sizeStock.SizeId,
-                            Stock = sizeStock.Stock
-                        };
-                        productSizes.Add(productSize);
+                            //foreach(var item in existingProductSize)
+                            //{
+                                existingProductSize.Stock = stock;
+                                _productSizeService.Update(existingProductSize);
+                            //}
+                            // Nếu đã tồn tại, cập nhật số lượng trong kho
+                        }
+                        else
+                        {
+                            // Nếu chưa tồn tại, tạo mới bản ghi ProductSize
+                            var newProductSize = new ProductSize
+                            {
+                                ProductId = model.Product.Id,
+                                SizeId = sizeId,
+                                Stock = stock
+                            };
+
+                            _productSizeService.Insert(newProductSize);
+                        }
                     }
 
-                    // Lưu thông tin về size và số lượng tồn vào bảng riêng
-                    _productSizeService.InsertMany(productSizes);
+                    var gallery = _galleryService.GetGalleryById(product.GalleryId.Value);
 
-                    SetAlert("Thêm mới ảnh thành công", "success");
+                    if (gallery != null)
+                    {
+                        // Cập nhật thông tin của gallery
+                        gallery.Image1 = model.Gallery.Image1;
+                        gallery.Image2 = model.Gallery.Image2;
+                        gallery.Image3 = model.Gallery.Image3;
+
+                        _galleryService.Update(gallery);
+                    }
+                    else
+                    {
+                        // Tạo mới gallery nếu chưa tồn tại
+                        gallery = new Gallery
+                        {
+                            Image1 = model.Gallery.Image1,
+                            Image2 = model.Gallery.Image2,
+                            Image3 = model.Gallery.Image3
+                        };
+
+                        long galleryId = _galleryService.Insert(gallery);
+
+                        if (galleryId > 0)
+                        {
+                            product.GalleryId = galleryId;
+                            _productService.Update(product);
+                        }
+                    }
+                    SetAlert("Cập nhật sản phẩm thành công", "success");
                     return RedirectToAction("Index", "Product");
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Thêm mới ảnh không thành công.");
+                    ModelState.AddModelError("", "Cập nhật sản phẩm không thành công.");
                 }
             }
             return View("Index");
@@ -131,58 +268,38 @@ namespace TGClothes.Areas.Admin.Controllers
         public ActionResult Detail(long id)
         {
             var product = _productService.GetProductById(id);
+            var productSizes = (from p in _productSizeService.GetProductSizeByProductId(id)
+                                join s in _sizeService.GetAll() on p.SizeId equals s.Id
+                                select new SizeModel
+                                {
+                                    SizeId = p.SizeId,
+                                    SizeName = s.Name,
+                                    Stock = p.Stock
+                                }).ToList();
             var gallery = _galleryService.GetGalleryById(product.GalleryId.Value);
             ViewBag.Product = product;
+            ViewBag.ProductSizes = productSizes;
             ViewBag.ProductGallery = gallery;
             return View();
         }
 
-        //public JsonResult LoadImages(long id)
-        //{
-        //    var product = _productService.GetProductById(id);
-        //    var images = product.MoreImage;
-        //    XElement xImages = XElement.Parse(images);
-        //    List<string> listImagesReturn = new List<string>();
+        [HttpDelete]
+        public ActionResult Delete(long id)
+        {
+            _productService.Delete(id);
+            return RedirectToAction("Index");
+        }
 
-        //    foreach (XElement element in xImages.Elements())
-        //    {
-        //        listImagesReturn.Add(element.Value);
-        //    }
-        //    return Json(new
-        //    {
-        //        data = listImagesReturn
-        //    }, JsonRequestBehavior.AllowGet);
-        //}
-        //public JsonResult SaveImages(long id, string images)
-        //{
-        //    JavaScriptSerializer serializer = new JavaScriptSerializer();
-        //    var listImages = serializer.Deserialize<List<string>>(images);
+        [HttpPost]
+        public JsonResult ChangeStatus(long id)
+        {
+            var result = _productService.ChangeStatus(id);
+            return Json(new
+            {
+                status = result
+            });
+        }
 
-        //    XElement xElement = new XElement("Images");
-
-        //    foreach (var item in listImages)
-        //    {
-        //        var subStringItem = item.Substring(21);
-        //        xElement.Add(new XElement("Image", subStringItem));
-        //    }
-
-        //    try
-        //    {
-        //        _productService.UpdateImages(id, xElement.ToString());
-        //        return Json(new
-        //        {
-        //            status = true
-        //        });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Json(new
-        //        {
-        //            status = false
-        //        });
-        //    }
-
-        //}
         public void SetViewBag(long? selectedId = null)
         {
             var productCategories = _productCategoryService.GetAll();

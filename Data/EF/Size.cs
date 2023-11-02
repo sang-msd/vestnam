@@ -9,7 +9,7 @@ namespace Data.EF
     [Table("Size")]
     public partial class Size
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         [Required]
         [StringLength(50)]

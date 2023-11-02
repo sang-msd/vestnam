@@ -17,6 +17,29 @@ namespace Data.Services.ServiceImpl
             db = new TGClothesDbContext();
         }
 
+        public bool ChangeStatus(long id)
+        {
+            var product = db.Products.Find(id);
+            product.Status = !product.Status;
+            db.SaveChanges();
+            return product.Status;
+        }
+
+        public bool Delete(long id)
+        {
+            try
+            {
+                var product = db.Products.Find(id);
+                db.Products.Remove(product);
+                db.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
         public List<Product> GetAll()
         {
             return db.Products.ToList();

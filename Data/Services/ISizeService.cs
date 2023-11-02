@@ -9,7 +9,7 @@ namespace Data.Services
 {
     public interface ISizeService
     {
-        IEnumerable<Size> GetAll();
+        List<Size> GetAll();
         long Insert(Size size);
         Size GetSizeById(long id);
         bool Update(Size size);

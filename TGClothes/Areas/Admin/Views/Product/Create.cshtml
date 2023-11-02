@@ -10,6 +10,7 @@
 @section header{
     Tạo mới sản phẩm
 }
+
 @section CustomJs{
     <script>
         $('#btnSelectImage').on('click', function (e) {
@@ -54,23 +55,28 @@
     </script>
 
     <script>
-        function addRow() {
-            var table = document.getElementById("sizeStockTable");
-            var row = table.insertRow(table.rows.length - 1); // Chèn dòng mới trước dòng cuối cùng (nút "Thêm mới size")
+        $(document).ready(function () {
+            var sizeStockIndex = 1;
 
-            var cell1 = row.insertCell(0);
-            var cell2 = row.insertCell(1);
-            var cell3 = row.insertCell(2);
-
-            cell1.innerHTML = '<input type="text" name="Product.SizeStockList[' + (table.rows.length - 2) + '].Size" class="form-control" />';
-            cell2.innerHTML = '<input type="text" name="Product.SizeStockList[' + (table.rows.length - 2) + '].Stock" class="form-control" />';
-            cell3.innerHTML = '<button type="button" class="btn btn-danger" onclick="deleteRow(this)">Xóa</button>';
-        }
-
-        function deleteRow(button) {
-            var row = button.parentNode.parentNode;
-            row.parentNode.removeChild(row);
-        }
+            $("#addSizeStock").click(function () {
+                var row = `<tr>
+                            <td>
+                                <select class="form-control" name="ProductSizes[${sizeStockIndex}].SizeId">
+                                    <option value="">-- Select Size --</option>
+                                    @foreach (var size in Model.Sizes)
+                                    {
+                                        <option value="@size.Id">@size.Name</option>
+                                    }
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" name="ProductSizes[${sizeStockIndex}].Stock" />
+                            </td>
+                        </tr>`;
+                $("#sizeStockTable tbody").append(row);
+                sizeStockIndex++;
+            });
+        });
     </script>
 }
 @using (Html.BeginForm())
@@ -130,11 +136,11 @@
 
             <label class="col-md-2">Thư viện ảnh 3</label>
             <div class="col-md-4">
-                @Html.LabelFor(model => model.Gallery.Image2, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.LabelFor(model => model.Gallery.Image3, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
-                    @Html.TextBoxFor(model => model.Gallery.Image2, new { htmlAttributes = new { @class = "form-control", @id = "txtImage" }, id = "txtImage3" })
+                    @Html.TextBoxFor(model => model.Gallery.Image3, new { htmlAttributes = new { @class = "form-control", @id = "txtImage" }, id = "txtImage3" })
                     <a id="btnSelectImage3" href="#">Chọn ảnh</a>
-                    @Html.ValidationMessageFor(model => model.Gallery.Image2, "", new { @class = "text-danger" })
+                    @Html.ValidationMessageFor(model => model.Gallery.Image3, "", new { @class = "text-danger" })
                 </div>
             </div>
         </div>
@@ -188,26 +194,34 @@
         </div>
 
         <div class="form-group">
-            <div id="sizeContainer">
-                <div class="sizeRow">
-                    <div class="form-group">
-                        <label for="size">Size:</label>
-                        <select class="sizeSelect form-control" name="Sizes[0].SizeId">
-                            @foreach (var size in sizes)
-                            {
-                                <option value="@size.Id">@size.Name</option>
-                            }
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="stock">Stock:</label>
-                        <input type="number" class="stockInput form-control" name="Sizes[0].Stock" />
-                    </div>
-                    <button type="button" class="removeSize btn btn-danger">Remove</button>
-                </div>
-            </div>
+            <h4>Sizes and Stocks</h4>
 
-            <button type="button" id="addSizeButton" class="btn btn-primary">Add Size</button>
+            <table class="table table-bordered" id="sizeStockTable">
+                <thead>
+                    <tr>
+                        <th>Size</th>
+                        <th>Stock</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <select class="form-control" name="ProductSizes[0].SizeId">
+                                <option value="">-- Select Size --</option>
+                                @foreach (var size in Model.Sizes)
+                                {
+                                    <option value="@size.Id">@size.Name</option>
+                                }
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" name="ProductSizes[0].Stock" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <button type="button" class="btn btn-primary" id="addSizeStock">Add Size and Stock</button>
         </div>
 
 
