@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using TGClothes.Common;
+using TGClothes.Models;
 
 namespace TGClothes.Controllers
 {
@@ -36,6 +38,18 @@ namespace TGClothes.Controllers
         {
             var model = _menuService.GetByGroupId(1);
             return PartialView(model);
+        }
+
+        [ChildActionOnly]
+        public PartialViewResult HeaderCart()
+        {
+            var cart = Session[CommonConstants.CartSession];
+            var list = new List<CartItem>();
+            if (cart != null)
+            {
+                list = (List<CartItem>)cart;
+            }
+            return PartialView(list);
         }
 
         [ChildActionOnly]

@@ -1,10 +1,42 @@
 ﻿@model List<Data.EF.ProductCategory>
 
 <div class="flex-w flex-l-m filter-tope-group m-tb-10">
-    @foreach (var item in Model)
+    @foreach (var item in Model.Where(x => x.ParentId == null).OrderBy(x => x.DisplayOrder))
     {
-    <a href="/san-pham/@item.MetaTitle-@item.Id" class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter="*">
+        var child = Model.Where(x => x.ParentId == item.Id);
+        var parentClass = child.Count() > 0 ? "data-toggle=dropdown" : "";
+<div class="dropdown">
+    <a href="/san-pham/@item.MetaTitle-@item.Id" class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 categoryLink" @parentClass data-filter="*">
         @item.Name
     </a>
-     }
+    @if (child.Count() > 0)
+    {
+<ul class="dropdown-menu">
+    @foreach (var childItem in child)
+    {
+<li>
+    <a href="/san-pham/@childItem.MetaTitle-@childItem.Id" class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5">
+        @childItem.Name
+    </a>
+</li>
+       }
+</ul>}
+</div>}
+
 </div>
+
+    <div id="selectedCategory"></div>
+
+    <script>
+        var categoryLinks = document.querySelectorAll(".categoryLink");
+        var outputElement = document.getElementById("selectedCategory");
+
+        categoryLinks.forEach(function (link) {
+            link.addEventListener("click", function (event) {
+
+                var clickedLinkValue = event.target.innerHTML;
+
+                outputElement.innerHTML = "Category được nhấp: " + clickedLinkValue;
+            });
+        });
+    </script>

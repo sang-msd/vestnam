@@ -197,6 +197,7 @@
     <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\BaseController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ContactController.cs" />
     <Compile Include="Areas\Admin\Controllers\ContentController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\Controllers\LoginController.cs" />
@@ -207,14 +208,20 @@
     <Compile Include="Areas\Admin\Controllers\UserController.cs" />
     <Compile Include="Common\CommonConstants.cs" />
     <Compile Include="Common\Encryptor.cs" />
+    <Compile Include="Common\OrderStatus.cs" />
+    <Compile Include="Common\PaymentMethods.cs" />
     <Compile Include="Common\UserLogin.cs" />
+    <Compile Include="Controllers\CartController.cs" />
+    <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\CartItem.cs" />
     <Compile Include="Models\LoginModel.cs" />
-    <Compile Include="Models\ProductImageModel.cs" />
+    <Compile Include="Models\ProductDetailModel.cs" />
+    <Compile Include="Models\ProductGalleryModel.cs" />
     <Compile Include="Models\ProductModel.cs" />
     <Compile Include="Models\ProductRateModel.cs" />
     <Compile Include="Models\ProductStockViewModel.cs" />
@@ -2879,6 +2886,23 @@
     <Content Include="Assets\Admin\vendor\jquery\jquery.min.js" />
     <Content Include="Assets\Admin\vendor\jquery\jquery.slim.js" />
     <Content Include="Assets\Admin\vendor\jquery\jquery.slim.min.js" />
+    <Content Include="Assets\Client\css\bootstrap-grid.css" />
+    <Content Include="Assets\Client\css\bootstrap-grid.min.css" />
+    <Content Include="Assets\Client\css\bootstrap-grid.rtl.css" />
+    <Content Include="Assets\Client\css\bootstrap-grid.rtl.min.css" />
+    <Content Include="Assets\Client\css\bootstrap-reboot.css" />
+    <Content Include="Assets\Client\css\bootstrap-reboot.min.css" />
+    <Content Include="Assets\Client\css\bootstrap-reboot.rtl.css" />
+    <Content Include="Assets\Client\css\bootstrap-reboot.rtl.min.css" />
+    <Content Include="Assets\Client\css\bootstrap-utilities.css" />
+    <Content Include="Assets\Client\css\bootstrap-utilities.min.css" />
+    <Content Include="Assets\Client\css\bootstrap-utilities.rtl.css" />
+    <Content Include="Assets\Client\css\bootstrap-utilities.rtl.min.css" />
+    <Content Include="Assets\Client\css\bootstrap.css" />
+    <Content Include="Assets\Client\css\bootstrap.min.css" />
+    <Content Include="Assets\Client\css\bootstrap.rtl.css" />
+    <Content Include="Assets\Client\css\bootstrap.rtl.min.css" />
+    <Content Include="Assets\Client\css\CustomDetails.css" />
     <Content Include="Assets\Client\css\main.css" />
     <Content Include="Assets\Client\css\util.css" />
     <Content Include="Assets\Client\fonts\font-awesome-4.7.0\css\font-awesome.css" />
@@ -2974,9 +2998,13 @@
     <Content Include="Assets\Client\images\thumb-01.jpg" />
     <Content Include="Assets\Client\images\thumb-02.jpg" />
     <Content Include="Assets\Client\images\thumb-03.jpg" />
+    <Content Include="Assets\Client\js\bootstrap.min.js" />
+    <Content Include="Assets\Client\js\controller\cartController.js" />
+    <Content Include="Assets\Client\js\controller\contactController.js" />
     <Content Include="Assets\Client\js\main.js" />
     <Content Include="Assets\Client\js\map-custom.js" />
     <Content Include="Assets\Client\js\slick-custom.js" />
+    <Content Include="Assets\Client\template\neworder.html" />
     <Content Include="Assets\Client\vendor\animate\animate.css" />
     <Content Include="Assets\Client\vendor\animsition\css\animsition.css" />
     <Content Include="Assets\Client\vendor\animsition\css\animsition.min.css" />
@@ -3361,6 +3389,22 @@
     <Content Include="Areas\Admin\Views\Product\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Product\Detail.cshtml" />
     <Content Include="Areas\Admin\Views\Product\Edit.cshtml" />
+    <Content Include="Assets\Client\css\bootstrap-grid.css.map" />
+    <Content Include="Assets\Client\css\bootstrap-grid.min.css.map" />
+    <Content Include="Assets\Client\css\bootstrap-grid.rtl.css.map" />
+    <Content Include="Assets\Client\css\bootstrap-grid.rtl.min.css.map" />
+    <Content Include="Assets\Client\css\bootstrap-reboot.css.map" />
+    <Content Include="Assets\Client\css\bootstrap-reboot.min.css.map" />
+    <Content Include="Assets\Client\css\bootstrap-reboot.rtl.css.map" />
+    <Content Include="Assets\Client\css\bootstrap-reboot.rtl.min.css.map" />
+    <Content Include="Assets\Client\css\bootstrap-utilities.css.map" />
+    <Content Include="Assets\Client\css\bootstrap-utilities.min.css.map" />
+    <Content Include="Assets\Client\css\bootstrap-utilities.rtl.css.map" />
+    <Content Include="Assets\Client\css\bootstrap-utilities.rtl.min.css.map" />
+    <Content Include="Assets\Client\css\bootstrap.css.map" />
+    <Content Include="Assets\Client\css\bootstrap.min.css.map" />
+    <Content Include="Assets\Client\css\bootstrap.rtl.css.map" />
+    <Content Include="Assets\Client\css\bootstrap.rtl.min.css.map" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -3409,11 +3453,20 @@
     <Content Include="Views\Shared\Footer.cshtml" />
     <Content Include="Views\Product\Detail.cshtml" />
     <Content Include="Views\Product\Category.cshtml" />
+    <Content Include="Views\Product\ProductByCategory.cshtml" />
+    <Content Include="Views\Cart\Index.cshtml" />
+    <Content Include="Views\Shared\HeaderCart.cshtml" />
+    <Content Include="Views\Cart\CartModel.cshtml" />
+    <Content Include="Views\Product\ModalDetail.cshtml" />
+    <Content Include="Views\Cart\Payment.cshtml" />
+    <Content Include="Views\Cart\OrderSuccess.cshtml" />
+    <Content Include="Views\Contact\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Views\Base\" />
+    <Folder Include="Areas\Admin\Views\Contact\" />
     <Folder Include="DataManagement\" />
   </ItemGroup>
   <ItemGroup>
@@ -3426,6 +3479,10 @@
     <Content Include="Scripts\jquery-3.4.1.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{342d057d-c7e2-4004-a894-bf03c9a99014}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Data\Data.csproj">
       <Project>{0bf15b44-a123-459a-aca9-9d2a1642d2dd}</Project>
       <Name>Data</Name>

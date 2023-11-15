@@ -11,9 +11,15 @@ namespace Data.EF
     {
         public long Id { get; set; }
 
-        [Column(TypeName = "ntext")]
-        public string Content { get; set; }
-
         public bool Status { get; set; }
+
+        [StringLength(200)]
+        public string Address { get; set; }
+
+        [StringLength(50)]
+        public string Email { get; set; }
+
+        [StringLength(50)]
+        public string Phone { get; set; }
     }
 }

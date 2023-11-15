@@ -36,6 +36,11 @@ namespace Data.Services.ServiceImpl
             return db.ProductSizes.Where(x => x.ProductId == productId && x.SizeId == sizeId).FirstOrDefault();
         }
 
+        public int GetStock(long productId, long sizeId)
+        {
+            return db.ProductSizes.Where(x => x.ProductId == productId && x.SizeId == sizeId).FirstOrDefault().Stock;
+        }
+
         public void Insert(ProductSize productSize)
         {
             db.ProductSizes.Add(productSize);

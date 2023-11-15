@@ -61,6 +61,7 @@
     <Compile Include="EF\Contact.cs" />
     <Compile Include="EF\Content.cs" />
     <Compile Include="EF\ContentTag.cs" />
+    <Compile Include="EF\Feedback.cs" />
     <Compile Include="EF\Footer.cs" />
     <Compile Include="EF\Gallery.cs" />
     <Compile Include="EF\Menu.cs" />
@@ -79,9 +80,13 @@
     <Compile Include="EF\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ICategoryService.cs" />
+    <Compile Include="Services\IContactService.cs" />
     <Compile Include="Services\IContentService.cs" />
+    <Compile Include="Services\IFeedbackService.cs" />
     <Compile Include="Services\IGalleryService.cs" />
     <Compile Include="Services\IMenuService.cs" />
+    <Compile Include="Services\IOrderDetailService.cs" />
+    <Compile Include="Services\IOrderService.cs" />
     <Compile Include="Services\IProductCategoryService.cs" />
     <Compile Include="Services\IProductService.cs" />
     <Compile Include="Services\IProductSizeService.cs" />
@@ -90,11 +95,15 @@
     <Compile Include="Services\ISlideService.cs" />
     <Compile Include="Services\IUserService.cs" />
     <Compile Include="Services\ServiceImpl\CategoryService.cs" />
+    <Compile Include="Services\ServiceImpl\ContactService.cs" />
     <Compile Include="Services\ServiceImpl\ContentService.cs" />
     <Compile Include="Services\IFooterService.cs" />
+    <Compile Include="Services\ServiceImpl\FeedbackService.cs" />
     <Compile Include="Services\ServiceImpl\FooterService.cs" />
     <Compile Include="Services\ServiceImpl\GalleryService.cs" />
     <Compile Include="Services\ServiceImpl\MenuService.cs" />
+    <Compile Include="Services\ServiceImpl\OrderDetailService.cs" />
+    <Compile Include="Services\ServiceImpl\OrderService.cs" />
     <Compile Include="Services\ServiceImpl\ProductCategoryService.cs" />
     <Compile Include="Services\ServiceImpl\ProductService.cs" />
     <Compile Include="Services\ServiceImpl\ProductSizeService.cs" />

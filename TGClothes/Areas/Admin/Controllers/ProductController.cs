@@ -78,14 +78,15 @@ namespace TGClothes.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult Create()
         {
-            var model = new ProductImageModel();
+            var model = new ProductModel();
             model.Sizes = _sizeService.GetAll();
             SetViewBag();
             return View(model);
         }
 
         [HttpPost]
-        public ActionResult Create(ProductImageModel model)
+        [ValidateInput(false)]
+        public ActionResult Create(ProductModel model)
         {
             if (ModelState.IsValid)
             {
@@ -95,6 +96,7 @@ namespace TGClothes.Areas.Admin.Controllers
                     Name = model.Product.Name,
                     MetaTitle = model.Product.MetaTitle,
                     Description = model.Product.Description,
+                    Details = model.Product.Details,
                     Image = model.Product.Image,
                     Price = model.Product.Price,
                     Promotion = model.Product.Promotion,
@@ -148,6 +150,15 @@ namespace TGClothes.Areas.Admin.Controllers
                 {
                     ModelState.AddModelError("", "Thêm mới sản phẩm không thành công.");
                 }
+            } else
+            {
+                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    // Xử lý lỗi
+                    var errorMessage = error.ErrorMessage;
+
+                    // ...
+                }
             }
             return View("Index");
         }
@@ -156,7 +167,7 @@ namespace TGClothes.Areas.Admin.Controllers
         public ActionResult Edit(long id)
         {
             var product = _productService.GetProductById(id);
-            var model = new ProductImageModel();
+            var model = new ProductModel();
             model.Product = product;
             model.ProductSizes = _productSizeService.GetProductSizeByProductId(product.Id);
             model.Gallery = _galleryService.GetGalleryById(product.GalleryId.Value);
@@ -166,7 +177,8 @@ namespace TGClothes.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(ProductImageModel model)
+        [ValidateInput(false)]
+        public ActionResult Edit(ProductModel model)
         {
             if (ModelState.IsValid)
             {
@@ -177,6 +189,7 @@ namespace TGClothes.Areas.Admin.Controllers
                     product.Name = model.Product.Name;
                     product.MetaTitle = model.Product.MetaTitle;
                     product.Description = model.Product.Description;
+                    product.Details = model.Product.Details;
                     product.Image = model.Product.Image;
                     product.Price = model.Product.Price;
                     product.Promotion = model.Product.Promotion;

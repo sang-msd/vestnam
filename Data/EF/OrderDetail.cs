@@ -28,5 +28,10 @@ namespace Data.EF
         public decimal? TotalPrice { get; set; }
 
         public int Status { get; set; }
+
+        [Key]
+        [Column(Order = 2)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public long SizeId { get; set; }
     }
 }

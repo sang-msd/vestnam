@@ -17,7 +17,7 @@ namespace Data.EF
         [StringLength(250)]
         public string MetaTitle { get; set; }
 
-        [Column(TypeName = "ntext")]
+        [StringLength(500)]
         public string Description { get; set; }
 
         [StringLength(250)]
@@ -48,6 +48,9 @@ namespace Data.EF
         public int? ViewCount { get; set; }
 
         public long? GalleryId { get; set; }
+
+        [Column(TypeName = "ntext")]
+        public string Details { get; set; }
         public List<ProductSize> ProductSizes { get; set; }
     }
 }

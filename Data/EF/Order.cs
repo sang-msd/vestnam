@@ -22,7 +22,15 @@ namespace Data.EF
 
         public int CustomerId { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long Id { get; set; }
+
+        [StringLength(150)]
+        public string Name { get; set; }
+
+        [StringLength(50)]
+        public string Email { get; set; }
+
+        [StringLength(50)]
+        public string Phone { get; set; }
     }
 }

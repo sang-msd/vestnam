@@ -1,4 +1,4 @@
-
+﻿
 (function ($) {
     "use strict";
 
@@ -216,7 +216,7 @@
     [ +/- num product ]*/
     $('.btn-num-product-down').on('click', function(){
         var numProduct = Number($(this).next().val());
-        if(numProduct > 0) $(this).next().val(numProduct - 1);
+        if(numProduct > 1) $(this).next().val(numProduct - 1);
     });
 
     $('.btn-num-product-up').on('click', function(){
@@ -270,7 +270,22 @@
     [ Show modal1 ]*/
     $('.js-show-modal1').on('click',function(e){
         e.preventDefault();
-        $('.js-modal1').addClass('show-modal1');
+        var productId = $(this).data('product-id');
+
+        // Gửi yêu cầu Ajax để lấy thông tin sản phẩm từ server
+        $.ajax({
+            url: '/Product/ModalDetail', // Đường dẫn đến action trong controller để lấy thông tin sản phẩm
+            type: 'GET',
+            data: { id: productId },
+            success: function (data) {
+                // Hiển thị thông tin sản phẩm trong modal
+                $('.modal1-content').html(data);
+                $('.js-modal1').addClass('show-modal1');
+            },
+            error: function () {
+                // Xử lý khi có lỗi xảy ra
+            }
+        });
     });
 
     $('.js-hide-modal1').on('click',function(){

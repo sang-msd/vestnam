@@ -11,7 +11,7 @@ namespace Common
     {
         public static string ToUnsignString(string input)
         {
-            input = input.Trim();
+            input = input.ToLower().Trim();
             for (int i = 0x20; i < 0x30; i++)
             {
                 input = input.Replace(((char)i).ToString(), " ");

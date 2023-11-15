@@ -164,9 +164,9 @@
                                     <!-- Block2 -->
                                     <div class="block2">
                                         <div class="block2-pic hov-img0">
-                                            <img src="@item.Image" alt="@item.Name">
+                                            <a href="@url"><img src="@item.Image" alt="@item.MetaTitle"></a>
 
-                                            <a href="#" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
+                                            <a  href="@Url.Action("ModalDetail", "ControllerName", new { id = item.Id })" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
                                                 Quick View
                                             </a>
                                         </div>
@@ -177,9 +177,21 @@
                                                     @item.Name
                                                 </a>
 
-                                                <span class="stext-105 cl3">
-                                                    @(item.Price.HasValue ? item.Price.Value.ToString("{0:N0}") : "Liên hệ")
+                                                @if (item.Promotion == 0 || item.Promotion == null)
+                                                {
+                                            <span class="stext-105 cl3">
+                                                @(item.Price.HasValue ? item.Price.Value.ToString("N0") : "Liên hệ")
+                                            </span> }
+                                                            else
+                                                            {
+                                            <div>
+                                                <span class="stext-105 cl3 text-decoration-line-through pr-2">
+                                                    @item.Price.Value.ToString("N0")
                                                 </span>
+                                                <span class="stext-105 cl3 text-danger">
+                                                    @item.PromotionPrice.Value.ToString("N0")
+                                                </span>
+                                            </div>}
                                             </div>
 
                                             <div class="block2-txt-child2 flex-r p-t-3">
@@ -222,7 +234,7 @@
                                                 </a>
 
                                                 <span class="stext-105 cl3">
-                                                    @(item.Price.HasValue ? item.Price.Value.ToString("{0:N0}") : "Liên hệ")
+                                                    @(item.Price.HasValue ? item.Price.Value.ToString("N0") : "Liên hệ")
                                                 </span>
                                             </div>
 

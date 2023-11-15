@@ -1,4 +1,5 @@
-﻿using Data.EF;
+﻿using Common;
+using Data.EF;
 using PagedList;
 using System;
 using System.Collections.Generic;
@@ -40,6 +41,12 @@ namespace Data.Services.ServiceImpl
             }
         }
 
+        public List<Product> GetAll(ref int totalRecord, int pageIndex = 1, int pageSize = 8)
+        {
+            totalRecord = db.Products.Count();
+            return db.Products.OrderByDescending(x => x.CreatedDate).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
+        }
+
         public List<Product> GetAll()
         {
             return db.Products.ToList();
@@ -55,6 +62,12 @@ namespace Data.Services.ServiceImpl
             return model.OrderBy(x => x.CreatedDate).ToPagedList(page, pageSize);
         }
 
+        public List<Product> GetProductByCategoryId(long id, ref int totalRecord, int pageIndex = 1, int pageSize = 8)
+        {
+            totalRecord = db.Products.Where(x => x.CategoryId == id).Count();
+            return db.Products.Where(x => x.CategoryId == id).OrderByDescending(x => x.CreatedDate).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
+        }
+
         public Product GetProductById(long id)
         {
             return db.Products.Find(id);
@@ -62,12 +75,11 @@ namespace Data.Services.ServiceImpl
 
         public long Insert(Product product)
         {
-            var metaTitle = product.Name.Trim();
-            metaTitle = Regex.Replace(metaTitle, @"[^a-z0-9\s-]", "");
-
-            // Thay thế các khoảng trắng bằng dấu gạch ngang
-            metaTitle = Regex.Replace(metaTitle, @"\s+", "-");
-            product.MetaTitle = metaTitle;
+            //Xử lý alias
+            if (string.IsNullOrEmpty(product.MetaTitle))
+            {
+                product.MetaTitle = StringHelper.ToUnsignString(product.Name);
+            }
             db.Products.Add(product);
             db.SaveChanges();
             return product.Id;

@@ -17,6 +17,7 @@ namespace Data.EF
         public virtual DbSet<Contact> Contacts { get; set; }
         public virtual DbSet<Content> Contents { get; set; }
         public virtual DbSet<ContentTag> ContentTags { get; set; }
+        public virtual DbSet<Feedback> Feedbacks { get; set; }
         public virtual DbSet<Footer> Footers { get; set; }
         public virtual DbSet<Gallery> Galleries { get; set; }
         public virtual DbSet<Menu> Menus { get; set; }

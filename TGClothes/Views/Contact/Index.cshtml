@@ -1,0 +1,107 @@
+﻿@model Data.EF.Contact
+@{
+    ViewBag.Title = "Liên hệ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="bg0 p-t-104 p-b-116">
+    <div class="container">
+        <div class="flex-w flex-tr">
+            <div class="size-210 bor10 p-lr-70 p-t-55 p-b-70 p-lr-15-lg w-full-md">
+                <form>
+                    <h4 class="mtext-105 cl2 txt-center p-b-30">
+                        Send Us A Message
+                    </h4>
+
+                    <div class="bor8 m-b-20 how-pos4-parent">
+                        <span class="how-pos4 pointer-none lnr lnr-user"></span>
+                        <input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="text" id="txtName" name="name" placeholder="Nhập họ tên">
+                    </div>
+
+                    <div class="bor8 m-b-20 how-pos4-parent">
+                        <span class="how-pos4 pointer-none lnr lnr-envelope"></span>
+                        <input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="email" id="txtEmail" name="email" placeholder="Nhập email">
+                    </div>
+                    <div class="bor8 m-b-20 how-pos4-parent">
+                        <span class="how-pos4 pointer-none lnr lnr-phone-handset"></span>
+                        <input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="text" id="txtPhone" name="phone" placeholder="Nhập số điện thoại">
+                    </div>
+                    <div class="bor8 m-b-20 how-pos4-parent">
+                        <span class="how-pos4 pointer-none lnr lnr-map-marker"></span>
+                        <input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="text" id="txtAddress" name="address" placeholder="Nhập địa chỉ">
+                    </div>
+                    <div class="bor8 m-b-20 how-pos4-parent">
+                        <span class="how-pos4 pointer-none lnr lnr-bubble"></span>
+                        <textarea class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="text" id="txtContent" name="content" placeholder="Nhập nội dung"></textarea>
+                    </div>
+
+                    <button id="btnSend" class="flex-c-m stext-101 cl0 size-121 bg3 bor1 hov-btn3 p-lr-15 trans-04 pointer">
+                        Submit
+                    </button>
+                </form>
+            </div>
+
+            <div class="size-210 bor10 flex-w flex-col-m p-lr-93 p-tb-30 p-lr-15-lg w-full-md">
+                <div class="flex-w w-full p-b-42">
+                    <span class="fs-18 cl5 txt-center size-211">
+                        <span class="lnr lnr-map-marker"></span>
+                    </span>
+
+                    <div class="size-212 p-t-2">
+                        <span class="mtext-110 cl2">
+                            Address
+                        </span>
+
+                        <p class="stext-115 cl6 size-213 p-t-18">
+                            @Model.Address
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex-w w-full p-b-42">
+                    <span class="fs-18 cl5 txt-center size-211">
+                        <span class="lnr lnr-phone-handset"></span>
+                    </span>
+
+                    <div class="size-212 p-t-2">
+                        <span class="mtext-110 cl2">
+                            Lets Talk
+                        </span>
+
+                        <p class="stext-115 cl1 size-213 p-t-18">
+                            @Model.Phone
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex-w w-full">
+                    <span class="fs-18 cl5 txt-center size-211">
+                        <span class="lnr lnr-envelope"></span>
+                    </span>
+
+                    <div class="size-212 p-t-2">
+                        <span class="mtext-110 cl2">
+                            Sale Support
+                        </span>
+
+                        <p class="stext-115 cl1 size-213 p-t-18">
+                            @Model.Email
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Map -->
+<div class="map">
+    <div class="size-303" id="google_map" data-map-x="21.004135483885534" data-map-y="105.84207983900919" data-pin="/Assets/Client/images/icons/pin.png" data-scrollwhell="0" data-draggable="1" data-zoom="11"></div>
+</div>
+
+@section jsFooter{
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDaOulQACiJzBfqumbsqg_-vKha8fCnL-s"></script>
+    <script src="/Assets/Client/js/map-custom.js"></script>
+    <script src="/Assets/Client/js/controller/contactController.js"></script>
+}

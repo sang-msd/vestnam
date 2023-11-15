@@ -96,5 +96,29 @@ namespace Data.Services.ServiceImpl
         {
             return db.ProductCategories.Where(x => x.Status == true).ToList();
         }
+
+        public List<ProductCategory> GetCategoriesWithParentName()
+        {
+            List<ProductCategory> categories = db.ProductCategories.ToList();
+
+            foreach (var category in categories)
+            {
+                if (category.ParentId != 0)
+                {
+                    // Tìm danh mục cha trong danh sách các danh mục
+                    var parentCategory = categories.FirstOrDefault(c => c.Id == category.ParentId);
+
+                    if (parentCategory != null)
+                    {
+                        // Gán tên của danh mục cha vào thuộc tính ParentName
+                        category.Name = parentCategory.Name;
+                    }
+                }
+
+                categories.Add(category);
+            }
+
+            return categories;
+        }
     }
 }

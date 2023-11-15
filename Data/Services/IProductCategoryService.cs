@@ -11,6 +11,7 @@ namespace Data.Services
     {
         long Insert(ProductCategory productCategory);
         ProductCategory GetProductCategoryByName(string userName);
+        List<ProductCategory> GetCategoriesWithParentName();
         List<ProductCategory> GetAll();
         IEnumerable<ProductCategory> GetAllPaging(int page, int pageSize);
         bool Update(ProductCategory productCategory);

@@ -12,6 +12,7 @@ namespace Data.Services
         List<ProductSize> GetAll();
         List<ProductSize> GetProductSizeByProductId(long productId);
         ProductSize GetProductSizeByProductIdAndSizeId(long productId, long sizeId);
+        int GetStock(long productId, long sizeId);
         void Insert(ProductSize productSize);
         void Update(ProductSize productSize);
         void InsertMany(List<ProductSize> productSizes);

@@ -5,6 +5,8 @@
     var category = (Data.EF.ProductCategory)ViewBag.Category;
     var sizes = (List<Data.EF.Size>)ViewBag.Sizes;
     var relateProducts = (List<Data.EF.Product>)ViewBag.RelateProducts;
+    var sizestock = (List<TGClothes.Models.ProductDetailModel>)ViewBag.SizeStock;
+    var galleries = (TGClothes.Models.ProductGalleryModel)ViewBag.Galleries;
 }
 
 <!-- breadcrumb -->
@@ -32,7 +34,7 @@
                     <div class="wrap-slick3 flex-sb flex-w">
                         <div class="wrap-slick3-dots"></div>
                         <div class="wrap-slick3-arrows flex-sb-m flex-w"></div>
-
+                        <h4 class="text-danger">@Html.Raw(TempData["msg"])</h4>
                         <div class="slick3 gallery-lb">
                             <div class="item-slick3" data-thumb="@Model.Image">
                                 <div class="wrap-pic-w pos-relative">
@@ -44,25 +46,19 @@
                                 </div>
                             </div>
 
-                            <div class="item-slick3" data-thumb="images/product-detail-02.jpg">
-                                <div class="wrap-pic-w pos-relative">
-                                    <img src="images/product-detail-02.jpg" alt="IMG-PRODUCT">
+                            @for (int i = 1; i <= 3; i++)
+                            {
+                                var imageUrl = galleries.Gallery.GetType().GetProperty($"Image{i}").GetValue(galleries.Gallery, null);
+                                <div class="item-slick3" data-thumb="@imageUrl">
+                                    <div class="wrap-pic-w pos-relative">
+                                        <img src="@imageUrl" alt="IMG-PRODUCT">
 
-                                    <a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04" href="images/product-detail-02.jpg">
-                                        <i class="fa fa-expand"></i>
-                                    </a>
+                                        <a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04" href="@imageUrl">
+                                            <i class="fa fa-expand"></i>
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
-
-                            <div class="item-slick3" data-thumb="images/product-detail-03.jpg">
-                                <div class="wrap-pic-w pos-relative">
-                                    <img src="images/product-detail-03.jpg" alt="IMG-PRODUCT">
-
-                                    <a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04" href="images/product-detail-03.jpg">
-                                        <i class="fa fa-expand"></i>
-                                    </a>
-                                </div>
-                            </div>
+                            }
                         </div>
                     </div>
                 </div>
@@ -73,52 +69,45 @@
                     <h4 class="mtext-105 cl2 js-name-detail p-b-14">
                         @Model.Name
                     </h4>
-
-                    <span class="mtext-106 cl2">
-                        @(Model.Price.HasValue ? Model.Price.Value.ToString("N0") : "Liên hệ")
-                    </span>
+                    @if (Model.Promotion == 0 || Model.Promotion == null)
+                    {
+                        <span class="mtext-106 cl2">
+                            Giá: @(Model.Price.HasValue ? Model.Price.Value.ToString("N0") : "Liên hệ")
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="mtext-106 cl2 pr-1">Giá: </span>
+                        <span class="mtext-106 cl2 text-decoration-line-through pr-2">
+                            @Model.Price.Value.ToString("N0")
+                        </span>
+                        <span class="mtext-106 cl2 text-danger">
+                            @Model.PromotionPrice.Value.ToString("N0")
+                        </span>
+                    }
 
                     <p class="stext-102 cl3 p-t-23">
-                        Nulla eget sem vitae eros pharetra viverra. Nam vitae luctus ligula. Mauris consequat ornare feugiat.
+                        @Model.Description
                     </p>
 
                     <!-- Size & Cart -->
                     <div class="p-t-33">
-                        <div class="flex-w flex-r-m p-b-10">
-                            <div class="size-203 flex-c-m respon6">
-                                Size
-                            </div>
-
-                            <div class="size-204 respon6-next">
-                                <div class="rs1-select2 bor8 bg0">
-                                    <select class="js-select2" name="time">
-                                        <option>Choose an option</option>
-                                        @foreach (var item in sizes)
-                                        {
-                                            <option>Size @item.Name</option>
-                                        }
-                                    </select>
-                                    <div class="dropDownSelect2"></div>
-                                </div>
-                            </div>
+                        <div class="size-selector stext-110">
+                            <h3>Size có sẵn:</h3>
+                            <ul>
+                                @foreach (var item in sizestock)
+                                {
+                                    <li class="size-option" onclick="selectSize(this)">
+                                        <input class="size" type="radio" name="size" data-size="@item.SizeId" value="@item.SizeId" style="width:100%;" hidden>@item.SizeName
+                                    </li>
+                                }
+                            </ul>
                         </div>
 
                         <div class="flex-w flex-r-m p-b-10">
                             <div class="size-204 flex-w flex-m respon6-next">
-                                <div class="wrap-num-product flex-w m-r-20 m-tb-10">
-                                    <div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
-                                        <i class="fs-16 zmdi zmdi-minus"></i>
-                                    </div>
-
-                                    <input class="mtext-104 cl3 txt-center num-product" type="number" name="num-product" value="1">
-
-                                    <div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
-                                        <i class="fs-16 zmdi zmdi-plus"></i>
-                                    </div>
-                                </div>
-
                                 <button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
-                                    Add to cart
+                                    <a href="/them-gio-hang?productId=@Model.Id&sizeId=...&quantity=1" id="addToCartLink" class="text-white">Add to cart</a>
                                 </button>
                             </div>
                         </div>
@@ -168,7 +157,7 @@
                     <div class="tab-pane fade show active" id="description" role="tabpanel">
                         <div class="how-pos2 p-lr-15-md">
                             <p class="stext-102 cl6">
-                                @Html.Raw(Model.Description)
+                                @Html.Raw(Model.Details)
                             </p>
                         </div>
                     </div>
@@ -290,7 +279,7 @@
 
                             <div class="block2-txt flex-w flex-t p-t-14">
                                 <div class="block2-txt-child1 flex-col-l ">
-                                    <a href="product-detail.html" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+                                    <a href="@url" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
                                         @item.Name
                                     </a>
 
@@ -538,3 +527,43 @@
         </div>
     </div>
 </section>
+
+<script src="/Assets/Client/js/main.js"></script>
+<script>
+  // JavaScript code
+  const addToCartLink = document.getElementById('addToCartLink');
+
+  addToCartLink.addEventListener('click', function(event) {
+    event.preventDefault();
+
+    const productId = '@Model.Id';
+      const selectedSize = document.querySelector('input[name="size"]:checked');
+      const sizeId = selectedSize ? selectedSize.value : '';
+
+    const href = `/them-gio-hang?productId=${productId}&sizeId=${sizeId}&quantity=1`;
+
+    // Redirect to the generated URL
+    window.location.href = href;
+  });
+</script>
+
+<script>
+    function selectSize(selectedOption) {
+        const radioInput = selectedOption.querySelector('input[type="radio"]');
+
+        if (radioInput) {
+            radioInput.checked = true;
+            console.log(radioInput.value);
+        }
+
+        const sizeOptions = document.querySelectorAll('.size-option');
+
+        // Xóa lớp 'selected' khỏi tất cả các ô chọn size
+        sizeOptions.forEach(option => {
+            option.classList.remove('selected');
+        });
+
+        // Thêm lớp 'selected' vào ô chọn size được chọn
+        selectedOption.classList.add('selected');
+    }
+</script>
