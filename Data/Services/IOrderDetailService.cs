@@ -10,5 +10,8 @@ namespace Data.Services
     public interface IOrderDetailService
     {
         bool Insert(OrderDetail detail);
+        List<OrderDetail> GetAll();
+        List<OrderDetail> GetOrderDetailByOrderId(long id);
+        bool Delete(OrderDetail orderDetail);
     }
 }

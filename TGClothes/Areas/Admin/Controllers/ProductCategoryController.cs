@@ -126,5 +126,26 @@ namespace TGClothes.Areas.Admin.Controllers
                 status = result
             });
         }
+
+        [HttpGet]
+        public ActionResult GetParentCategories()
+        {
+            // Lấy danh sách danh mục cha từ CSDL
+            var parentCategories = _productCategory.GetAll().Where(x => x.ParentId == null).ToList();
+
+            // Trả về kết quả dưới dạng JSON
+            return Json(parentCategories, JsonRequestBehavior.AllowGet);
+        }
+
+        // Action để trả về danh sách danh mục con của một danh mục cha
+        [HttpGet]
+        public ActionResult GetChildCategories(int parentId)
+        {
+            // Lấy danh sách danh mục con của danh mục cha từ CSDL
+            var childCategories = _productCategory.GetAll().Where(c => c.ParentId == parentId).ToList();
+
+            // Trả về kết quả dưới dạng JSON
+            return Json(childCategories, JsonRequestBehavior.AllowGet);
+        }
     }
 }

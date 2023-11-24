@@ -34,5 +34,8 @@ namespace Data.EF
         public DateTime? CreatedDate { get; set; }
 
         public DateTime? ModifiedDate { get; set; }
+
+        [StringLength(250)]
+        public string ResetPasswordCode { get; set; }
     }
 }

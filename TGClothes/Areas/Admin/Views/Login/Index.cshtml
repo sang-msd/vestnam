@@ -46,16 +46,13 @@
                                     {
                                         @Html.ValidationSummary(false, "", new { @class = "text-danger" })
                                         <div class="form-group">
-                                            @Html.TextBoxFor(model => model.UserName, new { @class = "form-control form-control-user", @autofocus = "autofocus" })
+                                            @Html.TextBoxFor(model => model.Email, new { @class = "form-control form-control-user", @autofocus = "autofocus" })
                                         </div>
                                         <div class="form-group">
                                             @Html.PasswordFor(model => model.Password, new { @class = "form-control form-control-user" })
                                         </div>
-                                        <div class="form-group">
-                                            @Html.CheckBoxFor(model => model.RememberMe) Remember Me
-                                        </div>
                                         <button type="submit" class="btn btn-primary btn-user btn-block">
-                                            Login
+                                            Đăng nhập
                                         </button>
                                         <hr>
                                         <a href="index.html" class="btn btn-google btn-user btn-block">

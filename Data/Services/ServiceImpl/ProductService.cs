@@ -90,6 +90,11 @@ namespace Data.Services.ServiceImpl
             return db.Products.Where(x => x.TopHot != null && x.TopHot > DateTime.Now).OrderByDescending(x => x.CreatedDate).Take(top).ToList();
         }
 
+        public List<string> ListName(string keyword)
+        {
+            return db.Products.Where(x => x.Name.Contains(keyword)).Select(x => x.Name).ToList();
+        }
+
         public List<Product> ListNewProduct(int top)
         {
             return db.Products.OrderByDescending(x => x.CreatedDate).Take(top).ToList();
@@ -101,13 +106,19 @@ namespace Data.Services.ServiceImpl
             return db.Products.Where(x => x.Id != productId && x.CategoryId == product.CategoryId).ToList();
         }
 
+        public List<Product> Search(string searchkeyword, ref int totalRecord, int pageIndex = 1, int pageSize = 8)
+        {
+            totalRecord = db.Products.Where(x => x.Name.Contains(searchkeyword)).Count();
+            return db.Products.Where(x => x.Name.Contains(searchkeyword)).OrderByDescending(x => x.CreatedDate).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
+        }
+
         public bool Update(Product product)
         {
             var data = db.Products.Find(product.Id);
             if (data != null)
             {
                 data.Name = product.Name;
-                data.MetaTitle = product.MetaTitle;
+                data.MetaTitle = StringHelper.ToUnsignString(product.Name); ;
                 data.Description = product.Description;
                 data.Image = product.Image;
                 data.Price = product.Price;
@@ -128,13 +139,6 @@ namespace Data.Services.ServiceImpl
             {
                 return false;
             }
-        }
-
-        public void UpdateImages(long productId, string images)
-        {
-            //var product = db.Products.Find(productId);
-            //product.MoreImage = images;
-            //db.SaveChanges();
         }
     }
 }

@@ -9,6 +9,17 @@ namespace Data.Services
 {
     public interface IContentService
     {
+        long Create(Content content);
+        long Edit(Content content);
+        void InsertTag(string id, string name);
         Content GetById(long id);
+        IEnumerable<Content> GetAll(ref int totalRecord, int page, int pageSize);
+        IEnumerable<Content> GetAllByTag(string tag, int page, int pageSize);
+        IEnumerable<Content> GetAllByCategory(long categoryId, int page, int pageSize);
+        IEnumerable<Content> GetAllPaging(string searchString, int page, int pageSize);
+        List<Tag> ListTag(long id);
+        Tag GetTag(string id);
+        Category GetCategory(long id);
+        List<Tag> GetAllTag();
     }
 }

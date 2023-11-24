@@ -11,6 +11,10 @@
     Tạo mới sản phẩm
 }
 
+@{
+    var sizesJson = Newtonsoft.Json.JsonConvert.SerializeObject(Model.Sizes);
+}
+
 @section CustomJs{
     <script>
         $('#btnSelectImage').on('click', function (e) {
@@ -80,8 +84,95 @@
     </script>
 
     <script>
+    function addSizeStock() {
+        var tableBody = document.getElementById("sizeStockTable").getElementsByTagName('tbody')[0];
+        var rowCount = tableBody.rows.length;
+
+        var newRow = tableBody.insertRow(rowCount);
+
+        var sizeCell = newRow.insertCell(0);
+        var sizeSelect = document.createElement("select");
+        sizeSelect.className = "form-control";
+        sizeSelect.name = "ProductSizes[" + rowCount + "].SizeId";
+
+        var defaultOption = document.createElement("option");
+        defaultOption.value = "";
+        defaultOption.text = "-- Select Size --";
+        sizeSelect.appendChild(defaultOption);
+
+        var sizes = @Html.Raw(sizesJson);
+        for (var i = 0; i < sizes.length; i++) {
+            var option = document.createElement("option");
+            option.value = sizes[i].Id;
+            option.text = sizes[i].Name;
+            sizeSelect.appendChild(option);
+        }
+
+        sizeCell.appendChild(sizeSelect);
+
+        var stockCell = newRow.insertCell(1);
+        var stockInput = document.createElement("input");
+        stockInput.type = "text";
+        stockInput.className = "form-control";
+        stockInput.name = "ProductSizes[" + rowCount + "].Stock";
+        stockCell.appendChild(stockInput);
+
+        var actionCell = newRow.insertCell(2);
+        var removeButton = document.createElement("button");
+        removeButton.type = "button";
+        removeButton.className = "btn btn-danger";
+        removeButton.textContent = "Remove";
+        removeButton.onclick = function () {
+            removeSizeStock(this);
+        };
+        actionCell.appendChild(removeButton);
+        }
+        </script>
+
+    <script>
         var editor = CKEDITOR.replace('inputDetails', {
             customConfig: '/Assets/Admin/plugin/ckeditor/config.js'
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            // Gửi yêu cầu để lấy danh sách danh mục cha
+            $.ajax({
+                url: '/ProductCategory/GetParentCategories',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    // Xử lý dữ liệu danh mục cha và hiển thị lên dropdown
+                    var dropdown = $('#parentCategoryDropdown');
+                    $.each(data, function (index, item) {
+                        dropdown.append($('<option></option>').val(item.Id).text(item.Name));
+                    });
+                }
+            });
+
+        // Xử lý sự kiện khi chọn danh mục cha
+        $('#parentCategoryDropdown').change(function () {
+                var parentId = $(this).val();
+
+        // Gửi yêu cầu để lấy danh sách danh mục con của danh mục cha đã chọn
+        $.ajax({
+            url: '/ProductCategory/GetChildCategories',
+        type: 'GET',
+        dataType: 'json',
+        data: {parentId: parentId },
+        success: function (data) {
+                        // Xử lý dữ liệu danh mục con và hiển thị lên dropdown
+                        var dropdown = $('#childCategoryDropdown');
+        dropdown.empty(); // Xóa các danh mục con hiện tại (nếu có)
+        $.each(data, function (index, item) {
+            dropdown.append($('<option></option>').val(item.Id).text(item.Name));
+                        });
+                    }
+                });
+            });
+
+        $('#parentCategoryDropdown').trigger('change');
         });
     </script>
 }
@@ -152,13 +243,15 @@
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Product.CategoryId, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownListFor(model => model.Product.CategoryId, (SelectList)categories, "Select a category", new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Product.CategoryId, "", new { @class = "text-danger" })
-            </div>
-        </div>
+        <label for="parentCategoryDropdown">Danh mục cha:</label>
+        <select id="parentCategoryDropdown">
+            <option value="">-- Chọn danh mục cha --</option>
+        </select>
+        <br>
+        <label for="childCategoryDropdown">Danh mục con:</label>
+        <select id="childCategoryDropdown" name="ParentId">
+            <option value="">-- Chọn danh mục con --</option>
+        </select>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Product.Details, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -217,27 +310,39 @@
                     <tr>
                         <th>Size</th>
                         <th>Stock</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
+                    @foreach (var sizeStock in Model.ProductSizes)
+                    {
+                        <tr>
+                            <td>
+                                <select class="form-control" name="ProductSizes[@Model.ProductSizes.IndexOf(sizeStock)].SizeId">
+                                    <option value="">-- Select Size --</option>
+                                    @foreach (var size in Model.Sizes)
+                                    {
+                                        <option value="@size.Id" @(size.Id == sizeStock.SizeId ? "selected" : "")>@size.Name</option>
+                                    }
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" name="ProductSizes[@Model.ProductSizes.IndexOf(sizeStock)].Stock" value="@sizeStock.Stock" />
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger" onclick="removeSizeStock(this)">Remove</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
                     <tr>
-                        <td>
-                            <select class="form-control" name="ProductSizes[0].SizeId">
-                                <option value="">-- Select Size --</option>
-                                @foreach (var size in Model.Sizes)
-                                {
-                                    <option value="@size.Id">@size.Name</option>
-                                }
-                            </select>
-                        </td>
-                        <td>
-                            <input type="text" class="form-control" name="ProductSizes[0].Stock" />
+                        <td colspan="3">
+                            <button type="button" class="btn btn-primary" onclick="addSizeStock()">Add Size</button>
                         </td>
                     </tr>
-                </tbody>
+                </tfoot>
             </table>
-
-            <button type="button" class="btn btn-primary" id="addSizeStock">Add Size and Stock</button>
         </div>
 
 
@@ -248,3 +353,4 @@
         </div>
     </div>
 }
+

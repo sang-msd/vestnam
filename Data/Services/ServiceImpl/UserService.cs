@@ -75,6 +75,7 @@ namespace Data.Services.ServiceImpl
                 data.Phone = user.Phone;
                 data.Address = user.Address;
                 data.ModifiedDate = DateTime.Now;
+                data.ResetPasswordCode = user.ResetPasswordCode;
                 db.SaveChanges();
                 return true;
             }
@@ -116,6 +117,63 @@ namespace Data.Services.ServiceImpl
         public List<User> GetAll()
         {
             return db.Users.ToList();
+        }
+
+        public bool CheckEmailExist(string email)
+        {
+            return db.Users.Count(x => x.Email == email) > 0;
+        }
+
+        public User GetUserByEmail(string email)
+        {
+            return db.Users.SingleOrDefault(x => x.Email == email);
+        }
+
+        public int LoginByEmail(string email, string password)
+        {
+            var result = db.Users.SingleOrDefault(x => x.Email == email);
+            if (result == null)
+            {
+                return 0;
+            }
+            else
+            {
+                if (result.Status == false)
+                {
+                    return -1;
+                }
+                else
+                {
+                    if (result.Password == password)
+                    {
+                        return 1;
+                    }
+                    else
+                    {
+                        return -2;
+                    }
+                }
+            }
+        }
+
+        public long InsertForFacebook(User user)
+        {
+            var data = db.Users.SingleOrDefault(x => x.Email == user.Email);
+            if (data == null)
+            {
+                db.Users.Add(user);
+                db.SaveChanges();
+                return user.Id;
+            }
+            else
+            {
+                return data.Id;
+            }
+        }
+
+        public User GetUserByResetPasswordCode(string resetPass)
+        {
+            return db.Users.SingleOrDefault(x => x.ResetPasswordCode == resetPass);
         }
     }
 }

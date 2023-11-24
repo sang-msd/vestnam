@@ -279,7 +279,7 @@
             data: { id: productId },
             success: function (data) {
                 // Hiển thị thông tin sản phẩm trong modal
-                $('.modal1-content').html(data);
+                $('#modalContainer').html(data);
                 $('.js-modal1').addClass('show-modal1');
             },
             error: function () {

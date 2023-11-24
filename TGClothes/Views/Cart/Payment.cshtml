@@ -2,92 +2,151 @@
 @{
     ViewBag.Title = "Payment";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var subtotal = ViewBag.SubTotal;
+    var promotion = ViewBag.Promotion;
 }
 
 <section class="bg0 p-t-104 p-b-116">
     <div class="container">
-        <div class="flex-w flex-tr">
-            <div class="size-210 bor10 p-lr-70 p-t-55 p-b-70 p-lr-15-lg w-full-md">
-                <h4 class="mtext-105 cl2 txt-center p-b-30">
-                    Thông tin khách hàng
-                </h4>
-                @using (Html.BeginForm("Payment", "Cart", FormMethod.Post))
-                {
-                    <div class="bor8 m-b-20 how-pos4-parent">
-                        <span class="how-pos4 pointer-none lnr lnr-user"></span>
-                        <input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="text" name="name" placeholder="Nhập tên người nhận">
-                    </div>
-
-                    <div class="bor8 m-b-20 how-pos4-parent">
-                        <span class="how-pos4 pointer-none lnr lnr-envelope"></span>
-                        <input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="email" name="email" placeholder="Nhập email">
-                    </div>
-                    <div class="bor8 m-b-20 how-pos4-parent">
-                        <span class="how-pos4 pointer-none lnr lnr-phone-handset"></span>
-                        <input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="text" name="phone" placeholder="Nhập số điện thoại">
-                    </div>
-                    <div class="bor8 m-b-20 how-pos4-parent">
-                        <span class="how-pos4 pointer-none lnr lnr-map-marker"></span>
-                        <input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="text" name="address" placeholder="Nhập địa chỉ giao hàng">
-                    </div>
-
+        <div class="row">
+            <div class="col-lg-10 col-xl-7 bor10 m-l-25 m-r--38">
+                <div class="m-lr-0-xl m-tb-30">
                     <h4 class="mtext-105 cl2 txt-center p-b-30">
-                        Hình thức thanh toán
+                        Thông tin khách hàng
+                    </h4>
+                    @using (Html.BeginForm())
+                    {
+                        <div class="bor8 m-b-20 how-pos4-parent">
+                            <span class="how-pos4 pointer-none lnr lnr-user"></span>
+                            <input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="text" name="name" placeholder="Nhập tên người nhận" required>
+                        </div>
+
+                        <div class="bor8 m-b-20 how-pos4-parent">
+                            <span class="how-pos4 pointer-none lnr lnr-envelope"></span>
+                            <input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="email" name="email" placeholder="Nhập email" required>
+                        </div>
+                        <div class="bor8 m-b-20 how-pos4-parent">
+                            <span class="how-pos4 pointer-none lnr lnr-phone-handset"></span>
+                            <input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="text" name="phone" placeholder="Nhập số điện thoại" required>
+                        </div>
+                        <div class="bor8 m-b-20 how-pos4-parent">
+                            <span class="how-pos4 pointer-none lnr lnr-map-marker"></span>
+                            <input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="text" name="address" placeholder="Nhập địa chỉ giao hàng" required>
+                        </div>
+
+                        <h4 class="mtext-105 cl2 txt-center p-b-30">
+                            Hình thức thanh toán
+                        </h4>
+                        <div class="p-l-268">
+                            <div class="m-b-20">
+                                <input type="radio" id="cash" name="payment" style="display:inline-block">
+                                <label for="cash" class="mtext-110 cl2" style="display:inline-block">
+                                    Trả tiền khi nhận hàng
+                                </label>
+                            </div>
+                            <div class="m-b-20">
+                                <input type="radio" id="vnpay" name="payment" style="display:inline-block">
+                                <img src="/Assets/Client/images/icons/icon-vnpay.png" alt="ICON-PAY" style="width:20px">
+                                <label for="vnpay" class="mtext-110 cl2" style="display:inline-block">
+                                    Thanh toán qua VNPay
+                                </label>
+                            </div>
+                            <div class="m-b-20">
+                                <input type="radio" id="momo" name="payment" style="display:inline-block">
+                                <img src="/Assets/Client/images/icons/icon-momo.png" alt="ICON-PAY" style="width:20px">
+                                <label for="momo" class="mtext-110 cl2" style="display:inline-block">
+                                    Thanh toán qua Momo
+                                </label>
+                            </div>
+                            <div class="m-b-20">
+                                <input type="radio" id="paypal" name="payment" style="display:inline-block">
+                                <img src="/Assets/Client/images/icons/icon-paypal.png" alt="ICON-PAY" style="width:20px">
+                                <label for="paypal" class="mtext-110 cl2" style="display:inline-block">
+                                    Thanh toán qua Paypal
+                                </label>
+                            </div>
+                        </div>
+
+                        <button id="confirmOrder" formaction="" type="submit" onclick='myFunction()' class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">Đặt hàng</button>
+                    }
+                </div>
+            </div>
+            <div class="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50">
+                <div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
+                    <h4 class="mtext-109 cl2 p-b-30">
+                        Thông tin giỏ hàng
                     </h4>
 
-                    <button type="submit" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">Đặt hàng</button>
-                }
+                    <div class="flex-w flex-t bor12 p-b-13">
+                        <div class="size-209">
+                            <span class="stext-110 cl2">
+                                Giá trị đơn hàng:
+                            </span>
+                        </div>
 
-
-
-            </div>
-
-            <div class="size-210 bor10 flex-w flex-col-m p-lr-93 p-tb-30 p-lr-15-lg w-full-md">
-                <div class="flex-w w-full p-b-42">
-                    <span class="fs-18 cl5 txt-center size-211">
-                        <span class="lnr lnr-map-marker"></span>
-                    </span>
-
-                    <div class="size-212 p-t-2">
-                        <span class="mtext-110 cl2">
-                            Address
-                        </span>
-
-                        <p class="stext-115 cl6 size-213 p-t-18">
-                            Coza Store Center 8th floor, 379 Hudson St, New York, NY 10018 US
-                        </p>
+                        <div class="size-208 text-right">
+                            <span class="mtext-110 cl2">
+                                @(subtotal.ToString("N0"))
+                            </span>
+                        </div>
                     </div>
-                </div>
 
-                <div class="flex-w w-full p-b-42">
-                    <span class="fs-18 cl5 txt-center size-211">
-                        <span class="lnr lnr-phone-handset"></span>
-                    </span>
+                    <div class="flex-w flex-t bor12 p-t-15 p-b-30">
+                        <div class="size-209">
+                            <span class="stext-110 cl2">
+                                Giảm giá:
+                            </span>
+                        </div>
 
-                    <div class="size-212 p-t-2">
-                        <span class="mtext-110 cl2">
-                            Lets Talk
-                        </span>
+                        <div class="size-208 text-right">
+                            <span class="mtext-110 cl2 text-danger">
+                                -@(promotion.ToString("N0"))
+                            </span>
+                        </div>
 
-                        <p class="stext-115 cl1 size-213 p-t-18">
-                            +1 800 1236879
-                        </p>
+                        <div class="size-209">
+                            <span class="stext-110 cl2">
+                                Phí giao hàng:
+                            </span>
+                        </div>
+
+                        <div class="size-208 text-right">
+                            @if (subtotal > 1000000)
+                            {
+                                <span class="stext-112 cl2">
+                                    Miễn phí
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="mtext-110 cl2 text-danger">
+                                    @(21000.ToString("N0"))
+                                </span>
+                            }
+                        </div>
                     </div>
-                </div>
 
-                <div class="flex-w w-full">
-                    <span class="fs-18 cl5 txt-center size-211">
-                        <span class="lnr lnr-envelope"></span>
-                    </span>
+                    <div class="flex-w flex-t p-t-27 p-b-33">
+                        <div class="size-209">
+                            <span class="mtext-101 cl2">
+                                Tổng:
+                            </span>
+                        </div>
 
-                    <div class="size-212 p-t-2">
-                        <span class="mtext-110 cl2">
-                            Sale Support
-                        </span>
-
-                        <p class="stext-115 cl1 size-213 p-t-18">
-                            contact@example.com
-                        </p>
+                        <div class="size-208 p-t-1 text-right">
+                            @if (subtotal > 1000000)
+                            {
+                                <span class="mtext-110 cl2">
+                                    @((subtotal - promotion).ToString("N0"))
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="mtext-110 cl2">
+                                    @((subtotal - promotion + 21000).ToString("N0"))
+                                </span>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
@@ -95,8 +154,22 @@
     </div>
 </section>
 
-
-<!-- Map -->
-<div class="map">
-    <div class="size-303" id="google_map" data-map-x="40.691446" data-map-y="-73.886787" data-pin="images/icons/pin.png" data-scrollwhell="0" data-draggable="1" data-zoom="11"></div>
-</div>
+@section jsFooter{
+    <script>
+        function myFunction() {
+            
+            if (document.getElementById('cash').checked) {
+                document.getElementById('confirmOrder').setAttribute("formaction", "/Cart/PaymentCOD");
+            }
+            if (document.getElementById('vnpay').checked) {
+                document.getElementById('confirmOrder').setAttribute("formaction", "/Cart/PaymentVnPay");
+            }
+            if (document.getElementById('momo').checked) {
+                document.getElementById('confirmOrder').setAttribute("formaction", "/Cart/PaymentVnPay");
+            }
+            if (document.getElementById('paypal').checked) {
+                document.getElementById('confirmOrder').setAttribute("formaction", "/Cart/PaymentVnPay");
+            }
+        }
+    </script>
+}

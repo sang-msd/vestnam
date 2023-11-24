@@ -86,7 +86,7 @@ namespace TGClothes.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult Create(ProductModel model)
+        public ActionResult Create(ProductModel model, long? ParentId)
         {
             if (ModelState.IsValid)
             {
@@ -101,7 +101,7 @@ namespace TGClothes.Areas.Admin.Controllers
                     Price = model.Product.Price,
                     Promotion = model.Product.Promotion,
                     PromotionPrice = model.Product.Price - (model.Product.Price * model.Product.Promotion / 100),
-                    CategoryId = model.Product.CategoryId,
+                    CategoryId = ParentId,
                     CreatedDate = DateTime.Now,
                     MetaKeywords = model.Product.MetaKeywords,
                     MetaDescription = model.Product.MetaDescription,

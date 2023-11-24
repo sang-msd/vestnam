@@ -15,9 +15,24 @@ namespace Data.Services.ServiceImpl
             db = new TGClothesDbContext();
         }
 
+        public bool Delete(long id)
+        {
+            throw new NotImplementedException();
+        }
+
         public Contact GetActiveContact()
         {
             return db.Contacts.SingleOrDefault(x => x.Status == true);
+        }
+
+        public long Insert(Contact contact)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Update(Contact contact)
+        {
+            throw new NotImplementedException();
         }
     }
 }

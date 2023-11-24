@@ -24,12 +24,12 @@ namespace TGClothes.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = _user.Login(model.UserName, Encryptor.MD5Hash(model.Password));
+                var result = _user.LoginByEmail(model.Email, Encryptor.MD5Hash(model.Password));
                 if (result == 1)
                 {
-                    var user = _user.GetUserByName(model.UserName);
+                    var user = _user.GetUserByEmail(model.Email);
                     var userSession = new UserLogin();
-                    userSession.UserName = user.UserName;
+                    userSession.Email = user.Email;
                     userSession.UserId = user.Id;
                     Session.Add(CommonConstants.USER_SESSION, userSession);
                     return RedirectToAction("Index", "Home");

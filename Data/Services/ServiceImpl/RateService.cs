@@ -20,9 +20,9 @@ namespace Data.Services.ServiceImpl
             return db.Rates.ToList();
         }
 
-        public List<Rate> GetRateByProductId(long id)
+        public IQueryable<Rate> GetRateByProductId(long id)
         {
-            return db.Rates.Where(x => x.Star > 0 && x.ProductId == id).ToList();
+            return db.Rates.Where(x => x.Star > 0 && x.ProductId == id);
         }
 
         public Rate Insert(Rate rate)

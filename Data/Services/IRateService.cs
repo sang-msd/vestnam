@@ -10,7 +10,7 @@ namespace Data.Services
     public interface IRateService
     {
         List<Rate> GetAll();
-        List<Rate> GetRateByProductId(long id);
+        IQueryable<Rate> GetRateByProductId(long id);
         Rate Insert(Rate rate);
     }
 }

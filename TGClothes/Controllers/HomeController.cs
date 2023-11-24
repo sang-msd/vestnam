@@ -15,13 +15,23 @@ namespace TGClothes.Controllers
         private readonly IFooterService _footerService;
         private readonly ISlideService _slideService;
         private readonly IProductService _productService;
+        private readonly IContactService _contactService;
+        private readonly IProductCategoryService _productCategoryService;
 
-        public HomeController(IMenuService menuService, IFooterService footerService, ISlideService slideService, IProductService productService)
+        public HomeController(
+            IMenuService menuService, 
+            IFooterService footerService, 
+            ISlideService slideService, 
+            IProductService productService,
+            IContactService contactService,
+            IProductCategoryService productCategoryService)
         {
             _menuService = menuService;
             _footerService = footerService;
             _slideService = slideService;
             _productService = productService;
+            _contactService = contactService;
+            _productCategoryService = productCategoryService;
         }
 
         // GET: Home
@@ -31,6 +41,13 @@ namespace TGClothes.Controllers
             ViewBag.NewProducts = _productService.ListNewProduct(5);
             ViewBag.FeatureProducts = _productService.ListFeatureProduct(5);
             return View();
+        }
+
+        [ChildActionOnly]
+        public ActionResult TopMenu()
+        {
+            var session = (TGClothes.Common.UserLogin)Session[TGClothes.Common.CommonConstants.USER_SESSION];
+            return PartialView();
         }
 
         [ChildActionOnly]
@@ -55,7 +72,8 @@ namespace TGClothes.Controllers
         [ChildActionOnly]
         public ActionResult Footer()
         {
-            var model = _footerService.GetFooter();
+            var model = _productCategoryService.GetAll();
+            ViewBag.Contact = _contactService.GetActiveContact();
             return PartialView(model);
         }
     }

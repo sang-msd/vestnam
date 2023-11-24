@@ -2131,12 +2131,31 @@ input.num-product::-webkit-inner-spin-button {
   left: 12px;
 }
 
+.product__sale {
+    background-color: red;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 0;
+    display: flex;
+    align-items: center;
+    padding: 0 5px;
+    min-width: 72px;
+    justify-content: center;
+}
 
+    .product__sale > h4 {
+        margin-bottom: 0;
+        color: #fff;
+        line-height: unset !important;
+    }
 
 /*==================================================================
     TEXT TEXT TEXT TEXT TEXT TEXT TEXT TEXT TEXT TEXT TEXT TEXT TEXT
 ==================================================================*/
-.cl0 {color: #fff;}
+.cl0 {
+    color: #fff;
+}
 .cl1 {color: #717fe0;}
 .cl2 {color: #333;}
 .cl3 {color: #666;}
@@ -2252,9 +2271,9 @@ input.num-product::-webkit-inner-spin-button {
 }
 
 .stext-117 {
-  font-family: Poppins-Light;
-  font-size: 15px;
-  line-height: 1.666667;
+    font-family: "HM Sans Latin Regular";
+    font-size: 15px;
+    line-height: 1.666667;
 }
 
 

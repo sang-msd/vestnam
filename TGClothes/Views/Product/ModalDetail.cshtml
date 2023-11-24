@@ -1,9 +1,8 @@
-﻿@model Data.EF.Product
+﻿
+@model Data.EF.Product
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
     var category = (Data.EF.ProductCategory)ViewBag.Category;
     var sizes = (List<Data.EF.Size>)ViewBag.Sizes;
-    var relateProducts = (List<Data.EF.Product>)ViewBag.RelateProducts;
     var sizestock = (List<TGClothes.Models.ProductDetailModel>)ViewBag.SizeStock;
     var galleries = (TGClothes.Models.ProductGalleryModel)ViewBag.Galleries;
 }
@@ -17,7 +16,7 @@
                 <img src="/Assets/Client/images/icons/icon-close.png" alt="CLOSE">
             </button>
 
-            <div class="row">
+            <div id="modal1-content" class="row">
                 <div class="col-md-6 col-lg-7 p-b-30">
                     <div class="p-l-25 p-r-30 p-lr-0-lg">
                         <div class="wrap-slick3 flex-sb flex-w">
@@ -111,6 +110,7 @@
                             </a>
                         </div>
                     </div>
+                </div>
             </div>
         </div>
     </div>

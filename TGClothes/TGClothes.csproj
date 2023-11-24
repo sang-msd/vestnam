@@ -45,6 +45,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BotDetect, Version=4.4.2.0, Culture=neutral, PublicKeyToken=74616036388b765f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Captcha.4.4.2\lib\net35\BotDetect.dll</HintPath>
+    </Reference>
+    <Reference Include="BotDetect.Web.Mvc, Version=4.4.2.0, Culture=neutral, PublicKeyToken=74616036388b765f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Captcha.4.4.2\lib\net35\BotDetect.Web.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="CKFinder, Version=2.4.1.2663, Culture=neutral, PublicKeyToken=579e7adc719a1423, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Users\vantu\Downloads\plugin\ckfinder\bin\Debug\CKFinder.dll</HintPath>
@@ -55,7 +61,22 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Facebook, Version=6.0.10.0, Culture=neutral, PublicKeyToken=58cb4f2111d1e6de, processorArchitecture=MSIL">
+      <HintPath>..\packages\Facebook.7.0.6\lib\net45\Facebook.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Owin, Version=4.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.4.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=4.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.4.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Facebook, Version=4.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Facebook.4.0.1\lib\net45\Microsoft.Owin.Security.Facebook.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
       <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
     </Reference>
@@ -64,6 +85,9 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite, Version=1.0.115.5, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.115.5\lib\net46\System.Data.SQLite.dll</HintPath>
+    </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
@@ -158,17 +182,8 @@
     <Reference Include="Owin">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin">
-      <HintPath>..\packages\Microsoft.Owin.4.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Owin.Host.SystemWeb">
       <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.4.0.1\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Security">
-      <HintPath>..\packages\Microsoft.Owin.Security.4.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Security.Cookies">
-      <HintPath>..\packages\Microsoft.Owin.Security.Facebook.4.0.1\lib\net45\Microsoft.Owin.Security.Facebook.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.Security.Cookies">
       <HintPath>..\packages\Microsoft.Owin.Security.Cookies.4.0.1\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
@@ -197,10 +212,12 @@
     <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\BaseController.cs" />
+    <Compile Include="Areas\Admin\Controllers\CategoryController.cs" />
     <Compile Include="Areas\Admin\Controllers\ContactController.cs" />
     <Compile Include="Areas\Admin\Controllers\ContentController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\Controllers\LoginController.cs" />
+    <Compile Include="Areas\Admin\Controllers\OrderController.cs" />
     <Compile Include="Areas\Admin\Controllers\ProductCategoryController.cs" />
     <Compile Include="Areas\Admin\Controllers\ProductController.cs" />
     <Compile Include="Areas\Admin\Controllers\SizeController.cs" />
@@ -208,23 +225,33 @@
     <Compile Include="Areas\Admin\Controllers\UserController.cs" />
     <Compile Include="Common\CommonConstants.cs" />
     <Compile Include="Common\Encryptor.cs" />
+    <Compile Include="Common\EnumExtensions.cs" />
     <Compile Include="Common\OrderStatus.cs" />
     <Compile Include="Common\PaymentMethods.cs" />
+    <Compile Include="Common\Payment\VnPayLibrary.cs" />
     <Compile Include="Common\UserLogin.cs" />
     <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
+    <Compile Include="Controllers\ContentController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\CartItem.cs" />
+    <Compile Include="Models\CustomerPerchasedModel.cs" />
     <Compile Include="Models\LoginModel.cs" />
+    <Compile Include="Models\OrderCustomerModel.cs" />
+    <Compile Include="Models\OrderDetailModel.cs" />
     <Compile Include="Models\ProductDetailModel.cs" />
     <Compile Include="Models\ProductGalleryModel.cs" />
     <Compile Include="Models\ProductModel.cs" />
     <Compile Include="Models\ProductRateModel.cs" />
     <Compile Include="Models\ProductStockViewModel.cs" />
+    <Compile Include="Models\RegisterModel.cs" />
+    <Compile Include="Models\ResetPasswordModel.cs" />
     <Compile Include="Models\SizeModel.cs" />
     <Compile Include="Models\UserRateModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -238,6 +265,7 @@
     <Content Include="Assets\Admin\img\undraw_profile_2.svg" />
     <Content Include="Assets\Admin\img\undraw_profile_3.svg" />
     <Content Include="Assets\Admin\img\undraw_rocket.svg" />
+    <Content Include="Assets\Admin\js\controller\categoryController.js" />
     <Content Include="Assets\Admin\js\controller\productCategoryController.js" />
     <Content Include="Assets\Admin\js\controller\productController.js" />
     <Content Include="Assets\Admin\js\controller\userController.js" />
@@ -2903,6 +2931,8 @@
     <Content Include="Assets\Client\css\bootstrap.rtl.css" />
     <Content Include="Assets\Client\css\bootstrap.rtl.min.css" />
     <Content Include="Assets\Client\css\CustomDetails.css" />
+    <Content Include="Assets\Client\css\CustomLogin.css" />
+    <Content Include="Assets\Client\css\jquery-ui.css" />
     <Content Include="Assets\Client\css\main.css" />
     <Content Include="Assets\Client\css\util.css" />
     <Content Include="Assets\Client\fonts\font-awesome-4.7.0\css\font-awesome.css" />
@@ -2951,13 +2981,16 @@
     <Content Include="Assets\Client\images\icons\icon-email.png" />
     <Content Include="Assets\Client\images\icons\icon-heart-01.png" />
     <Content Include="Assets\Client\images\icons\icon-heart-02.png" />
+    <Content Include="Assets\Client\images\icons\icon-momo.png" />
     <Content Include="Assets\Client\images\icons\icon-next.png" />
     <Content Include="Assets\Client\images\icons\icon-pay-01.png" />
     <Content Include="Assets\Client\images\icons\icon-pay-02.png" />
     <Content Include="Assets\Client\images\icons\icon-pay-03.png" />
     <Content Include="Assets\Client\images\icons\icon-pay-04.png" />
     <Content Include="Assets\Client\images\icons\icon-pay-05.png" />
+    <Content Include="Assets\Client\images\icons\icon-paypal.png" />
     <Content Include="Assets\Client\images\icons\icon-prev.png" />
+    <Content Include="Assets\Client\images\icons\icon-vnpay.png" />
     <Content Include="Assets\Client\images\icons\logo-01.png" />
     <Content Include="Assets\Client\images\icons\logo-02.png" />
     <Content Include="Assets\Client\images\icons\pin.png" />
@@ -2999,8 +3032,10 @@
     <Content Include="Assets\Client\images\thumb-02.jpg" />
     <Content Include="Assets\Client\images\thumb-03.jpg" />
     <Content Include="Assets\Client\js\bootstrap.min.js" />
+    <Content Include="Assets\Client\js\controller\baseController.js" />
     <Content Include="Assets\Client\js\controller\cartController.js" />
     <Content Include="Assets\Client\js\controller\contactController.js" />
+    <Content Include="Assets\Client\js\jquery-ui.js" />
     <Content Include="Assets\Client\js\main.js" />
     <Content Include="Assets\Client\js\map-custom.js" />
     <Content Include="Assets\Client\js\slick-custom.js" />
@@ -3074,6 +3109,24 @@
     <Content Include="Assets\Client\vendor\slick\slick.min.js" />
     <Content Include="Assets\Client\vendor\sweetalert\sweetalert.min.js" />
     <Content Include="Content\PagedList.css" />
+    <Content Include="DataManagement\Images\background7.jpg" />
+    <Content Include="DataManagement\Images\icon.png" />
+    <Content Include="DataManagement\Images\Men\SoMi\so-mi-oxford-regular-fit-1.png" />
+    <Content Include="DataManagement\Images\Men\SoMi\so-mi-oxford-regular-fit-2.png" />
+    <Content Include="DataManagement\Images\Men\SoMi\so-mi-oxford-regular-fit-3.png" />
+    <Content Include="DataManagement\Images\Men\SoMi\so-mi-oxford-regular-fit-4.png" />
+    <Content Include="DataManagement\Images\so-mi-poplin-1.png" />
+    <Content Include="DataManagement\Images\so-mi-satin-1.png" />
+    <Content Include="DataManagement\Images\Women\NiHoodie\hoodie-nu-1.png" />
+    <Content Include="DataManagement\Images\Women\NiHoodie\hoodie-nu-2.png" />
+    <Content Include="DataManagement\Images\Women\NiHoodie\hoodie-nu-3.png" />
+    <Content Include="DataManagement\Images\Women\NiHoodie\hoodie-nu-4.png" />
+    <Content Include="DataManagement\Images\Women\SoMi\so-mi-poplin-1.png" />
+    <Content Include="DataManagement\Images\Women\SoMi\so-mi-poplin-2.png" />
+    <Content Include="DataManagement\Images\Women\SoMi\so-mi-poplin-3.png" />
+    <Content Include="DataManagement\Images\Women\SoMi\so-mi-satin-1.png" />
+    <Content Include="DataManagement\Images\Women\SoMi\so-mi-satin-2.png" />
+    <Content Include="DataManagement\Images\Women\SoMi\so-mi-satin-3.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -3405,6 +3458,13 @@
     <Content Include="Assets\Client\css\bootstrap.min.css.map" />
     <Content Include="Assets\Client\css\bootstrap.rtl.css.map" />
     <Content Include="Assets\Client\css\bootstrap.rtl.min.css.map" />
+    <Content Include="Areas\Admin\Views\Order\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Order\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\Order\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Content\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Category\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Category\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Category\Create.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -3457,17 +3517,31 @@
     <Content Include="Views\Cart\Index.cshtml" />
     <Content Include="Views\Shared\HeaderCart.cshtml" />
     <Content Include="Views\Cart\CartModel.cshtml" />
-    <Content Include="Views\Product\ModalDetail.cshtml" />
     <Content Include="Views\Cart\Payment.cshtml" />
     <Content Include="Views\Cart\OrderSuccess.cshtml" />
     <Content Include="Views\Contact\Index.cshtml" />
+    <Content Include="Views\User\Register.cshtml" />
+    <Content Include="Views\User\Login.cshtml" />
+    <Content Include="Views\Home\TopMenu.cshtml" />
+    <Content Include="Views\User\ForgotPassword.cshtml" />
+    <Content Include="Views\User\ResetPassword.cshtml" />
+    <Content Include="Views\Product\ModalDetail.cshtml" />
+    <Content Include="Views\Order\Index.cshtml" />
+    <Content Include="Views\Order\Details.cshtml" />
+    <Content Include="Views\Cart\OrderFailure.cshtml" />
+    <Content Include="Views\Product\Search.cshtml" />
+    <Content Include="Views\Content\Index.cshtml" />
+    <Content Include="Views\Content\Detail.cshtml" />
+    <Content Include="Views\Content\Tag.cshtml" />
+    <Content Include="Views\Content\Category.cshtml" />
+    <Content Include="Views\Content\ContentCategory.cshtml" />
+    <Content Include="Views\Content\ContentTag.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Views\Base\" />
     <Folder Include="Areas\Admin\Views\Contact\" />
-    <Folder Include="DataManagement\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -3521,7 +3595,9 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+    <Error Condition="!Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.115.5\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.115.5\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets'))" />
   </Target>
+  <Import Project="..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.115.5\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets" Condition="Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.115.5\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

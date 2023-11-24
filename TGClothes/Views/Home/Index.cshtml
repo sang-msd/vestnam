@@ -160,13 +160,23 @@
                             @foreach (var item in newProducts)
                             {
                                 var url = "chi-tiet/" + item.MetaTitle + "-" + item.Id;
+                                var dayDiff = (DateTime.Now.Subtract(item.CreatedDate.Value).Days);
                                 <div class="item-slick2 p-l-15 p-r-15 p-t-15 p-b-15">
                                     <!-- Block2 -->
                                     <div class="block2">
                                         <div class="block2-pic hov-img0">
                                             <a href="@url"><img src="@item.Image" alt="@item.MetaTitle"></a>
-
-                                            <a  href="@Url.Action("ModalDetail", "ControllerName", new { id = item.Id })" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
+                                            @if (item.Promotion.HasValue && item.Promotion != 0)
+                                            {
+                                        <div class="product__sale">
+                                            <h4> @item.Promotion %</h4>
+                                        </div> }
+                                    else if (dayDiff <= 7)
+                                    {
+                                        <div class="product__sale">
+                                            <h4>Mới</h4>
+                                        </div>}
+                                            <a data-product-id="@item.Id" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
                                                 Quick View
                                             </a>
                                         </div>
@@ -815,3 +825,4 @@
         </div>
     </div>
 </section>
+

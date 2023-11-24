@@ -20,6 +20,9 @@ namespace Data.EF
         [Column(TypeName = "ntext")]
         public string Description { get; set; }
 
+        [Column(TypeName = "ntext")]
+        public string Detail { get; set; }
+
         [StringLength(250)]
         public string Image { get; set; }
 

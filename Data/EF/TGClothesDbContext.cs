@@ -99,10 +99,6 @@ namespace Data.EF
             modelBuilder.Entity<Tag>()
                 .Property(e => e.Id)
                 .IsUnicode(false);
-
-            modelBuilder.Entity<User>()
-                .Property(e => e.UserName)
-                .IsUnicode(false);
         }
     }
 }

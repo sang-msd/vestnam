@@ -1,0 +1,84 @@
+﻿@model  IEnumerable<Data.EF.OrderDetail>
+@using TGClothes.Common;
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var orderDetail = ViewBag.OrderDetails;
+}
+
+<div class="container">
+    <div class="body fix-width scroll-inner">
+        <table class="table table-striped">
+            <tr>
+                <th>Tên sản phẩm</th>
+                <th>Hình ảnh</th>
+                <th>Size</th>
+                <th>Số lượng</th>
+                <th>Giá</th>
+                <th>Đánh giá</th>
+            </tr>
+
+            @foreach (var item in orderDetail)
+            {
+        <tr>
+            <td>
+                @item.Product.Name
+            </td>
+            <td>
+                <img src=" @item.Product.Image" height="100px" />
+            </td>
+            <td>
+                @item.Size.Name
+            </td>
+            <td>
+                @item.OrderDetail.Quantity
+            </td>
+            <td>
+                @if (item.Product.Promotion == 0 || item.Product.Promotion == null)
+                {
+                    @item.Product.Price.ToString("N0")
+                }
+                else
+                {
+                    <span class="stext-105 cl3 text-decoration-line-through">
+                        @item.Product.Price.ToString("N0")
+                    </span>
+                    <span class="stext-105 cl3 text-danger">
+                        @item.Product.PromotionPrice.ToString("N0")
+                    </span>
+                }
+            </td>
+            @if (item.Order.Status != (int)OrderStatus.SUCCESSFUL)
+            {
+                <th>&nbsp;</th>
+            }
+            else if (item.Order.Status == (int)OrderStatus.SUCCESSFUL)
+            {
+                var url = "/chi-tiet/" + item.Product.MetaTitle + "-" + item.Product.Id;
+                <th><a href="@url">Đánh giá</a></th>
+            }
+        </tr>
+            }
+
+        </table>
+    </div>
+    @foreach (var item in Model.Take(1))
+    {
+        <tr>
+            <td>
+                <strong> Tổng số lượng</strong>
+
+                @Html.DisplayFor(modelItem => item.TotalQuantity)
+            </td>
+            <td>
+                <strong> Tổng giá tiền</strong>
+
+                @String.Format("{0:N0}", item.TotalPrice) vnđ
+            </td>
+
+        </tr>
+    }
+
+
+</div>

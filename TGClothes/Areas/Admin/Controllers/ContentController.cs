@@ -10,19 +10,21 @@ namespace TGClothes.Areas.Admin.Controllers
 {
     public class ContentController : BaseController
     {
-        private readonly ICategoryService _category;
-        private readonly IContentService _content;
+        private readonly ICategoryService _categoryService;
+        private readonly IContentService _contentService;
 
-        public ContentController(ICategoryService category, IContentService content)
+        public ContentController(ICategoryService categoryService, IContentService contentService)
         {
-            _category = category;
-            _content = content;
+            _categoryService = categoryService;
+            _contentService = contentService;
         }
 
         // GET: Admin/Content
-        public ActionResult Index()
+        public ActionResult Index(string searchString, int page = 1, int pageSize = 10)
         {
-            return View();
+            var model = _contentService.GetAllPaging(searchString, page, pageSize);
+            ViewBag.SearchString = searchString;
+            return View(model);
         }
 
         public ActionResult Create()
@@ -37,7 +39,8 @@ namespace TGClothes.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-
+                _contentService.Create(content);
+                return RedirectToAction("Index");
             }
             SetViewbag();
             return View();
@@ -45,9 +48,9 @@ namespace TGClothes.Areas.Admin.Controllers
 
         public ActionResult Edit(long id)
         {
-            var content = _content.GetById(id);
+            var content = _contentService.GetById(id);
             SetViewbag(content.CategoryId);
-            return View();
+            return View(content);
         }
 
         [HttpPost]
@@ -56,15 +59,24 @@ namespace TGClothes.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-
+                var result = _contentService.Edit(content);
+                if (result > 0)
+                {
+                    SetAlert("Cập nhật tin tức thành công", "success");
+                    return RedirectToAction("Index", "Content");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Cập nhật tin tức không thành công");
+                }
             }
             SetViewbag(content.CategoryId);
-            return View();
+            return View("Index");
         }
 
         public void SetViewbag(long? selectedId = null)
         {
-            ViewBag.CategoryId = new SelectList(_category.GetAll(), "Id", "Name", selectedId);
+            ViewBag.CategoryId = new SelectList(_categoryService.GetAll(), "Id", "Name", selectedId);
         }
     }
 }

@@ -8,10 +8,12 @@ namespace TGClothes.Models
 {
     public class LoginModel
     {
-        [Required(ErrorMessage = "Mời nhập tên đăng nhập")]
-        public string UserName { get; set; }
+        [Display(Name = "Email")]
+        [Required(ErrorMessage = "Mời nhập email")]
+        public string Email { get; set; }
+
+        [Display(Name = "Mật khẩu")]
         [Required(ErrorMessage = "Mời nhập mật khẩu")]
         public string Password { get; set; }
-        public bool RememberMe { get; set; }
     }
 }

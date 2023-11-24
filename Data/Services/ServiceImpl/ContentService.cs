@@ -1,5 +1,6 @@
 ﻿using Common;
 using Data.EF;
+using PagedList;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +31,7 @@ namespace Data.Services.ServiceImpl
             }
             content.CreatedDate = DateTime.Now;
             content.ViewCount = 0;
+            content.Status = true;
             db.Contents.Add(content);
             db.SaveChanges();
 
@@ -57,6 +59,56 @@ namespace Data.Services.ServiceImpl
             return content.Id;
         }
 
+        public long Edit(Content content)
+        {
+            var data = db.Contents.Find(content.Id);
+            //Xử lý alias
+            if (string.IsNullOrEmpty(data.MetaTitle))
+            {
+                data.MetaTitle = StringHelper.ToUnsignString(content.Name);
+            }
+            data.Name = content.Name;
+            data.Detail = content.Detail;
+            data.Description = content.Description;
+            data.CategoryId = content.CategoryId;
+            data.Image = content.Image;
+            data.MetaKeywords = content.MetaKeywords;
+            data.MetaDescription = content.MetaDescription;
+            data.Tags = content.Tags;
+            data.ModifiedDate = DateTime.Now;
+            db.SaveChanges();
+
+            //Xử lý tag
+            if (!string.IsNullOrEmpty(data.Tags))
+            {
+                this.DeleteAllContentTag(data.Id);
+                string[] tags = data.Tags.Split(',');
+                foreach (var tag in tags)
+                {
+                    var tagId = StringHelper.ToUnsignString(tag);
+                    var existedTag = this.CheckTag(tagId);
+
+                    //insert to to tag table
+                    if (!existedTag)
+                    {
+                        this.InsertTag(tagId, tag);
+                    }
+
+                    //insert to content tag
+                    this.InsertContentTag(data.Id, tagId);
+
+                }
+            }
+
+            return data.Id;
+        }
+
+        public void DeleteAllContentTag(long contentId)
+        {
+            db.ContentTags.RemoveRange(db.ContentTags.Where(x => x.ContentId == contentId));
+            db.SaveChanges();
+        }
+
         public void InsertTag(string id, string name)
         {
             var tag = new Tag();
@@ -78,6 +130,110 @@ namespace Data.Services.ServiceImpl
         public bool CheckTag(string id)
         {
             return db.Tags.Count(x => x.Id == id) > 0;
+        }
+
+        public List<Content> GetAll()
+        {
+            return db.Contents.OrderByDescending(x => x.Id).ToList();
+        }
+
+        public IEnumerable<Content> GetAllPaging(string searchString, int page, int pageSize)
+        {
+            IQueryable<Content> model = db.Contents;
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                model = model.Where(x => x.Name.Contains(searchString));
+            }
+            return model.OrderBy(x => x.CreatedDate).ToPagedList(page, pageSize);
+        }
+
+        public IEnumerable<Content> GetAll(ref int totalRecord, int page, int pageSize)
+        {
+            IQueryable<Content> model = db.Contents;
+            totalRecord = db.Contents.Count();
+            return model.OrderBy(x => x.CreatedDate).ToPagedList(page, pageSize);
+        }
+
+        public List<Tag> ListTag(long id)
+        {
+            var model = (from t in db.Tags
+                         join ct in db.ContentTags on t.Id equals ct.TagId
+                         where ct.ContentId == id
+                         select new
+                         {
+                             Id = ct.TagId,
+                             Name = t.Name
+                         }).AsEnumerable().Select(x => new Tag()
+                         {
+                             Id = x.Id,
+                             Name = x.Name
+                         });
+            return model.ToList();
+        }
+
+        public IEnumerable<Content> GetAllByTag(string tag, int page, int pageSize)
+        {
+            var model = (from c in db.Contents
+                         join ct in db.ContentTags on c.Id equals ct.ContentId
+                         where ct.TagId == tag
+                         select new
+                         {
+                             Id = c.Id,
+                             Name = c.Name,
+                             MetaTitle = c.MetaTitle,
+                             Image = c.Image,
+                             Description = c.Description,
+                             CreatedDate = DateTime.Now
+                         }).AsEnumerable().Select(x => new Content()
+                         {
+                             Id = x.Id,
+                             Name = x.Name,
+                             MetaTitle = x.MetaTitle,
+                             Image = x.Image,
+                             Description = x.Description,
+                             CreatedDate = x.CreatedDate
+                         });
+            return model.OrderBy(x => x.CreatedDate).ToPagedList(page, pageSize);
+        }
+
+        public IEnumerable<Content> GetAllByCategory(long categoryId, int page, int pageSize)
+        {
+            var model = (from c in db.Contents
+                         join cat in db.Categories on c.CategoryId equals cat.Id
+                         where cat.Id == categoryId
+                         select new
+                         {
+                             Id = c.Id,
+                             Name = c.Name,
+                             MetaTitle = c.MetaTitle,
+                             Image = c.Image,
+                             Description = c.Description,
+                             CreatedDate = DateTime.Now
+                         }).AsEnumerable().Select(x => new Content()
+                         {
+                             Id = x.Id,
+                             Name = x.Name,
+                             MetaTitle = x.MetaTitle,
+                             Image = x.Image,
+                             Description = x.Description,
+                             CreatedDate = x.CreatedDate
+                         });
+            return model.OrderBy(x => x.CreatedDate).ToPagedList(page, pageSize);
+        }
+
+        public Tag GetTag(string id)
+        {
+            return db.Tags.Find(id);
+        }
+
+        public Category GetCategory(long id)
+        {
+            return db.Categories.Find(id);
+        }
+
+        public List<Tag> GetAllTag()
+        {
+            return db.Tags.ToList();
         }
     }
 }

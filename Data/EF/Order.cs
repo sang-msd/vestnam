@@ -20,7 +20,7 @@ namespace Data.EF
         [StringLength(200)]
         public string DeliveryAddress { get; set; }
 
-        public int CustomerId { get; set; }
+        public long CustomerId { get; set; }
 
         public long Id { get; set; }
 

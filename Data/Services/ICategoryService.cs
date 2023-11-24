@@ -10,5 +10,10 @@ namespace Data.Services
     public interface ICategoryService
     {
         List<Category> GetAll();
+        long Insert(Category category);
+        Category GetById(long id);
+        bool Update(Category size);
+        bool Delete(long id);
+        bool ChangeStatus(long id);
     }
 }

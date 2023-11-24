@@ -22,11 +22,13 @@
             <!-- Search product -->
             <div class="dis-none panel-search w-full p-t-10 p-b-15">
                 <div class="bor8 dis-flex p-l-15">
-                    <button class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04">
-                        <i class="zmdi zmdi-search"></i>
-                    </button>
+                    <form action="/tim-kiem" method="get" style="display: contents;">
+                        <button class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04">
+                            <i class="zmdi zmdi-search"></i>
+                        </button>
 
-                    <input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="search-product" placeholder="Search">
+                        <input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" id="txtSearch" name="searchkeyword" placeholder="Nhập từ khóa tìm kiếm...">
+                    </form>
                 </div>
             </div>
 
@@ -224,13 +226,23 @@
             @foreach (var item in Model)
             {
                 var id = item.Id;
+                var dayDiff = (DateTime.Now.Subtract(item.CreatedDate.Value).Days);
                 var url = "/chi-tiet/" + item.MetaTitle + "-" + id;
     <div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item">
         <!-- Block2 -->
         <div class="block2">
             <div class="block2-pic hov-img0">
                 <a href="@url"><img src="@item.Image" alt="@item.MetaTitle"></a>
-
+                @if (item.Promotion.HasValue && item.Promotion != 0)
+                {
+            <div class="product__sale">
+                <h4> @item.Promotion %</h4>
+            </div> }
+        else if (dayDiff <= 7)
+        {
+            <div class="product__sale">
+                <h4>Mới</h4>
+            </div>}
                 <a href="#" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
                     Quick View
                 </a>
