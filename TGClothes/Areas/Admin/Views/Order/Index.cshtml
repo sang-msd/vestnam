@@ -4,6 +4,8 @@
 @{
     ViewBag.Title = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var fromDate = ViewBag.FromDate;
+    var toDate = ViewBag.ToDate;
 }
 
 @section header {
@@ -19,10 +21,12 @@
         {
             <div class="row form-group">
                 <div class="col-lg-12 row">
-                    <div class="col-md-4">
-                        <h3>Tìm kiếm đơn hàng theo ngày đặt</h3>
-                        <input type="date" name="OrderDate" required/>
-                        <input type="submit"  value="Tìm kiếm" />
+                    <div class="col-md-5">
+                        <span>Từ ngày</span>
+                        <input type="date" name="fromDate" value="" required class="mr-2" />
+                        <span>Đến ngày</span>
+                        <input type="date" name="toDate" value="" required class="mr-2" />
+                        <button type="submit" class="btn btn-outline-success">Tìm kiếm</button>
                     </div>
                 </div>
             </div>
@@ -84,13 +88,6 @@
                                         {
                                             <a href="@Url.Action("Edit", "Order", new { id = item.Id })" class="btn text-primary f2"><i class="fas fa-edit"></i></a>
                                         }
-                                        <a href="@Url.Action("Delete", "Order", new { id = item.Id })" class="btn text-primary f2"><i class="fa-solid fa-trash-can"></i></a>\
-                                        @Ajax.ActionLink("Xóa", "Delete", new { @id = item.Id }, new AjaxOptions
-                                   {
-                                       Confirm = "Bạn có muốn xóa bản ghi này?",
-                                       OnComplete = "$('#row_" + @item.Id + "').remove()",
-                                       HttpMethod = "Delete"
-                                   })
                                     </td>
                                 </tr>
                                 }
@@ -100,7 +97,7 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-12">
-                        @Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }))
+                        @Html.PagedListPager(Model, page => Url.Action("Index", new { fromDate, toDate, page = page }))
                     </div>
                 </div>
             </div>

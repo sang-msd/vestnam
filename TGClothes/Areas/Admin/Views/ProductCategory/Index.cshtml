@@ -4,6 +4,7 @@
 @{
     ViewBag.Title = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var parentCategories = (List<Data.EF.ProductCategory>)TempData["ParentCategories"];
 }
 
 @section header {
@@ -44,23 +45,39 @@
                             <tbody>
                                 @foreach (var item in Model)
                                 {
+                                    var checkStatus = "";
+                                    if (item.Status)
+                                    { checkStatus = "text-success"; }
+
+                                    else
+                                    {
+                                        checkStatus = "text-danger";
+                                    }
                                     <tr id="row_@item.Id">
                                         <td>@item.DisplayOrder</td>
                                         <td>@item.Name</td>
-                                        <td>@GetParentCategoryName(item.ParentId)</td>
+                                        <td>
+                                            @if (item.ParentId == null)
+                                            {
+                                                <span>Danh mục gốc</span>
+                                            }
+                                            else
+                                            {
+                                                var parent = parentCategories.FirstOrDefault(x => x.Id == item.ParentId);
+                                                <span>@parent.Name</span>
+                                            }
+                                        </td>
                                         <td>@item.CreatedDate</td>
                                         <td>@item.ModifiedDate</td>
-                                        <td><a href="#" class="btn-active" data-id="@item.Id">@(item.Status ? "Kích hoạt" : "Khóa")</a></td>
+                                        <td><a href="#" class="btn-active @checkStatus" data-id="@item.Id">@(item.Status ? "Kích hoạt" : "Khóa")</a></td>
                                         <td>
-                                            <a href="@Url.Action("Details", "ProductCategory", new { id = item.Id })" class="text-primary f2"><i class="fa-solid fa-eye"></i></a>
-                                            <a href="@Url.Action("Edit", "ProductCategory", new { id = item.Id })" class="text-primary f2"><i class="fas fa-edit"></i></a>
-                                            <a href="@Url.Action("Delete", "ProductCategory", new { id = item.Id })" class="text-primary f2"><i class="fa-solid fa-trash-can"></i></a>
-                                            @Ajax.ActionLink("Xóa", "Delete", new { @id = item.Id }, new AjaxOptions
-                                       {
-                                           Confirm = "Bạn có muốn xóa bản ghi này?",
-                                           OnComplete = "$('#row_" + @item.Id + "').remove()",
-                                           HttpMethod = "Delete"
-                                       })
+                                            <a href="@Url.Action("Edit", "ProductCategory", new { id = item.Id })" class="btn text-primary f2"><i class="fas fa-edit"></i></a>
+                                            @Ajax.ActionLink(" ", "Delete", new { @id = item.Id }, new AjaxOptions
+                                           {
+                                               Confirm = "Bạn có muốn xóa bản ghi này?",
+                                               OnComplete = "$('#row_" + @item.Id + "').remove()",
+                                               HttpMethod = "Delete"
+                                           }, new { @class = "btn text-primary f1 myActionLink" })
                                         </td>
                                     </tr>
                                 }
@@ -80,22 +97,4 @@
 
 @section CustomJs {
     <script src="/Assets/Admin/js/controller/productCategoryController.js"></script>
-}
-
-@functions {
-    public string GetParentCategoryName(long? parentId)
-    {
-        if (parentId == null)
-        {
-            return "Là danh mục gốc";
-        }
-
-        var parentCategory = Model.FirstOrDefault(c => c.Id == parentId);
-        if (parentCategory != null)
-        {
-            return parentCategory.Name;
-        }
-
-        return string.Empty;
-    }
 }

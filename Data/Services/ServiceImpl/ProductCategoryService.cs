@@ -48,9 +48,6 @@ namespace Data.Services.ServiceImpl
                 var data = db.ProductCategories.Find(productCategory.Id);
                 data.Name = productCategory.Name;
                 data.MetaTitle = productCategory.MetaTitle;
-                data.MetaDescription = productCategory.MetaDescription;
-                data.MetaKeywords = productCategory.MetaKeywords;
-                data.SeoTitle = productCategory.SeoTitle;
                 data.DisplayOrder = productCategory.DisplayOrder;
                 data.ParentId = productCategory.ParentId;
                 data.Status = productCategory.Status;

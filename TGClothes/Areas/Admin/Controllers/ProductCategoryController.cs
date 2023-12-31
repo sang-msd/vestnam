@@ -20,6 +20,7 @@ namespace TGClothes.Areas.Admin.Controllers
         public ActionResult Index(int page = 1, int pageSize = 10)
         {
             var model = _productCategory.GetAllPaging(page, pageSize);
+            TempData["ParentCategories"] = _productCategory.GetAll().Where(x => x.ParentId == null).ToList();
             return View(model);
         }
 

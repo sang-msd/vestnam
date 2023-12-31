@@ -1,5 +1,5 @@
-﻿
-@model Data.EF.Product
+﻿@model Data.EF.Product
+
 @{
     var category = (Data.EF.ProductCategory)ViewBag.Category;
     var sizes = (List<Data.EF.Size>)ViewBag.Sizes;
@@ -8,6 +8,8 @@
 }
 
 <div class="wrap-modal1 js-modal1 p-t-60 p-b-20">
+    <h4 class="text-danger">@Html.Raw(TempData["Success"])</h4>
+    <h4 class="text-danger">@Html.Raw(TempData["OutOfStock"])</h4>
     <div class="overlay-modal1 js-hide-modal1"></div>
 
     <div class="container">
@@ -69,13 +71,22 @@
                         <!-- Size & Cart -->
                         <div class="p-t-33">
                             <div class="size-selector stext-110">
-                                <h3>Size có sẵn:</h3>
+
                                 <ul>
                                     @foreach (var item in sizestock)
                                     {
-                                        <li class="size-option" onclick="selectSize(this)">
-                                            <input class="size" type="radio" name="size" data-size="@item.SizeId" value="@item.SizeId" style="width:100%;" hidden>@item.SizeName
-                                        </li>
+                                        if (item.Stock == 0)
+                                        {
+                                            <li class="size-option" style="background-color: #f6f6f6; pointer-events: none; color: #dedddd; ">
+                                                <input class="size" type="radio" name="size" data-size="@item.SizeId" value="@item.SizeId" style="width:100%;" hidden>@item.SizeName
+                                            </li>
+                                        }
+                                        else
+                                        {
+                                            <li class="size-option" onclick="selectSize(this)">
+                                                <input class="size" type="radio" name="size" data-size="@item.SizeId" value="@item.SizeId" style="width:100%;" hidden>@item.SizeName
+                                            </li>
+                                        }
                                     }
                                 </ul>
                             </div>
@@ -115,3 +126,91 @@
         </div>
     </div>
 </div>
+<script src="/Assets/Client/vendor/jquery/jquery-3.2.1.min.js"></script>
+<script src="/Assets/Client/js/jquery-ui.js"></script>
+<!--===============================================================================================-->
+<script src="/Assets/Client/vendor/bootstrap/js/popper.js"></script>
+<script src="/Assets/Client/vendor/bootstrap/js/bootstrap.min.js"></script>
+<!--===============================================================================================-->
+<script src="/Assets/Client/vendor/select2/select2.min.js"></script>
+<!--===============================================================================================-->
+<script src="/Assets/Client/vendor/daterangepicker/moment.min.js"></script>
+<script src="/Assets/Client/vendor/slick/slick.min.js"></script>
+<script src="/Assets/Client/js/slick-custom.js"></script>
+<script>
+    $('.wrap-slick3').each(function () {
+        $(this).find('.slick3').slick({
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            fade: true,
+            infinite: true,
+            autoplay: false,
+            autoplaySpeed: 6000,
+
+            arrows: true,
+            appendArrows: $(this).find('.wrap-slick3-arrows'),
+            prevArrow: '<button class="arrow-slick3 prev-slick3"><i class="fa fa-angle-left" aria-hidden="true"></i></button>',
+            nextArrow: '<button class="arrow-slick3 next-slick3"><i class="fa fa-angle-right" aria-hidden="true"></i></button>',
+
+            dots: true,
+            appendDots: $(this).find('.wrap-slick3-dots'),
+            dotsClass: 'slick3-dots',
+            customPaging: function (slick, index) {
+                var portrait = $(slick.$slides[index]).data('thumb');
+                return '<img src=" ' + portrait + ' "/><div class="slick3-dot-overlay"></div>';
+            },
+        });
+    });
+</script>
+<!--===============================================================================================-->
+<script src="/Assets/Client/vendor/MagnificPopup/jquery.magnific-popup.min.js"></script>
+<!--===============================================================================================-->
+<script src="/Assets/Client/vendor/isotope/isotope.pkgd.min.js"></script>
+<!--===============================================================================================-->
+<script src="/Assets/Client/vendor/sweetalert/sweetalert.min.js"></script>
+<script>
+  // JavaScript code
+  $('#addToCartLink').off('click').on('click', function (e) {
+        e.preventDefault();
+        const productId = '@Model.Id';
+        const selectedSize = document.querySelector('input[name="size"]:checked');
+        const sizeId = selectedSize ? selectedSize.value : '';
+
+        if (sizeId > 0) {
+            const href = `/them-gio-hang?productId=${productId}&sizeId=${sizeId}&quantity=1`;
+            window.location.href = href;
+
+        } else if (sizeId === '') {
+            swal("Lỗi", "Vui lòng chọn size!", "error");
+        }
+  });
+</script>
+<script>
+    function selectSize(selectedOption) {
+        const radioInput = selectedOption.querySelector('input[type="radio"]');
+
+        if (radioInput) {
+            radioInput.checked = true;
+        }
+
+        const sizeOptions = document.querySelectorAll('.size-option');
+
+        // Xóa lớp 'selected' khỏi tất cả các ô chọn size
+        sizeOptions.forEach(option => {
+            option.classList.remove('selected');
+        });
+
+        // Thêm lớp 'selected' vào ô chọn size được chọn
+        selectedOption.classList.add('selected');
+    }
+</script>
+
+<script src="/Assets/Client/js/main.js"></script>
+
+<script>
+
+    $('.js-hide-modal1').on('click', function () {
+        $('#modalContainer').empty();
+        $('.js-modal1').removeClass('show-modal1');
+    });
+</script>

@@ -33,8 +33,6 @@
                                 <tr>
                                     <th>Tên</th>
                                     <th>Mô tả</th>
-                                    <th>Ngày tạo</th>
-                                    <th>Ngày cập nhật</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -45,15 +43,13 @@
                                         <td>@item.Name</td>
                                         <td>@item.Description</td>
                                         <td>
-                                            <a href="@Url.Action("Details", "Size", new { id = item.Id })" class="text-primary f2"><i class="fa-solid fa-eye"></i></a>
-                                            <a href="@Url.Action("Edit", "Size", new { id = item.Id })" class="text-primary f2"><i class="fas fa-edit"></i></a>
-                                            <a href="@Url.Action("Delete", "Size", new { id = item.Id })" class="text-primary f2"><i class="fa-solid fa-trash-can"></i></a>
-                                            @Ajax.ActionLink("Xóa", "Delete", new { @id = item.Id }, new AjaxOptions
-                                        {
-                                            Confirm = "Bạn có muốn xóa bản ghi này?",
-                                            OnComplete = "$('#row_" + @item.Id + "').remove()",
-                                            HttpMethod = "Delete"
-                                        })
+                                            <a href="@Url.Action("Edit", "Size", new { id = item.Id })" class="btn text-primary f2"><i class="fas fa-edit"></i></a>
+                                            @Ajax.ActionLink(" ", "Delete", new { @id = item.Id }, new AjaxOptions
+                                           {
+                                               Confirm = "Bạn có muốn xóa bản ghi này?",
+                                               OnComplete = "$('#row_" + @item.Id + "').remove()",
+                                               HttpMethod = "Delete"
+                                           }, new { @class = "btn text-primary f1 myActionLink" })
                                         </td>
                                     </tr>
                                 }
@@ -65,3 +61,9 @@
         </div>
     </div>
 </div>
+
+@section CustomJs {
+    <script>
+        $('.myActionLink').prepend("<i class='fa-solid fa-trash-can'></i> ");
+    </script>
+}

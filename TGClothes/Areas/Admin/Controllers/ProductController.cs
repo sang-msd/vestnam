@@ -17,18 +17,18 @@ namespace TGClothes.Areas.Admin.Controllers
         private readonly IProductService _productService;
         private readonly IProductCategoryService _productCategoryService;
         private readonly IRateService _rateService;
-        private readonly IUserService _userService;
+        private readonly IAccountService _userService;
         private readonly IGalleryService _galleryService;
-        private readonly IProductSizeService _productSizeService;
+        private readonly IProductStockService _productSizeService;
         private readonly ISizeService _sizeService;
 
         public ProductController(
             IProductService productService, 
             IProductCategoryService productCategoryService, 
             IRateService rateService, 
-            IUserService userService,
+            IAccountService userService,
             IGalleryService galleryService,
-            IProductSizeService productSizeService,
+            IProductStockService productSizeService,
             ISizeService sizeService
             )
         {
@@ -99,15 +99,12 @@ namespace TGClothes.Areas.Admin.Controllers
                     Details = model.Product.Details,
                     Image = model.Product.Image,
                     Price = model.Product.Price,
+                    OriginalPrice = model.Product.OriginalPrice,
                     Promotion = model.Product.Promotion,
                     PromotionPrice = model.Product.Price - (model.Product.Price * model.Product.Promotion / 100),
                     CategoryId = ParentId,
                     CreatedDate = DateTime.Now,
-                    MetaKeywords = model.Product.MetaKeywords,
-                    MetaDescription = model.Product.MetaDescription,
                     Status = true,
-                    TopHot = null,
-                    ViewCount = 0
                 };
 
                 long id = _productService.Insert(product);
@@ -172,7 +169,7 @@ namespace TGClothes.Areas.Admin.Controllers
             model.ProductSizes = _productSizeService.GetProductSizeByProductId(product.Id);
             model.Gallery = _galleryService.GetGalleryById(product.GalleryId.Value);
             model.Sizes = _sizeService.GetAll();
-            SetViewBag();
+            SetViewBag(model.Product.CategoryId);
             return View(model);
         }
 
@@ -192,15 +189,12 @@ namespace TGClothes.Areas.Admin.Controllers
                     product.Details = model.Product.Details;
                     product.Image = model.Product.Image;
                     product.Price = model.Product.Price;
+                    product.OriginalPrice = model.Product.OriginalPrice;
                     product.Promotion = model.Product.Promotion;
                     product.PromotionPrice = model.Product.Price - (model.Product.Price * model.Product.Promotion / 100);
                     product.CategoryId = model.Product.CategoryId;
                     product.ModifiedDate = DateTime.Now;
-                    product.MetaKeywords = model.Product.MetaKeywords;
-                    product.MetaDescription = model.Product.MetaDescription;
                     product.Status = true;
-                    product.TopHot = model.Product.TopHot;
-                    product.ViewCount = 0;
                 }
 
                 var id = _productService.Update(product);
@@ -275,6 +269,7 @@ namespace TGClothes.Areas.Admin.Controllers
                     ModelState.AddModelError("", "Cập nhật sản phẩm không thành công.");
                 }
             }
+            SetViewBag(model.Product.CategoryId);
             return View("Index");
         }
 

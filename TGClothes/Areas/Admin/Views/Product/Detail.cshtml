@@ -12,23 +12,15 @@
 }
 
 <div class="col-lg-12 padding-8">
-
+    <hr />
     <dl class="dl-horizontal" style="overflow: hidden;">
-        <dt>
-            Tên sản phẩm
-        </dt>
+        <dt>Tên sản phẩm</dt>
 
-        <dd>
-            <p>@product.Name</p>
-        </dd>
+        <dd><p>@product.Name</p></dd>
 
-        <dt>
-            Hình đại diện
-        </dt>
+        <dt>Hình đại diện</dt>
 
-        <dd>
-            <img src="@product.Image" height="200px" />
-        </dd>
+        <dd><img src="@product.Image" height="200px" /></dd>
 
         @{
             string[] imageFields = { gallery.Image1, gallery.Image2, gallery.Image3 };
@@ -48,12 +40,24 @@
             }
         }
 
+        <dt>Giá Nhập</dt>
+
+        <dd>@String.Format("{0:N0}", @product.OriginalPrice) vnđ</dd>
+
+        <dt>Giá bán</dt>
+
+        <dd>@String.Format("{0:N0}", @product.Price) vnđ</dd>
+
+        <dt>Khuyến mại</dt>
+
+        <dd>@String.Format("{0}%", @product.Promotion)</dd>
+
         <dt>
-            Giá bán
+            Ngày tạo
         </dt>
 
         <dd>
-            @String.Format("{0:N0}", @product.Price) vnđ
+            <p>@product.CreatedDate</p>
         </dd>
 
         <dt>
@@ -74,23 +78,8 @@
                 totalQuantity += productSize.Stock;
             }
         </ul>
-
-
-        <dt>
-            Tổng số lượng tồn
-        </dt>
-
-        <dd>
-            @totalQuantity
-        </dd>
-        <dt>
-            Mô tả
-        </dt>
-
-        <dd>
-            @Html.Raw(product.Description)
-        </dd>
-
     </dl>
+
+    <a href="@Url.Action("Index", "Product")" class="btn btn-danger">Quay lại</a>
 </div>
 

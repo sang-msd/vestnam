@@ -10,10 +10,10 @@ namespace TGClothes.Areas.Admin.Controllers
 {
     public class ContentController : BaseController
     {
-        private readonly ICategoryService _categoryService;
-        private readonly IContentService _contentService;
+        private readonly INewsCategoryService _categoryService;
+        private readonly INewsService _contentService;
 
-        public ContentController(ICategoryService categoryService, IContentService contentService)
+        public ContentController(INewsCategoryService categoryService, INewsService contentService)
         {
             _categoryService = categoryService;
             _contentService = contentService;
@@ -55,11 +55,11 @@ namespace TGClothes.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult Edit(Content content)
+        public ActionResult Edit(Content news)
         {
             if (ModelState.IsValid)
             {
-                var result = _contentService.Edit(content);
+                var result = _contentService.Edit(news);
                 if (result > 0)
                 {
                     SetAlert("Cập nhật tin tức thành công", "success");
@@ -70,9 +70,26 @@ namespace TGClothes.Areas.Admin.Controllers
                     ModelState.AddModelError("", "Cập nhật tin tức không thành công");
                 }
             }
-            SetViewbag(content.CategoryId);
+            SetViewbag(news.CategoryId);
             return View("Index");
         }
+
+        [HttpDelete]
+        public ActionResult Delete(long id)
+        {
+            _contentService.Delete(id);
+            return RedirectToAction("Index");
+        }
+        [HttpPost]
+        public JsonResult ChangeStatus(long id)
+        {
+            var result = _contentService.ChangeStatus(id);
+            return Json(new
+            {
+                status = result
+            });
+        }
+
 
         public void SetViewbag(long? selectedId = null)
         {

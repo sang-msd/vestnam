@@ -10,19 +10,16 @@ namespace TGClothes.Controllers
 {
     public class ContactController : Controller
     {
-        private readonly IContactService _contactService;
         private readonly IFeedbackService _feedbackService;
 
-        public ContactController(IContactService contactService, IFeedbackService feedbackService)
+        public ContactController(IFeedbackService feedbackService)
         {
-            _contactService = contactService;
             _feedbackService = feedbackService;
         }
         // GET: Contact
         public ActionResult Index()
         {
-            var model = _contactService.GetActiveContact();
-            return View(model);
+            return View();
         }
 
         [HttpPost]

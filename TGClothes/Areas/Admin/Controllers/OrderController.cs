@@ -12,16 +12,16 @@ namespace TGClothes.Areas.Admin.Controllers
     public class OrderController : BaseController
     {
         private readonly IOrderService _orderService;
-        private readonly IUserService _userService;
+        private readonly IAccountService _userService;
         private readonly IProductService _productService;
         private readonly IOrderDetailService _orderDetailService;
-        private readonly IProductSizeService _productSizeService;
+        private readonly IProductStockService _productSizeService;
 
         public OrderController(IOrderService orderService, 
-            IUserService userService,
+            IAccountService userService,
             IProductService productService, 
             IOrderDetailService orderDetailService,
-            IProductSizeService productSizeService)
+            IProductStockService productSizeService)
         {
             _orderService = orderService;
             _userService = userService;
@@ -30,17 +30,21 @@ namespace TGClothes.Areas.Admin.Controllers
             _productSizeService = productSizeService;
         }
         // GET: Admin/Order
-        public ActionResult Index(int page = 1, int pageSize = 3)
-        {
-            var model = _orderService.GetAllPaging(page, pageSize);
-            return View(model);
-        }
 
-        [HttpPost]
-        public ActionResult Index(DateTime orderDate, int page = 1, int pageSize = 3)
+        public ActionResult Index(DateTime? fromDate, DateTime? toDate, int page = 1, int pageSize = 8)
         {
-            var model = _orderService.GetAllByDatePaging(orderDate, page, pageSize);
-            return View(model);
+            if (!fromDate.HasValue && !toDate.HasValue)
+            {
+                var model = _orderService.GetAllPaging(page, pageSize);
+                return View(model);
+            }
+            else
+            {
+                var model = _orderService.GetAllByDatePaging(fromDate.Value, toDate.Value, page, pageSize);
+                ViewBag.FromDate = fromDate;
+                ViewBag.ToDate = toDate;
+                return View(model);
+            }
         }
 
         public ActionResult Details(long id)
@@ -52,7 +56,7 @@ namespace TGClothes.Areas.Admin.Controllers
                            select new OrderCustomerModel
                            {
                                Order = o,
-                               User = u
+                               Account = u
                            };
 
             var detail = from p in _productService.GetAll()

@@ -35,22 +35,12 @@ namespace Data.EF
 
         public DateTime? ModifiedDate { get; set; }
 
-        [StringLength(50)]
-        public string MetaKeywords { get; set; }
-
-        [StringLength(250)]
-        public string MetaDescription { get; set; }
-
         public bool Status { get; set; }
-
-        public DateTime? TopHot { get; set; }
-
-        public int? ViewCount { get; set; }
 
         public long? GalleryId { get; set; }
 
-        [Column(TypeName = "ntext")]
         public string Details { get; set; }
-        public List<ProductSize> ProductSizes { get; set; }
+
+        public decimal? OriginalPrice { get; set; }
     }
 }

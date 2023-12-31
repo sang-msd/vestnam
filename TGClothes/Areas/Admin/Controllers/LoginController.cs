@@ -7,9 +7,9 @@ namespace TGClothes.Areas.Admin.Controllers
 {
     public class LoginController : Controller
     {
-        private readonly IUserService _user;
+        private readonly IAccountService _user;
 
-        public LoginController(IUserService user)
+        public LoginController(IAccountService user)
         {
            _user = user;
         }
@@ -20,17 +20,20 @@ namespace TGClothes.Areas.Admin.Controllers
             return View();
         }
 
-        public ActionResult Login(LoginModel model)
+        [HttpPost]
+        public ActionResult Index(LoginModel model)
         {
             if (ModelState.IsValid)
             {
-                var result = _user.LoginByEmail(model.Email, Encryptor.MD5Hash(model.Password));
+                var result = _user.LoginByEmail(model.Email, Encryptor.MD5Hash(model.Password), true);
                 if (result == 1)
                 {
                     var user = _user.GetUserByEmail(model.Email);
                     var userSession = new UserLogin();
                     userSession.Email = user.Email;
                     userSession.UserId = user.Id;
+                    //var listCredentials = _user.GetListCredential(user.Email);
+                    //Session.Add(CommonConstants.SESSION_CREDENTIAL, listCredentials);
                     Session.Add(CommonConstants.USER_SESSION, userSession);
                     return RedirectToAction("Index", "Home");
                 }
@@ -45,6 +48,10 @@ namespace TGClothes.Areas.Admin.Controllers
                 else if (result == -2)
                 {
                     ModelState.AddModelError("", "Mật khẩu không đúng.");
+                }
+                else if (result == -3)
+                {
+                    ModelState.AddModelError("", "Tài khoản của bạn không có quyền đăng nhập.");
                 }
                 else
                 {

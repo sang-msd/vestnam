@@ -2,6 +2,9 @@
 @{
     ViewBag.Title = "Detail";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var day = Model.CreatedDate.Value.Day;
+    var month = Model.CreatedDate.Value.Month;
+    var year = Model.CreatedDate.Value.Year;
 }
 
 @{ 
@@ -40,11 +43,11 @@
 
                         <div class="flex-col-c-m size-123 bg9 how-pos5">
                             <span class="ltext-107 cl2 txt-center">
-                                @Model.CreatedDate.Value.Day
+                                @day
                             </span>
 
                             <span class="stext-109 cl3 txt-center">
-                                @Model.CreatedDate.Value.Month @Model.CreatedDate.Value.Year
+                                @month @year
                             </span>
                         </div>
                     </div>
@@ -53,7 +56,7 @@
                         <span class="flex-w flex-m stext-111 cl2 p-b-19">
 
                             <span>
-                                22 Jan, 2018
+                                @Model.CreatedDate.Value.ToString("dd-MMM-yyyy") 
                                 <span class="cl12 m-l-4 m-r-6">|</span>
                             </span>
 
@@ -69,13 +72,11 @@
                             </span>
                         </span>
 
-                        <h4 class="mtext-112 cl2 p-b-28 font-italic">
+                        <h4 class="mtext-101 cl2 p-b-16 font-italic">
                             @Model.Description
                         </h4>
 
-                        <p class="stext-117 cl6 p-b-26">
-                           @Html.Raw(Model.Detail)
-                        </p>
+                        @Html.Raw("<div class='lh-17'>" + Model.Detail + "</div>")
                     </div>
 
                     <div class="flex-w flex-t p-t-16">
@@ -84,13 +85,12 @@
                         </span>
 
                         <div class="flex-w size-217">
-                            <a href="#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-                                Streetstyle
-                            </a>
-
-                            <a href="#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-                                Crafts
-                            </a>
+                            @foreach (var item in tags)
+                            {
+                                <a href="/tag/@item.Id" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
+                                    @item.Name
+                                </a>
+                            }
                         </div>
                     </div>
                 </div>

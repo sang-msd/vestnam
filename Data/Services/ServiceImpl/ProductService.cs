@@ -41,10 +41,20 @@ namespace Data.Services.ServiceImpl
             }
         }
 
+        public List<Product> FilterByPrice(decimal minPrice, decimal maxPrice, ref int totalRecord, int pageIndex = 1, int pageSize = 8)
+        {
+            totalRecord = db.Products.Where(x => x.Price >= minPrice && x.Price <= maxPrice).Count();
+            return db.Products.Where(x => x.Price >= minPrice && x.Price <= maxPrice).OrderByDescending(x => x.CreatedDate).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
+        }
+
         public List<Product> GetAll(ref int totalRecord, int pageIndex = 1, int pageSize = 8)
         {
-            totalRecord = db.Products.Count();
-            return db.Products.OrderByDescending(x => x.CreatedDate).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
+            var data = (from p in db.Products
+                        join ps in db.ProductSizes on p.Id equals ps.ProductId
+                        where ps.Stock != 0
+                        select p).Distinct();
+            totalRecord = data.Count();
+            return data.OrderByDescending(x => x.CreatedDate).ToList();
         }
 
         public List<Product> GetAll()
@@ -62,10 +72,33 @@ namespace Data.Services.ServiceImpl
             return model.OrderBy(x => x.CreatedDate).ToPagedList(page, pageSize);
         }
 
+        public List<Product> GetAllProductByRootCategory(long id, ref int totalRecord, int pageIndex = 1, int pageSize = 8)
+        {
+            var category = db.ProductCategories.Find(id);
+            
+            List<Product> products = new List<Product>();
+            List<ProductCategory> productCategories = db.ProductCategories.Where(x => x.ParentId == category.Id).ToList();
+
+            foreach (var item in productCategories)
+            {
+                var result = (from p in db.Products
+                            join ps in db.ProductSizes on p.Id equals ps.ProductId
+                            where ps.Stock != 0 && p.CategoryId == item.Id
+                            select p).Distinct();
+                products.AddRange(result);
+            }
+            totalRecord = products.Count();
+            return products.OrderByDescending(x => x.CreatedDate).ToList();
+        }
+
         public List<Product> GetProductByCategoryId(long id, ref int totalRecord, int pageIndex = 1, int pageSize = 8)
         {
-            totalRecord = db.Products.Where(x => x.CategoryId == id).Count();
-            return db.Products.Where(x => x.CategoryId == id).OrderByDescending(x => x.CreatedDate).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
+            var data = (from p in db.Products
+                        join ps in db.ProductSizes on p.Id equals ps.ProductId
+                        where ps.Stock != 0
+                        select p).Distinct();
+            totalRecord = data.Where(x => x.CategoryId == id).Count();
+            return data.Where(x => x.CategoryId == id).OrderByDescending(x => x.CreatedDate).ToList();
         }
 
         public Product GetProductById(long id)
@@ -85,10 +118,10 @@ namespace Data.Services.ServiceImpl
             return product.Id;
         }
 
-        public List<Product> ListFeatureProduct(int top)
-        {
-            return db.Products.Where(x => x.TopHot != null && x.TopHot > DateTime.Now).OrderByDescending(x => x.CreatedDate).Take(top).ToList();
-        }
+        //public List<Product> ListFeatureProduct(int top)
+        //{
+        //    return db.Products.Where(x => x.TopHot != null && x.TopHot > DateTime.Now).OrderByDescending(x => x.CreatedDate).Take(top).ToList();
+        //}
 
         public List<string> ListName(string keyword)
         {
@@ -106,10 +139,57 @@ namespace Data.Services.ServiceImpl
             return db.Products.Where(x => x.Id != productId && x.CategoryId == product.CategoryId).ToList();
         }
 
+        public List<Product> ListSaleProduct(int top)
+        {
+            return db.Products.Where(x => x.Promotion.HasValue).OrderByDescending(x => x.Promotion.Value).Take(top).ToList();
+        }
+
+        public List<Product> ListTopProduct(int top)
+        {
+            var query = (from p in db.Products
+                         join od in db.OrderDetails on p.Id equals od.ProductId
+                         join o in db.Orders on od.OrderId equals o.Id
+                         where o.DeliveryDate.HasValue && o.DeliveryDate.Value.Month == DateTime.Now.Month && o.Status == 3
+                         group new { p, od } by p.Id into g
+                         orderby g.Sum(x => x.od.Quantity) descending
+                         select new
+                         {
+                             Id = g.Key,
+                             Name = g.Select(x => x.p.Name).FirstOrDefault(),
+                             Price = g.Select(x => x.p.Price).FirstOrDefault(),
+                             MetaTitle = g.Select(x => x.p.MetaTitle).FirstOrDefault(),
+                             Description = g.Select(x => x.p.Description).FirstOrDefault(),
+                             Image = g.Select(x => x.p.Image).FirstOrDefault(),
+                             PromotionPrice = g.Select(x => x.p.PromotionPrice).FirstOrDefault(),
+                             Promotion = g.Select(x => x.p.Promotion).FirstOrDefault(),
+                             CreatedDate = g.Select(x => x.p.CreatedDate).FirstOrDefault(),
+                         }).Take(10);
+
+            var data = query.ToList().Select(x => new Product
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Price = x.Price,
+                Promotion = x.Promotion,
+                Image = x.Image,
+                PromotionPrice = x.PromotionPrice,
+                Description = x.Description,
+                MetaTitle = x.MetaTitle,
+                CreatedDate = x.CreatedDate
+            }).ToList();
+
+            return data;
+        }
+
+        public double ProductStatistic()
+        {
+            return db.Products.Where(x => x.Status == true).Count();
+        }
+
         public List<Product> Search(string searchkeyword, ref int totalRecord, int pageIndex = 1, int pageSize = 8)
         {
             totalRecord = db.Products.Where(x => x.Name.Contains(searchkeyword)).Count();
-            return db.Products.Where(x => x.Name.Contains(searchkeyword)).OrderByDescending(x => x.CreatedDate).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
+            return db.Products.Where(x => x.Name.Contains(searchkeyword)).OrderByDescending(x => x.CreatedDate).ToList();
         }
 
         public bool Update(Product product)
@@ -121,14 +201,11 @@ namespace Data.Services.ServiceImpl
                 data.MetaTitle = StringHelper.ToUnsignString(product.Name); ;
                 data.Description = product.Description;
                 data.Image = product.Image;
+                data.OriginalPrice = product.OriginalPrice;
                 data.Price = product.Price;
                 data.Promotion = product.Promotion;
                 data.PromotionPrice = product.PromotionPrice;
                 data.CategoryId = product.CategoryId;
-                data.MetaKeywords = product.MetaKeywords;
-                data.MetaDescription = product.MetaDescription;
-                data.TopHot = product.TopHot;
-                data.ViewCount = product.ViewCount;
                 data.GalleryId = product.GalleryId;
 
                 // Lưu các thay đổi vào cơ sở dữ liệu

@@ -12,18 +12,15 @@ namespace Data.EF
         [StringLength(500)]
         public string Content { get; set; }
 
-        public int? Star { get; set; }
+        public int Star { get; set; }
 
         public DateTime CreatedDate { get; set; }
 
-        [Key]
-        [Column(Order = 0)]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long UserId { get; set; }
 
-        [Key]
-        [Column(Order = 1)]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long ProductId { get; set; }
+
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public long Id { get; set; }
     }
 }

@@ -12,35 +12,35 @@ namespace TGClothes.Controllers
     public class HomeController : Controller
     {
         private readonly IMenuService _menuService;
-        private readonly IFooterService _footerService;
         private readonly ISlideService _slideService;
         private readonly IProductService _productService;
-        private readonly IContactService _contactService;
+        private readonly INewsCategoryService _categoryService;
         private readonly IProductCategoryService _productCategoryService;
 
         public HomeController(
             IMenuService menuService, 
-            IFooterService footerService, 
             ISlideService slideService, 
             IProductService productService,
-            IContactService contactService,
+            INewsCategoryService categoryService,
             IProductCategoryService productCategoryService)
         {
             _menuService = menuService;
-            _footerService = footerService;
             _slideService = slideService;
             _productService = productService;
-            _contactService = contactService;
+            _categoryService = categoryService;
             _productCategoryService = productCategoryService;
         }
 
         // GET: Home
         public ActionResult Index()
         {
+            var model = _productCategoryService.GetAll();
             ViewBag.Slides = _slideService.GetAll();
-            ViewBag.NewProducts = _productService.ListNewProduct(5);
-            ViewBag.FeatureProducts = _productService.ListFeatureProduct(5);
-            return View();
+            ViewBag.NewProducts = _productService.ListNewProduct(8);
+            //ViewBag.FeatureProducts = _productService.ListFeatureProduct(8);
+            ViewBag.SaleProducts = _productService.ListSaleProduct(8);
+            ViewBag.TopSeller = _productService.ListTopProduct(8);
+            return View(model);
         }
 
         [ChildActionOnly]
@@ -73,7 +73,7 @@ namespace TGClothes.Controllers
         public ActionResult Footer()
         {
             var model = _productCategoryService.GetAll();
-            ViewBag.Contact = _contactService.GetActiveContact();
+            ViewBag.Category = _categoryService.GetAll();
             return PartialView(model);
         }
     }

@@ -31,6 +31,10 @@
             }
         })
             .autocomplete("instance")._renderItem = function (ul, item) {
+                $(ul).css({
+                    "max-height": "200px",
+                    "overflow": "auto"
+                });
                 return $("<li class='p-all-8'>")
                     .append("<div class='stext-106'>" + item.label + "</div>")
                     .appendTo(ul);

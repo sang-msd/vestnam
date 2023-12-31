@@ -31,27 +31,15 @@
                     <div class="bor8 m-t-20 how-pos4-parent">
                         <span class="how-pos4 pointer-none lnr lnr-user"></span>
                         @*<input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="text" id="txtName" name="UserName" placeholder="Nhập họ tên">*@
-                        @Html.TextBoxFor(model => model.UserName, new { @class = "stext-111 cl2 plh3 size-116 p-l-62 p-r-30", @placeholder = "Nhập họ tên" })
+                        @Html.TextBoxFor(model => model.Name, new { @class = "stext-111 cl2 plh3 size-116 p-l-62 p-r-30", @placeholder = "Nhập họ tên" })
                     </div>
-                    @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
 
                     <div class="bor8 m-t-20 how-pos4-parent">
                         <span class="how-pos4 pointer-none lnr lnr-envelope"></span>
                         @Html.TextBoxFor(model => model.Email, new { @class = "stext-111 cl2 plh3 size-116 p-l-62 p-r-30", @placeholder = "Nhập email" })
                     </div>
                     @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
-
-                    <div class="bor8 m-t-20 how-pos4-parent">
-                        <span class="how-pos4 pointer-none lnr lnr-phone-handset"></span>
-                        @Html.TextBoxFor(model => model.Phone, new { @class = "stext-111 cl2 plh3 size-116 p-l-62 p-r-30", @placeholder = "Nhập số điện thoại" })
-                    </div>
-                    @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
-
-                    <div class="bor8 m-t-20 how-pos4-parent">
-                        <span class="how-pos4 pointer-none lnr lnr-map-marker"></span>
-                        @Html.TextBoxFor(model => model.Address, new { @class = "stext-111 cl2 plh3 size-116 p-l-62 p-r-30", @placeholder = "Nhập địa chỉ" })
-                    </div>
-                    @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
 
                     <div class="bor8 m-t-20 how-pos4-parent">
                         <span class="how-pos4 pointer-none lnr lnr-bubble"></span>
@@ -73,7 +61,7 @@
                     @Html.ValidationMessage("CaptchaCode", new { @class = "text-danger" })
 
                     <button class="flex-c-m stext-101 cl0 size-121 bg3 bor1 hov-btn3 p-lr-15 m-t-20 trans-04 pointer">
-                        Submit
+                        Đăng ký
                     </button>
 
                     <div class="m-t-20 how-pos4-parent text-center">

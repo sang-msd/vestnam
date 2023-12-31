@@ -17,7 +17,7 @@ namespace Data.Services.ServiceImpl
 
         public List<Menu> GetByGroupId(int groupId)
         {
-            return db.Menus.Where(x => x.TypeId == groupId).OrderBy(o => o.DisplayOrder).ToList();
+            return db.Menus.OrderBy(o => o.DisplayOrder).ToList();
         }
     }
 }

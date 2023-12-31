@@ -11,9 +11,9 @@ namespace TGClothes.Areas.Admin.Controllers
 {
     public class UserController : BaseController
     {
-        private readonly IUserService _user;
+        private readonly IAccountService _user;
 
-        public UserController(IUserService user)
+        public UserController(IAccountService user)
         {
             _user = user;
         }
@@ -32,7 +32,7 @@ namespace TGClothes.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(User user)
+        public ActionResult Create(Account user)
         {
             if (ModelState.IsValid)
             {
@@ -60,7 +60,7 @@ namespace TGClothes.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(User user)
+        public ActionResult Edit(Account user)
         {
             if (ModelState.IsValid)
             {

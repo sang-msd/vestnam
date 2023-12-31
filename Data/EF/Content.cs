@@ -17,11 +17,7 @@ namespace Data.EF
         [StringLength(250)]
         public string MetaTitle { get; set; }
 
-        [Column(TypeName = "ntext")]
         public string Description { get; set; }
-
-        [Column(TypeName = "ntext")]
-        public string Detail { get; set; }
 
         [StringLength(250)]
         public string Image { get; set; }
@@ -30,21 +26,13 @@ namespace Data.EF
 
         public DateTime? ModifiedDate { get; set; }
 
-        [StringLength(50)]
-        public string MetaKeywords { get; set; }
-
-        [StringLength(250)]
-        public string MetaDescription { get; set; }
-
         public bool Status { get; set; }
-
-        public DateTime? TopHot { get; set; }
-
-        public int? ViewCount { get; set; }
 
         [StringLength(500)]
         public string Tags { get; set; }
 
         public long? CategoryId { get; set; }
+
+        public string Detail { get; set; }
     }
 }

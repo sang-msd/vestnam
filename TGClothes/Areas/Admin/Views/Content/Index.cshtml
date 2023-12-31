@@ -23,6 +23,9 @@
                     </div>
                     <div class="col-md-4">
                         <button type="submit" class="btn btn-success">Tìm kiếm</button>
+                        <a href="/Admin/Content/Index" class="btn btn-outline-success">Refresh</a>
+                    </div>
+                    <div class="col-md-4 d-flex justify-content-lg-end">
                         <a href="/Admin/Content/Create" class="btn btn-primary">Thêm mới</a>
                     </div>
                 </div>
@@ -46,22 +49,30 @@
                             <tbody>
                                 @foreach (var item in Model)
                                 {
+                                    var checkStatus = "";
+                                    if (item.Status)
+                                    { checkStatus = "text-success"; }
+
+                                    else
+                                    {
+                                        checkStatus = "text-danger";
+                                    }
+
                                     <tr id="row_@item.Id">
                                         <td>@item.Name</td>
                                         <td><img src=" @Html.DisplayFor(modelItem => item.Image)" height="100px" /></td>
                                         <td>@item.CreatedDate</td>
                                         <td>@item.ModifiedDate</td>
-                                        <td><a href="#" class="btn-active" data-id="@item.Id">@(item.Status ? "Kích hoạt" : "Khóa")</a></td>
+                                        <td><a href="#" class="btn-active @checkStatus" data-id="@item.Id">@(item.Status ? "Kích hoạt" : "Khóa")</a></td>
                                         <td>
-                                            <a href="@Url.Action("Details", "Content", new { id = item.Id })" class="text-primary f2"><i class="fa-solid fa-eye"></i></a>
-                                            <a href="@Url.Action("Edit", "Content", new { id = item.Id })" class="text-primary f2"><i class="fas fa-edit"></i></a>
-                                            <a href="@Url.Action("Delete", "Content", new { id = item.Id })" class="text-primary f2"><i class="fa-solid fa-trash-can"></i></a>\
-                                            @Ajax.ActionLink("Xóa", "Delete", new { @id = item.Id }, new AjaxOptions
-                                       {
-                                           Confirm = "Bạn có muốn xóa bản ghi này?",
-                                           OnComplete = "$('#row_" + @item.Id + "').remove()",
-                                           HttpMethod = "Delete"
-                                       })
+                                            <a href="@Url.Action("Details", "Content", new { id = item.Id })" class="btn text-primary f2"><i class="fa-solid fa-eye"></i></a>
+                                            <a href="@Url.Action("Edit", "Content", new { id = item.Id })" class="btn text-primary f2"><i class="fas fa-edit"></i></a>
+                                            @Ajax.ActionLink(" ", "Delete", new { @id = item.Id }, new AjaxOptions
+                                           {
+                                               Confirm = "Bạn có muốn xóa bản ghi này?",
+                                               OnComplete = "$('#row_" + @item.Id + "').remove()",
+                                               HttpMethod = "Delete"
+                                           }, new { @class = "btn text-primary f1 myActionLink" })
                                         </td>
                                     </tr>
                                 }
@@ -80,5 +91,5 @@
 </div>
 
 @section CustomJs {
-    <script src="/Assets/Admin/js/controller/userController.js"></script>
+    <script src="/Assets/Admin/js/controller/contentController.js"></script>
 }

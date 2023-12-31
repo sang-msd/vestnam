@@ -22,6 +22,7 @@
                 }
             });
         });
+        $('.myActionLink').prepend("<i class='fa-solid fa-trash-can'></i> ");
     }
 }
 category.init();

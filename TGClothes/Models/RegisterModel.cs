@@ -13,19 +13,11 @@ namespace TGClothes.Models
 
         [Display(Name ="Tên người dùng")]
         [Required(ErrorMessage = "Vui lòng nhập tên người dùng")]
-        public string UserName { get; set; }
+        public string Name { get; set; }
 
         [Display(Name = "Email")]
         [Required(ErrorMessage = "Vui lòng nhập email")]
         public string Email { get; set; }
-
-        [Display(Name = "Số điện thoại")]
-        [Required(ErrorMessage = "Vui lòng nhập số điện thoại")]
-        public string Phone { get; set; }
-
-        [Display(Name = "Địa chỉ")]
-        [Required(ErrorMessage = "Vui lòng nhập địa chỉ")]
-        public string Address { get; set; }
 
         [Display(Name = "Mật khẩu")]
         [Required(ErrorMessage = "Vui lòng nhập mật khẩu")]

@@ -2,12 +2,17 @@
 using Data.EF;
 using Data.Services;
 using Facebook;
+using GoogleAuthentication.Services;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Mail;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using TGClothes.Common;
@@ -17,9 +22,9 @@ namespace TGClothes.Controllers
 {
     public class UserController : Controller
     {
-        private readonly IUserService _userService;
+        private readonly IAccountService _userService;
 
-        public UserController(IUserService userService)
+        public UserController(IAccountService userService)
         {
             _userService = userService;
         }
@@ -54,11 +59,9 @@ namespace TGClothes.Controllers
                 }
                 else
                 {
-                    var user = new User();
-                    user.UserName = model.UserName;
+                    var user = new Account();
                     user.Email = model.Email;
-                    user.Phone = model.Phone;
-                    user.Address = model.Address;
+                    user.Name = model.Name;
                     user.Password = Encryptor.MD5Hash(model.Password);
                     user.CreatedDate = DateTime.Now;
                     user.Status = true;
@@ -68,6 +71,7 @@ namespace TGClothes.Controllers
                     {
                         ViewBag.Success = "Đăng ký tài khoản thành công";
                         model = new RegisterModel();
+                        return RedirectToAction("Login");
                     }
                     else
                     {
@@ -80,6 +84,10 @@ namespace TGClothes.Controllers
 
         public ActionResult Login()
         {
+            var clientId = ConfigurationManager.AppSettings["GoogleId"];
+            var url = "https://localhost:44362/signin-google";
+            var response = GoogleAuth.GetAuthUrl(clientId, url);
+            ViewBag.Response = response;
             return View();
         }
 
@@ -88,12 +96,13 @@ namespace TGClothes.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = _userService.LoginByEmail(model.Email, Encryptor.MD5Hash(model.Password));
+                var result = _userService.LoginByEmail(model.Email, Encryptor.MD5Hash(model.Password), false);
                 if (result == 1)
                 {
                     var user = _userService.GetUserByEmail(model.Email);
                     var userSession = new UserLogin();
                     userSession.Email = user.Email;
+                    userSession.Name = user.Name;
                     userSession.UserId = user.Id;
                     Session.Add(CommonConstants.USER_SESSION, userSession);
 
@@ -108,6 +117,10 @@ namespace TGClothes.Controllers
                     ModelState.AddModelError("", "Tài khoản đang bị khóa.");
                 }
                 else if (result == -2)
+                {
+                    ModelState.AddModelError("", "Mật khẩu không chính xác.");
+                }
+                else if (result == -3)
                 {
                     ModelState.AddModelError("", "Mật khẩu không chính xác.");
                 }
@@ -154,9 +167,8 @@ namespace TGClothes.Controllers
                 string middleName = me.middle_name;
                 string lastName = me.last_name;
 
-                var user = new User();
+                var user = new Account();
                 user.Email = email;
-                user.UserName = email;
                 user.Status = true;
                 user.Name = firstName+ " " + middleName + " " + lastName;
                 user.CreatedDate = DateTime.Now;
@@ -166,11 +178,63 @@ namespace TGClothes.Controllers
                 {
                     var userSession = new UserLogin();
                     userSession.Email = user.Email;
+                    userSession.Name = user.Name;
                     userSession.UserId = data;
                     Session.Add(CommonConstants.USER_SESSION, userSession);
                 }
             }
             return Redirect("/");
+        }
+
+        public async Task<ActionResult> LoginWithGoogle(string code)
+        {
+            var clientId = ConfigurationManager.AppSettings["GoogleId"];
+            var clientSecret = ConfigurationManager.AppSettings["GoogleSecretKey"];
+            var url = "https://localhost:44362/signin-google";
+            var token = await GoogleAuth.GetAuthAccessToken(code, clientId, clientSecret, url);
+            var userProfile = await GoogleAuth.GetProfileResponseAsync(token.AccessToken.ToString());
+
+            var userProfile2 = await GetGoogleUserProfile(token.AccessToken);
+
+            // Sử dụng thông tin người dùng ở đây hoặc lưu vào cơ sở dữ liệu
+            var userName = userProfile2.Name;
+            var userEmail = userProfile2.Email;
+            var user = new Account();
+            user.Email = userEmail;
+            user.Name = userName;
+            user.Status = true;
+            user.CreatedDate = DateTime.Now;
+
+            var data = _userService.InsertForGoogle(user);
+            if (data > 0)
+            {
+                var userSession = new UserLogin();
+                userSession.Email = user.Email;
+                userSession.Name = user.Name;
+                userSession.UserId = data;
+                Session.Add(CommonConstants.USER_SESSION, userSession);
+            }
+            return Redirect("/");
+        }
+
+        private async Task<GoogleUserInfo> GetGoogleUserProfile(string accessToken)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+                var response = await client.GetAsync("https://www.googleapis.com/oauth2/v1/userinfo");
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    var userProfile = JsonConvert.DeserializeObject<GoogleUserInfo>(content);
+                    return userProfile;
+                }
+                else
+                {
+                    // Xử lý lỗi khi gọi API
+                    throw new Exception("Failed to get user profile from Google API.");
+                }
+            }
         }
 
         [HttpPost]

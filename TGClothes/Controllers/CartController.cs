@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using TGClothes.Common;
@@ -18,14 +17,14 @@ namespace TGClothes.Controllers
     {
         private readonly IProductService _productService;
         private readonly ISizeService _sizeService;
-        private readonly IProductSizeService _productSizeService;
+        private readonly IProductStockService _productSizeService;
         private readonly IOrderDetailService _orderDetailService;
         private readonly IOrderService _orderService;
 
         public CartController(
             IProductService productService, 
             ISizeService sizeService, 
-            IProductSizeService productSizeService, 
+            IProductStockService productSizeService, 
             IOrderDetailService orderDetailService, 
             IOrderService orderService)
         {
@@ -39,7 +38,7 @@ namespace TGClothes.Controllers
         // GET: Cart
         public ActionResult Index()
         {
-            var cart = Session[CommonConstants.CartSession];
+            var cart = Session[Common.CommonConstants.CartSession];
             var list = new List<CartItem>();
             if (cart != null)
             {
@@ -54,7 +53,7 @@ namespace TGClothes.Controllers
         {
             var product = _productService.GetProductById(productId);
             var size = _sizeService.GetSizeById(sizeId);
-            var cart = Session[CommonConstants.CartSession];
+            var cart = Session[Common.CommonConstants.CartSession];
             if (cart != null)
             {
                 var list = (List<CartItem>)cart;
@@ -68,11 +67,12 @@ namespace TGClothes.Controllers
                             if (item.Quantity < stock && stock > 0)
                             {
                                 item.Quantity += quantity;
+                                TempData["Success"] = "<script>alert('Sản phẩm đã được thêm vào giỏ hàng');</script>";
                             }
-                            
+
                             else
                             {
-                                TempData["msg"] = "<script>alert('Sản phẩm k được vượt quá số lượng tồn');</script>";
+                                TempData["OutOfStock"] = "<script>alert('Sản phẩm không được vượt quá số lượng tồn');</script>";
                             }
                         }
                     }
@@ -85,9 +85,11 @@ namespace TGClothes.Controllers
                     item.Size = size;
                     item.Quantity = quantity;
                     list.Add(item);
+                    TempData["Success"] = "<script>alert('Sản phẩm đã được thêm vào giỏ hàng');</script>";
                 }
                 //gan vao session
-                Session[CommonConstants.CartSession] = list;
+                Session[Common.CommonConstants.CartSession] = list;
+
             }
             else
             {
@@ -98,9 +100,10 @@ namespace TGClothes.Controllers
                 item.Quantity = quantity;
                 var list = new List<CartItem>();
                 list.Add(item);
-
+                TempData["Success"] = "<script>alert('Sản phẩm đã được thêm vào giỏ hàng');</script>";
                 //gan vao session
-                Session[CommonConstants.CartSession] = list;
+                Session[Common.CommonConstants.CartSession] = list;
+
             }
             return Redirect(Request.UrlReferrer.ToString());
         }
@@ -108,9 +111,8 @@ namespace TGClothes.Controllers
         public JsonResult Update(string cartModel)
         {
             var jsonCart = new JavaScriptSerializer().Deserialize<List<CartItem>>(cartModel);
-            var sessionCart = (List<CartItem>)Session[CommonConstants.CartSession];
+            var sessionCart = (List<CartItem>)Session[Common.CommonConstants.CartSession];
             
-
             foreach (var item in sessionCart)
             {
                 var stock = _productSizeService.GetStock(item.Product.Id, item.Size.Id);
@@ -121,10 +123,10 @@ namespace TGClothes.Controllers
                 }
                 else
                 {
-                    TempData["msg"] = "<script>alert('Sản phẩm k được vượt quá số lượng tồn');</script>";
+                    TempData["msg"] = "<script>alert('Sản phẩm không được vượt quá số lượng tồn');</script>";
                 }
             }
-            Session[CommonConstants.CartSession] = sessionCart;
+            Session[Common.CommonConstants.CartSession] = sessionCart;
             return Json(new
             {
                 status = true
@@ -133,9 +135,9 @@ namespace TGClothes.Controllers
 
         public JsonResult Delete(long productId, long sizeId)
         {
-            var sessionCart = (List<CartItem>)Session[CommonConstants.CartSession];
+            var sessionCart = (List<CartItem>)Session[Common.CommonConstants.CartSession];
             sessionCart.RemoveAll(x => x.Product.Id == productId && x.Size.Id == sizeId);
-            Session[CommonConstants.CartSession] = sessionCart;
+            Session[Common.CommonConstants.CartSession] = sessionCart;
             return Json(new
             {
                 status = true
@@ -144,7 +146,7 @@ namespace TGClothes.Controllers
 
         public JsonResult DeleteAll()
         {
-            Session[CommonConstants.CartSession] = null;
+            Session[Common.CommonConstants.CartSession] = null;
             return Json(new
             {
                 status = true
@@ -153,11 +155,11 @@ namespace TGClothes.Controllers
 
         public ActionResult Payment()
         {
-            if(Session[CommonConstants.USER_SESSION] == null || Session[CommonConstants.USER_SESSION].ToString() == "")
+            if(Session[Common.CommonConstants.USER_SESSION] == null || Session[Common.CommonConstants.USER_SESSION].ToString() == "")
             {
                 return RedirectToAction("Login", "User");
             }
-            var cart = Session[CommonConstants.CartSession];
+            var cart = Session[Common.CommonConstants.CartSession];
             var list = new List<CartItem>();
             if (cart != null)
             {
@@ -172,19 +174,18 @@ namespace TGClothes.Controllers
         [HttpPost]
         public ActionResult PaymentCOD(string name, string email, string phone, string address)
         {
-            var user = (UserLogin)Session[CommonConstants.USER_SESSION];
+            var user = (UserLogin)Session[Common.CommonConstants.USER_SESSION];
             var order = new Order();
             order.OrderDate = DateTime.Now;
             order.CustomerId = user.UserId;
             order.Name = name;
-            order.Email = email;
             order.Phone = phone;
             order.DeliveryAddress = address;
             order.Status = (int)OrderStatus.PENDING;
             order.PaymentMethod = (int)PaymentMethods.COD;
 
             var id = _orderService.Insert(order);
-            var cart = (List<CartItem>)Session[CommonConstants.CartSession];
+            var cart = (List<CartItem>)Session[Common.CommonConstants.CartSession];
             foreach (var item in cart)
             {
                 var orderDetail = new OrderDetail();
@@ -205,14 +206,14 @@ namespace TGClothes.Controllers
             string content = System.IO.File.ReadAllText(Server.MapPath("~/Assets/Client/template/neworder.html"));
             content = content.Replace("{{CustomerName}}", name);
             content = content.Replace("{{Phone}}", phone);
-            content = content.Replace("{{Email}}", email);
+            content = content.Replace("{{OrderDate}}", DateTime.Now.ToString());
             content = content.Replace("{{Address}}", address);
             content = content.Replace("{{Total}}", Total().ToString("N0"));
             var toEmail = ConfigurationManager.AppSettings["ToEmailAddress"];
 
             new MailHelper().SendMail(email, "Đơn hàng mới từ TGClothes", content);
             new MailHelper().SendMail(toEmail, "Đơn hàng mới từ TGClothes", content);
-            Session[CommonConstants.CartSession] = null;
+            Session[Common.CommonConstants.CartSession] = null;
             return Redirect("/hoan-thanh");
         }
         #endregion
@@ -231,12 +232,12 @@ namespace TGClothes.Controllers
             pay.AddRequestData("vnp_Command", "pay"); //Mã API sử dụng, mã cho giao dịch thanh toán là 'pay'
             pay.AddRequestData("vnp_TmnCode", tmnCode); //Mã website của merchant trên hệ thống của VNPAY (khi đăng ký tài khoản sẽ có trong mail VNPAY gửi về)
             pay.AddRequestData("vnp_Amount", amount); //số tiền cần thanh toán, công thức: số tiền * 100 - ví dụ 10.000 (mười nghìn đồng) --> 1000000
-            pay.AddRequestData("vnp_BankCode", ""); //Mã Ngân hàng thanh toán (tham khảo: https://sandbox.vnpayment.vn/apis/danh-sach-ngan-hang/), có thể để trống, người dùng có thể chọn trên cổng thanh toán VNPAY
+            pay.AddRequestData("vnp_BankCode", "VNBANK"); //Mã Ngân hàng thanh toán (tham khảo: https://sandbox.vnpayment.vn/apis/danh-sach-ngan-hang/), có thể để trống, người dùng có thể chọn trên cổng thanh toán VNPAY
             pay.AddRequestData("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss")); //ngày thanh toán theo định dạng yyyyMMddHHmmss
             pay.AddRequestData("vnp_CurrCode", "VND"); //Đơn vị tiền tệ sử dụng thanh toán. Hiện tại chỉ hỗ trợ VND
             pay.AddRequestData("vnp_IpAddr", Utils.GetIpAddress()); //Địa chỉ IP của khách hàng thực hiện giao dịch
             pay.AddRequestData("vnp_Locale", "vn"); //Ngôn ngữ giao diện hiển thị - Tiếng Việt (vn), Tiếng Anh (en)
-            pay.AddRequestData("vnp_OrderInfo", "Thanh toan don hang"); //Thông tin mô tả nội dung thanh toán
+            pay.AddRequestData("vnp_OrderInfo", "Thanh toán đơn hàng"); //Thông tin mô tả nội dung thanh toán
             pay.AddRequestData("vnp_OrderType", "other"); //topup: Nạp tiền điện thoại - billpayment: Thanh toán hóa đơn - fashion: Thời trang - other: Thanh toán trực tuyến
             pay.AddRequestData("vnp_ReturnUrl", returnUrl); //URL thông báo kết quả giao dịch khi Khách hàng kết thúc thanh toán
             pay.AddRequestData("vnp_TxnRef", DateTime.Now.Ticks.ToString()); //mã hóa đơn
@@ -276,7 +277,7 @@ namespace TGClothes.Controllers
                     if (vnp_ResponseCode == "00")
                     {
                         //Thanh toán thành công
-                        var user = (UserLogin)Session[CommonConstants.USER_SESSION];
+                        var user = (UserLogin)Session[TGClothes.Common.CommonConstants.USER_SESSION];
                         var order = new Order();
                         order.OrderDate = DateTime.Now;
                         order.CustomerId = user.UserId;
@@ -288,7 +289,7 @@ namespace TGClothes.Controllers
                         order.PaymentMethod = (int)PaymentMethods.VNPAY;
 
                         var id = _orderService.Insert(order);
-                        var cart = (List<CartItem>)Session[CommonConstants.CartSession];
+                        var cart = (List<CartItem>)Session[TGClothes.Common.CommonConstants.CartSession];
                         foreach (var item in cart)
                         {
                             var orderDetail = new OrderDetail();
@@ -316,7 +317,7 @@ namespace TGClothes.Controllers
 
                         //new MailHelper().SendMail(email, "Đơn hàng mới từ TGClothes", content);
                         //new MailHelper().SendMail(toEmail, "Đơn hàng mới từ TGClothes", content);
-                        Session[CommonConstants.CartSession] = null;
+                        Session[TGClothes.Common.CommonConstants.CartSession] = null;
                         return Redirect("/hoan-thanh");
                     }
                     else
@@ -351,7 +352,7 @@ namespace TGClothes.Controllers
         [ChildActionOnly]
         public PartialViewResult CartModel()
         {
-            var cart = Session[CommonConstants.CartSession];
+            var cart = Session[TGClothes.Common.CommonConstants.CartSession];
             var list = new List<CartItem>();
             if (cart != null)
             {
@@ -363,7 +364,7 @@ namespace TGClothes.Controllers
         private decimal SubTotal()
         {
             decimal subtotal = 0;
-            List<CartItem> cart = Session[CommonConstants.CartSession] as List<CartItem>;
+            List<CartItem> cart = Session[TGClothes.Common.CommonConstants.CartSession] as List<CartItem>;
             if (cart != null)
             {
                 subtotal = cart.Sum(n => n.Quantity * n.Product.Price.Value);
@@ -374,7 +375,7 @@ namespace TGClothes.Controllers
         private decimal Promotion()
         {
             decimal promotion = 0;
-            List<CartItem> cart = Session[CommonConstants.CartSession] as List<CartItem>;
+            List<CartItem> cart = Session[TGClothes.Common.CommonConstants.CartSession] as List<CartItem>;
             if (cart != null)
             {
                 promotion = cart.Sum(n => n.Quantity * n.Product.Price.Value * (n.Product.Promotion.HasValue ? n.Product.Promotion.Value : 0) / 100);
@@ -385,7 +386,7 @@ namespace TGClothes.Controllers
         private int TotalQuantity()
         {
             int total = 0;
-            List<CartItem> cart = Session[CommonConstants.CartSession] as List<CartItem>;
+            List<CartItem> cart = Session[TGClothes.Common.CommonConstants.CartSession] as List<CartItem>;
             if (cart != null)
             {
                 total = cart.Sum(n => n.Quantity);
@@ -396,7 +397,7 @@ namespace TGClothes.Controllers
         private decimal Total()
         {
             decimal total = 0;
-            List<CartItem> cart = Session[CommonConstants.CartSession] as List<CartItem>;
+            List<CartItem> cart = Session[TGClothes.Common.CommonConstants.CartSession] as List<CartItem>;
             if (cart != null)
             {
                 foreach (var item in cart)

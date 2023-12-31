@@ -71,5 +71,12 @@ namespace TGClothes.Areas.Admin.Controllers
             }
             return View("Index");
         }
+
+        [HttpDelete]
+        public ActionResult Delete(long id)
+        {
+            _sizeService.Delete(id);
+            return RedirectToAction("Index");
+        }
     }
 }

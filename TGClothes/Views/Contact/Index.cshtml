@@ -1,5 +1,4 @@
-﻿@model Data.EF.Contact
-@{
+﻿@{
     ViewBag.Title = "Liên hệ";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -10,7 +9,7 @@
             <div class="size-210 bor10 p-lr-70 p-t-55 p-b-70 p-lr-15-lg w-full-md">
                 <form>
                     <h4 class="mtext-105 cl2 txt-center p-b-30">
-                        Send Us A Message
+                        Gửi phản hồi cho chúng tôi
                     </h4>
 
                     <div class="bor8 m-b-20 how-pos4-parent">
@@ -36,59 +35,24 @@
                     </div>
 
                     <button id="btnSend" class="flex-c-m stext-101 cl0 size-121 bg3 bor1 hov-btn3 p-lr-15 trans-04 pointer">
-                        Submit
+                        Gửi
                     </button>
                 </form>
             </div>
 
-            <div class="size-210 bor10 flex-w flex-col-m p-lr-93 p-tb-30 p-lr-15-lg w-full-md">
-                <div class="flex-w w-full p-b-42">
-                    <span class="fs-18 cl5 txt-center size-211">
-                        <span class="lnr lnr-map-marker"></span>
-                    </span>
+            <div class="size-210 bor10 flex-w flex-col-m p-lr-15-lg ">
+                <div class="map">
+                    @*<div class="size-303" id="google_map" data-map-x="21.004135483885534" data-map-y="105.84207983900919" data-pin="/Assets/Client/images/icons/pin.png" data-scrollwhell="0" data-draggable="1" data-zoom="15"></div>*@
+                    <div id="google_map" class="size-304">
+                        <div class="map_container size-304">
 
-                    <div class="size-212 p-t-2">
-                        <span class="mtext-110 cl2">
-                            Address
-                        </span>
-
-                        <p class="stext-115 cl6 size-213 p-t-18">
-                            @Model.Address
-                        </p>
+                            <div id="map" class="size-304">
+                                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.733594621142!2d105.840740411713!3d21.003313480558937!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ac773026b415%3A0x499b8b613889f78a!2zVHLGsOG7nW5nIMSQ4bqhaSBI4buNYyBYw6J5IEThu7FuZyBIw6AgTuG7mWkgLSBOVUNF!5e0!3m2!1svi!2s!4v1702609426983!5m2!1svi!2s" style="border:0;width:100%;height:100%;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="flex-w w-full p-b-42">
-                    <span class="fs-18 cl5 txt-center size-211">
-                        <span class="lnr lnr-phone-handset"></span>
-                    </span>
-
-                    <div class="size-212 p-t-2">
-                        <span class="mtext-110 cl2">
-                            Lets Talk
-                        </span>
-
-                        <p class="stext-115 cl1 size-213 p-t-18">
-                            @Model.Phone
-                        </p>
-                    </div>
-                </div>
-
-                <div class="flex-w w-full">
-                    <span class="fs-18 cl5 txt-center size-211">
-                        <span class="lnr lnr-envelope"></span>
-                    </span>
-
-                    <div class="size-212 p-t-2">
-                        <span class="mtext-110 cl2">
-                            Sale Support
-                        </span>
-
-                        <p class="stext-115 cl1 size-213 p-t-18">
-                            @Model.Email
-                        </p>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -96,12 +60,9 @@
 
 
 <!-- Map -->
-<div class="map">
-    <div class="size-303" id="google_map" data-map-x="21.004135483885534" data-map-y="105.84207983900919" data-pin="/Assets/Client/images/icons/pin.png" data-scrollwhell="0" data-draggable="1" data-zoom="11"></div>
-</div>
 
 @section jsFooter{
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDaOulQACiJzBfqumbsqg_-vKha8fCnL-s"></script>
+    @*<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDaOulQACiJzBfqumbsqg_-vKha8fCnL-s"></script>*@
     <script src="/Assets/Client/js/map-custom.js"></script>
     <script src="/Assets/Client/js/controller/contactController.js"></script>
 }

@@ -8,7 +8,7 @@ namespace TGClothes.Models
 {
     public class UserRateModel
     {
-        public User User { get; set; }
+        public Account User { get; set; }
         public Rate Rate { get; set; }
     }
 }

@@ -9,10 +9,10 @@ namespace TGClothes.Controllers
 {
     public class ContentController : Controller
     {
-        private readonly IContentService _contentService;
-        private readonly ICategoryService _categoryService;
+        private readonly INewsService _contentService;
+        private readonly INewsCategoryService _categoryService;
 
-        public ContentController(IContentService contentService, ICategoryService categoryService)
+        public ContentController(INewsService contentService, INewsCategoryService categoryService)
         {
             _contentService = contentService;
             _categoryService = categoryService;
@@ -21,7 +21,10 @@ namespace TGClothes.Controllers
         public ActionResult Index(int page = 1, int pageSize = 4)
         {
             int totalRecord = 0;
-            var model = _contentService.GetAll(ref totalRecord, page, pageSize);
+            var model = _contentService.GetAll();
+            totalRecord = model.Count();
+
+            var result = model.Skip((page - 1) * pageSize).Take(pageSize).ToList();
 
             int maxPage = 5;
             int totalPage = 0;
@@ -35,9 +38,10 @@ namespace TGClothes.Controllers
             ViewBag.Last = totalPage;
             ViewBag.Next = page + 1;
             ViewBag.Prev = page - 1;
-            return View(model);
+            return View(result);
         }
 
+        [ValidateInput(false)]
         public ActionResult Detail(long id)
         {
             var model = _contentService.GetById(id);

@@ -1,4 +1,7 @@
-
+@font-face {
+	font-family: "HM Sans Latin Regular";
+	src: url('../fonts/HM/HM Sans Latin Regular.ttf') format('truetype');
+}
 
 /*//////////////////////////////////////////////////////////////////
 [ REBOOT ]*/
@@ -11,10 +14,9 @@
 }
 
 body, html {
-	font-family: Arial, sans-serif;
+	font-family: "HM Sans Latin Regular";
 	font-size: 15px;
-	color: #666666;
-
+	color: #333333;
 	height: 100%;
 	background-color: #fff;
 	-webkit-box-sizing: border-box;

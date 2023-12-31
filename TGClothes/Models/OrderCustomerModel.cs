@@ -9,6 +9,6 @@ namespace TGClothes.Models
     public class OrderCustomerModel
     {
         public Order Order { get; set; }
-        public User User { get; set; }
+        public Account Account { get; set; }
     }
 }

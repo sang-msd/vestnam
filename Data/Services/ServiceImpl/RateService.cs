@@ -25,6 +25,11 @@ namespace Data.Services.ServiceImpl
             return db.Rates.Where(x => x.Star > 0 && x.ProductId == id);
         }
 
+        public List<int> GetRateStarByUserId(long userId, long productId)
+        {
+            return db.Rates.Where(x => x.UserId == userId && x.ProductId == productId).Select(x => x.Star).ToList();
+        }
+
         public Rate Insert(Rate rate)
         {
             db.Rates.Add(rate);

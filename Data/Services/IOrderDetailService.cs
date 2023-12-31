@@ -13,5 +13,12 @@ namespace Data.Services
         List<OrderDetail> GetAll();
         List<OrderDetail> GetOrderDetailByOrderId(long id);
         bool Delete(OrderDetail orderDetail);
+        decimal TotalRevenue();
+        decimal DailyRevenue();
+        decimal MonthlyRevenue();
+        decimal AnnualRevenue();
+        decimal DailyProfit();
+        decimal MonthlyProfit();
+        decimal AnnualProfit();
     }
 }

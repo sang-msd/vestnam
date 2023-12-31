@@ -36,11 +36,29 @@ namespace Data.Services.ServiceImpl
             return db.Orders.ToList();
         }
 
-        public IEnumerable<Order> GetAllByDatePaging(DateTime orderDate, int page, int pageSize)
+        public IEnumerable<Order> GetAllByDatePaging(DateTime fromDate, DateTime toDate, int page, int pageSize)
         {
             IQueryable<Order> model = db.Orders;
             var data = model.OrderBy(x => x.OrderDate).ToList();
-            return data.Where(x => x.OrderDate.Date == orderDate).ToPagedList(page, pageSize);
+            return data.Where(x => x.OrderDate.Date >= fromDate && x.OrderDate.Date <= toDate).ToPagedList(page, pageSize);
+        }
+
+        public List<Order> GetAllOrderByDate(DateTime orderDate, ref int totalRecord, int pageIndex = 1, int pageSize = 8)
+        {
+            var data = (from o in db.Orders
+                        where o.OrderDate.Day == orderDate.Day && o.OrderDate.Month == orderDate.Month && o.OrderDate.Year == orderDate.Year && o.Status == 3
+                        select o).Distinct();
+            totalRecord = data.Count();
+            return data.OrderByDescending(x => x.OrderDate).ToList();
+        }
+
+        public List<Order> GetAllOrderByMonth(DateTime orderDate, ref int totalRecord, int pageIndex = 1, int pageSize = 8)
+        {
+            var data = (from o in db.Orders
+                        where o.OrderDate.Month == orderDate.Month && o.OrderDate.Year == orderDate.Year && o.Status == 3
+                        select o).Distinct();
+            totalRecord = data.Count();
+            return data.OrderByDescending(x => x.OrderDate).ToList();
         }
 
         public IEnumerable<Order> GetAllPaging(int page, int pageSize)
@@ -57,7 +75,7 @@ namespace Data.Services.ServiceImpl
         public List<Order> GetOrderByUserId(long userId)
         {
             var result = from o in db.Orders
-                         join u in db.Users on o.CustomerId equals u.Id
+                         join u in db.Accounts on o.CustomerId equals u.Id
                          where u.Id == userId
                          select o;
             return result.ToList();
@@ -68,6 +86,11 @@ namespace Data.Services.ServiceImpl
             db.Orders.Add(order);
             db.SaveChanges();
             return order.Id;
+        }
+
+        public double OrderStatistic()
+        {
+            return db.Orders.Count();
         }
 
         public bool Update(Order order)
@@ -81,7 +104,7 @@ namespace Data.Services.ServiceImpl
                 data.DeliveryAddress = order.DeliveryAddress;
                 data.DeliveryDate = order.DeliveryDate;
                 data.CustomerId = order.CustomerId;
-                data.Email = order.Email;
+                //data.Email = order.Email;
                 db.SaveChanges();
                 return true;
             }

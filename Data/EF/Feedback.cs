@@ -13,9 +13,6 @@ namespace Data.EF
 
         public DateTime? CreatedDate { get; set; }
 
-        [StringLength(150)]
-        public string Name { get; set; }
-
         [StringLength(200)]
         public string Address { get; set; }
 
@@ -27,7 +24,9 @@ namespace Data.EF
 
         public bool Status { get; set; }
 
-        [Column(TypeName = "ntext")]
         public string Content { get; set; }
+
+        [StringLength(150)]
+        public string Name { get; set; }
     }
 }

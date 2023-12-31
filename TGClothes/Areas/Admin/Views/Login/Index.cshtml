@@ -42,7 +42,7 @@
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
                                     </div>
-                                    @using (Html.BeginForm("Login", "Login", FormMethod.Post))
+                                    @using (Html.BeginForm("Index", "Login", FormMethod.Post))
                                     {
                                         @Html.ValidationSummary(false, "", new { @class = "text-danger" })
                                         <div class="form-group">

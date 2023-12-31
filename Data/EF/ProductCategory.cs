@@ -22,20 +22,12 @@ namespace Data.EF
 
         public int DisplayOrder { get; set; }
 
-        [StringLength(250)]
-        public string SeoTitle { get; set; }
-
         public DateTime? CreatedDate { get; set; }
 
         public DateTime? ModifiedDate { get; set; }
 
-        [StringLength(250)]
-        public string MetaKeywords { get; set; }
-
-        [StringLength(250)]
-        public string MetaDescription { get; set; }
-
         public bool Status { get; set; }
+
         public IEnumerable<ProductCategory> ParentCategories { get; set; }
     }
 }

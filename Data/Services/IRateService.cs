@@ -11,6 +11,7 @@ namespace Data.Services
     {
         List<Rate> GetAll();
         IQueryable<Rate> GetRateByProductId(long id);
+        List<int> GetRateStarByUserId(long userId, long productId);
         Rate Insert(Rate rate);
     }
 }

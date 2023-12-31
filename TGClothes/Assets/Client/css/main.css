@@ -34,7 +34,21 @@ Paragrap        : 18px/1.6 '', Arial, sans-serif;
 Input, textarea : 14px/1.6 '', Arial, sans-serif;
 -------------------------------------------------------------------*/
 
+/*Scrollbar*/
+html *::-webkit-scrollbar {
+    border-radius: 0;
+    width: 8px;
+}
 
+html *::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(22, 24, 35, .15);
+}
+
+html *::-webkit-scrollbar-track {
+    border-radius: 0;
+    background-color: rgba(0, 0, 0, 0);
+}
 
 /*//////////////////////////////////////////////////////////////////
 [ FONT ]*/
@@ -337,7 +351,6 @@ Input, textarea : 14px/1.6 '', Arial, sans-serif;
   display: flex;
   align-items: center;
   height: 65%;
-  margin-right: 55px;
 }
 
 .logo img {
@@ -440,7 +453,7 @@ Input, textarea : 14px/1.6 '', Arial, sans-serif;
     line-height: 1.5;
     color: #555;
     display: block;
-    padding: 8px 20px;
+    padding: 0px 20px;
     width: 100%;
     transition: all 0.4s;
     -webkit-transition: all 0.4s;
@@ -2142,6 +2155,7 @@ input.num-product::-webkit-inner-spin-button {
     padding: 0 5px;
     min-width: 72px;
     justify-content: center;
+    border-bottom-right-radius: 5px
 }
 
     .product__sale > h4 {
@@ -2168,6 +2182,7 @@ input.num-product::-webkit-inner-spin-button {
 .cl10 {color: #1d1d1d;}
 .cl11 {color: #f9ba48;}
 .cl12 {color: #ccc;}
+.cl13 {color: #ee4d2d;}
 
 /*//////////////////////////////////////////////////////////////////
 [ S-Text 0 - 15 ]*/
@@ -2276,6 +2291,12 @@ input.num-product::-webkit-inner-spin-button {
     line-height: 1.666667;
 }
 
+.stext-118 {
+    font-family: "HM Sans Latin Regular";
+    font-size: 16px;
+    line-height: 1.666667;
+}
+
 
 /*---------------------------------------------*/
 .stext-301 {
@@ -2367,6 +2388,27 @@ input.num-product::-webkit-inner-spin-button {
   font-size: 22px;
   line-height: 1.333333;
   text-transform: uppercase;
+}
+
+.mtext-114 {
+    font-family: "HM Sans Latin Regular";
+    font-size: 30px;
+    line-height: 1.6;
+    text-transform: uppercase;
+}
+
+.mtext-115 {
+    font-family: "HM Sans Latin Regular";
+    font-size: 22px;
+    line-height: 1.6;
+    text-transform: uppercase;
+}
+
+.mtext-116 {
+    font-family: "HM Sans Latin Regular";
+    font-size: 18px;
+    line-height: 1.6;
+    text-transform: uppercase;
 }
 
 
@@ -2668,6 +2710,9 @@ input.num-product::-webkit-inner-spin-button {
   height: 390px;
 }
 
+.size-304 {
+    height: 601px;
+}
 
 /*==================================================================
    BACKGROUND BACKGROUND BACKGROUND BACKGROUND BACKGROUND BACKGROUND 
@@ -2984,7 +3029,21 @@ input.num-product::-webkit-inner-spin-button {
   left: 10px;
 }
 
+.review-form {
+    position: relative;
+    max-height: 614px;
+    overflow-y: auto;
+    padding-bottom: 267px;
+}
 
+.write-review {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    right: 4px;
+    background-color: #fff;
+    padding: 10px;
+}
 
 /*---------------------------------------------*/
 .how-itemcart1 {
@@ -3168,6 +3227,28 @@ input.num-product::-webkit-inner-spin-button {
 
 .hov-ovelay1:hover:after {
   opacity: 1;
+}
+
+.href_style {
+    text-decoration: none;
+    color: #dc3545;
+    position: relative;
+}
+
+.href_style:before {
+    position: absolute;
+    content: "";
+    width: 0%;
+    height: 1px;
+    background-color: #dc3545;
+    bottom: 0;
+    right: 0;
+    transition: all 0.6s ease;
+}
+
+.href_style:hover:before {
+    width: 100%;
+    left: 0;
 }
 
 

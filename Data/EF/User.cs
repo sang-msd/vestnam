@@ -37,5 +37,8 @@ namespace Data.EF
 
         [StringLength(250)]
         public string ResetPasswordCode { get; set; }
+
+        [StringLength(20)]
+        public string GroupId { get; set; }
     }
 }

@@ -14,18 +14,18 @@ namespace TGClothes.Controllers
     {
         private readonly IOrderService _orderService;
         private readonly IOrderDetailService _orderDetailService;
-        private readonly IUserService _userService;
+        private readonly IAccountService _userService;
         private readonly IProductService _productService;
-        private readonly IProductSizeService _productSizeService;
+        private readonly IProductStockService _productSizeService;
         private readonly ISizeService _sizeService;
         private readonly IRateService _rateService;
 
         public OrderController(
             IOrderService orderService, 
             IOrderDetailService orderDetailService,
-            IUserService userService, 
+            IAccountService userService, 
             IProductService productService,
-            IProductSizeService productSizeService,
+            IProductStockService productSizeService,
             ISizeService sizeService, 
             IRateService rateService)
         {
@@ -97,14 +97,30 @@ namespace TGClothes.Controllers
         public ActionResult ProductReviews(Rate review, int rating, string content)
         {
             var user = (UserLogin)Session[CommonConstants.USER_SESSION];
-            review.CreatedDate = DateTime.Now;
-            review.Content = content;
-            review.UserId = _userService.GetUserByEmail(user.Email).Id;
-            review.Star = rating;
-            review.ProductId = (long)Session["ProductId"];
+            var productId = (long)Session["ProductId"];
+            List<int> stars = _rateService.GetRateStarByUserId(user.UserId, productId);
+            if (stars.Count() == 0)
+            {
+                if (rating > 0)
+                {
+                    review.CreatedDate = DateTime.Now;
+                    review.Content = content;
+                    review.UserId = user.UserId;
+                    review.Star = rating;
+                    review.ProductId = productId;
+                    _rateService.Insert(review);
+                }
+                else
+                {
+                    TempData["RateError"] = "<script>alert('Vui nhập chọn số sao muốn đánh giá.');</script>";
+                }
+            }
+            else
+            {
+                TempData["RateError"] = "<script>alert('Bạn đã đánh giá sản phẩm này rồi.');</script>";
+            }
 
-            _rateService.Insert(review);
-            return RedirectToAction("Details", "Order", new { id = review.ProductId });
+            return RedirectToAction("Detail", "Product", new { id = productId });
         }
     }
 }

@@ -10,9 +10,9 @@ namespace TGClothes.Areas.Admin.Controllers
 {
     public class CategoryController : BaseController
     {
-        private readonly ICategoryService _categoryService;
+        private readonly INewsCategoryService _categoryService;
 
-        public CategoryController(ICategoryService categoryService)
+        public CategoryController(INewsCategoryService categoryService)
         {
             _categoryService = categoryService;
         }

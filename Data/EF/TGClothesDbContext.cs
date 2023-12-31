@@ -12,16 +12,13 @@ namespace Data.EF
         {
         }
 
-        public virtual DbSet<About> Abouts { get; set; }
+        public virtual DbSet<Account> Accounts { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
-        public virtual DbSet<Contact> Contacts { get; set; }
         public virtual DbSet<Content> Contents { get; set; }
         public virtual DbSet<ContentTag> ContentTags { get; set; }
         public virtual DbSet<Feedback> Feedbacks { get; set; }
-        public virtual DbSet<Footer> Footers { get; set; }
         public virtual DbSet<Gallery> Galleries { get; set; }
         public virtual DbSet<Menu> Menus { get; set; }
-        public virtual DbSet<MenuType> MenuTypes { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<OrderDetail> OrderDetails { get; set; }
         public virtual DbSet<Product> Products { get; set; }
@@ -30,38 +27,22 @@ namespace Data.EF
         public virtual DbSet<Rate> Rates { get; set; }
         public virtual DbSet<Size> Sizes { get; set; }
         public virtual DbSet<Slide> Slides { get; set; }
-        public virtual DbSet<SystemConfig> SystemConfigs { get; set; }
         public virtual DbSet<Tag> Tags { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<UserInfo> UserInfoes { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<About>()
-                .Property(e => e.MetaTitle)
+            modelBuilder.Entity<Account>()
+                .Property(e => e.GroupId)
                 .IsUnicode(false);
-
-            modelBuilder.Entity<About>()
-                .Property(e => e.MetaDescription)
-                .IsFixedLength();
-
-            modelBuilder.Entity<Category>()
-                .Property(e => e.MetaDescription)
-                .IsFixedLength();
 
             modelBuilder.Entity<Content>()
                 .Property(e => e.MetaTitle)
                 .IsUnicode(false);
-
-            modelBuilder.Entity<Content>()
-                .Property(e => e.MetaDescription)
-                .IsFixedLength();
 
             modelBuilder.Entity<ContentTag>()
                 .Property(e => e.TagId)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Footer>()
-                .Property(e => e.Id)
                 .IsUnicode(false);
 
             modelBuilder.Entity<Product>()
@@ -77,27 +58,19 @@ namespace Data.EF
                 .HasPrecision(18, 0);
 
             modelBuilder.Entity<Product>()
-                .Property(e => e.MetaDescription)
-                .IsFixedLength();
+                .Property(e => e.OriginalPrice)
+                .HasPrecision(18, 0);
 
             modelBuilder.Entity<ProductCategory>()
                 .Property(e => e.MetaTitle)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<ProductCategory>()
-                .Property(e => e.MetaDescription)
-                .IsFixedLength();
-
-            modelBuilder.Entity<SystemConfig>()
-                .Property(e => e.Id)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<SystemConfig>()
-                .Property(e => e.Type)
-                .IsUnicode(false);
-
             modelBuilder.Entity<Tag>()
                 .Property(e => e.Id)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<User>()
+                .Property(e => e.GroupId)
                 .IsUnicode(false);
         }
     }

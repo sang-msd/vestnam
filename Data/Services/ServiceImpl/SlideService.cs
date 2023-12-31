@@ -43,7 +43,22 @@ namespace Data.Services.ServiceImpl
                 data.ModifiedDate = DateTime.Now;
                 data.Link = slide.Link;
                 data.Description = slide.Description;
-                data.Status = slide.Status;
+                data.Status = true;
+                db.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public bool Delete(long id)
+        {
+            try
+            {
+                var slide = db.Slides.Find(id);
+                db.Slides.Remove(slide);
                 db.SaveChanges();
                 return true;
             }

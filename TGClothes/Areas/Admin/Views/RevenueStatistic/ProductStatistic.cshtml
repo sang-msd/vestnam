@@ -1,0 +1,98 @@
+﻿@model PagedList.IPagedList<TGClothes.Models.ProductStatistic>
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "ProductStatistic";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var searchString = ViewBag.SearchString;
+    var fromDate = ViewBag.FromDate;
+    var toDate = ViewBag.ToDate;
+}
+
+@section header {
+    Thống kê sản phẩm bán ra
+}
+
+<div class="card shadow mb-4">
+    <div class="card-body">
+        @using (Html.BeginForm("ProductStatistic", "RevenueStatistic", FormMethod.Get))
+        {
+            <div class="row form-group">
+                <div class="col-lg-12 row">
+                    <div class="col-md-5">
+                        <span>Từ ngày</span>
+                        <input type="date" name="fromDate" id="fromDate" value="" required class="mr-2" />
+                        <span>Đến ngày</span>
+                        <input type="date" name="toDate" id="toDate" value="" required class="mr-2" />
+                        <input type="text" value="@ViewBag.SearchString" class="form-control" name="searchString" id="searchString" />
+                        <button type="submit" class="btn btn-outline-success">Tìm kiếm</button>
+                        <a href="/Admin/RevenueStatistic/ProductStatistic" class="btn btn-outline-success">Refresh</a>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <h4 class="text-danger mt-3">Tổng số sản phẩm bán ra: @ViewBag.TotalProductSold</h4>
+                </div>
+            </div>
+        }
+        <div class="table-responsive" style="overflow-x: hidden;">
+            <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr class="text-center">
+                                    <th class="text-left">Tên sản phẩm</th>
+                                    <th>Hình ảnh</th>
+                                    <th>Số lượng bán</th>
+                                    <th>Giá bán</th>
+                                    <th>Thành tiền</th>
+                                </tr>
+                            </thead>
+                            <tbody id="load_data">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section CustomJs{
+    <script>
+        $(document).ready(function () {
+            $('form').submit(function (event) {
+                event.preventDefault();
+                var fromDate = $('#fromDate').val();
+                var toDate = $('#toDate').val();
+                var searchString = $('#searchString').val();
+                $.ajax({
+                    url: '/RevenueStatistic/ProductStatistic',
+                    type: 'GET',
+                    data: {
+                        fromDate: fromDate,
+                        toDate: toDate,
+                        searchString: searchString
+                    },
+                    success: function (response) {
+                        var result = response.Data;
+                        var strHtml = '';
+                        $.each(result, function (i, item) {
+                            var strDate = moment(item.Date).format('DD/MM/yyyy');
+                            strHtml += "<tr>";
+                            strHtml += "<td>" + (i + 1) + "</td>";
+                            strHtml += "<td>" + strDate + "</td>";
+                            strHtml += "<td>" + item.DoanhThu.toLocaleString() + "đ" + "</td>";
+                            strHtml += "<td>" + item.LoiNhuan.toLocaleString() + "đ" + "</td>";
+                            strHtml += "</tr>";
+                        });
+                        $('#load_data').html(strHtml);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>    
+}

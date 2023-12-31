@@ -20,21 +20,19 @@ namespace TGClothes
             var container = new UnityContainer();
 
             // ??ng ký các ph? thu?c
-            container.RegisterType<IUserService, UserService>();
-            container.RegisterType<ICategoryService, CategoryService>();
-            container.RegisterType<IContentService, ContentService>();
+            container.RegisterType<IAccountService, AccountService>();
+            container.RegisterType<INewsCategoryService, NewsCategoryService>();
+            container.RegisterType<INewsService, NewsService>();
             container.RegisterType<IMenuService, MenuService>();
             container.RegisterType<IProductCategoryService, ProductCategoryService>();
             container.RegisterType<IProductService, ProductService>();
             container.RegisterType<ISizeService, SizeService>();
-            container.RegisterType<IFooterService, FooterService>();
             container.RegisterType<ISlideService, SlideService>();
             container.RegisterType<IRateService, RateService>();
             container.RegisterType<IGalleryService, GalleryService>();
-            container.RegisterType<IProductSizeService, ProductSizeService>();
+            container.RegisterType<IProductStockService, ProductStockService>();
             container.RegisterType<IOrderService, OrderService>();
             container.RegisterType<IOrderDetailService, OrderDetailService>();
-            container.RegisterType<IContactService, ContactService>();
             container.RegisterType<IFeedbackService, FeedbackService>();
 
             // ??t Resolver m?c ??nh cho MVC DependencyResolver

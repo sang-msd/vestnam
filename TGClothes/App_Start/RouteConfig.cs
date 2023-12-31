@@ -17,11 +17,18 @@ namespace TGClothes
             routes.IgnoreRoute("{*botdetect}", new { botdetect = @"(.*)BotDetectCaptcha\.ashx" });
 
             routes.MapRoute(
-                name: "Product",
-                url: "san-pham",
-                defaults: new { controller = "Product", action = "Index", id = UrlParameter.Optional },
-                namespaces: new[] { "TGClothes.Controllers" }
-            );
+               name: "Product",
+               url: "san-pham",
+               defaults: new { controller = "Product", action = "Index", id = UrlParameter.Optional },
+               namespaces: new[] { "TGClothes.Controllers" }
+           );
+
+            routes.MapRoute(
+               name: "Filter Product",
+               url: "san-pham/filter",
+               defaults: new { controller = "Product", action = "Filter", id = UrlParameter.Optional },
+               namespaces: new[] { "TGClothes.Controllers" }
+           );
 
             routes.MapRoute(
                 name: "About",
@@ -104,6 +111,13 @@ namespace TGClothes
                 name: "Login",
                 url: "dang-nhap",
                 defaults: new { controller = "User", action = "Login", id = UrlParameter.Optional },
+                namespaces: new[] { "TGClothes.Controllers" }
+            );
+
+            routes.MapRoute(
+                name: "Login with google",
+                url: "signin-google",
+                defaults: new { controller = "User", action = "LoginWithGoogle", id = UrlParameter.Optional },
                 namespaces: new[] { "TGClothes.Controllers" }
             );
 

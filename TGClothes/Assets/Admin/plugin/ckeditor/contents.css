@@ -3,24 +3,26 @@ Copyright (c) 2003-2017, CKSource - Frederico Knabben. All rights reserved.
 For licensing, see LICENSE.md or http://ckeditor.com/license
 */
 
-body
-{
+@font-face {
+	font-family: 'HM Sans Latin Regular';
+	src: url('../../HM/HM Sans Latin Regular.ttf') format('truetype');
+}
+
+body {
 	/* Font */
-	font-family: sans-serif, Arial, Verdana, "Trebuchet MS";
-	font-size: 12px;
+	font-family: "HM Sans Latin Regular";
+	font-size: 16px;
 
 	/* Text color */
 	color: #333;
-
 	/* Remove the background color to make it transparent */
 	background-color: #fff;
-
 	margin: 20px;
 }
 
 .cke_editable
 {
-	font-size: 13px;
+	font-size: 16px;
 	line-height: 1.6;
 
 	/* Fix for missing scrollbars with RTL texts. (#10488) */
