@@ -1,4 +1,4 @@
-﻿@model PagedList.IPagedList<Data.EF.User>
+﻿@model PagedList.IPagedList<Data.EF.Account>
 @using PagedList.Mvc;
 @{
     ViewBag.Title = "Index";
@@ -40,10 +40,7 @@
                                 <tr class="text-center">
                                     <th>Id</th>
                                     <th class="text-left">Tên</th>
-                                    <th class="text-left">Tài khoản</th>
                                     <th>Email</th>
-                                    <th>Số điện thoại</th>
-                                    <th>Địa chỉ</th>
                                     <th>Trạng thái</th>
                                     <th>Action</th>
                                 </tr>
@@ -62,13 +59,9 @@
                                     <tr id="row_@item.Id" class="text-center">
                                         <td>@item.Id</td>
                                         <td class="text-left">@item.Name</td>
-                                        <td class="text-left">@item.UserName</td>
                                         <td class="text-left">@item.Email</td>
-                                        <td>@item.Phone</td>
-                                        <td class="text-left">@item.Address</td>
                                         <td><a href="#" class="btn-active @checkStatus" data-id="@item.Id">@(item.Status ? "Kích hoạt" : "Khóa")</a></td>
                                         <td>
-                                            <a href="@Url.Action("Details", "User", new { id = item.Id })" class="btn text-primary f2"><i class="fa-solid fa-eye"></i></a>
                                             <a href="@Url.Action("Edit", "User", new { id = item.Id })" class="btn text-primary f2"><i class="fas fa-edit"></i></a>
                                             @Ajax.ActionLink(" ", "Delete", new { @id = item.Id }, new AjaxOptions
                                            {

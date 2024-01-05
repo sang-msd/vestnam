@@ -80,6 +80,7 @@ namespace TGClothes.Areas.Admin.Controllers
             _contentService.Delete(id);
             return RedirectToAction("Index");
         }
+
         [HttpPost]
         public JsonResult ChangeStatus(long id)
         {
@@ -89,7 +90,6 @@ namespace TGClothes.Areas.Admin.Controllers
                 status = result
             });
         }
-
 
         public void SetViewbag(long? selectedId = null)
         {

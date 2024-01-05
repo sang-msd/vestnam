@@ -67,12 +67,12 @@ namespace TGClothes.Controllers
                             if (item.Quantity < stock && stock > 0)
                             {
                                 item.Quantity += quantity;
-                                TempData["Success"] = "<script>alert('Sản phẩm đã được thêm vào giỏ hàng');</script>";
+                                return Json(new { success = true, message = "Thêm vào giỏ hàng thành công." }, JsonRequestBehavior.AllowGet);
                             }
 
                             else
                             {
-                                TempData["OutOfStock"] = "<script>alert('Sản phẩm không được vượt quá số lượng tồn');</script>";
+                                return Json(new { success = false, message = "Sản phẩm không được vượt quá số lượng tồn." }, JsonRequestBehavior.AllowGet);
                             }
                         }
                     }
@@ -85,7 +85,7 @@ namespace TGClothes.Controllers
                     item.Size = size;
                     item.Quantity = quantity;
                     list.Add(item);
-                    TempData["Success"] = "<script>alert('Sản phẩm đã được thêm vào giỏ hàng');</script>";
+                    return Json(new { success = true, message = "Thêm vào giỏ hàng thành công." }, JsonRequestBehavior.AllowGet);
                 }
                 //gan vao session
                 Session[Common.CommonConstants.CartSession] = list;
@@ -100,12 +100,11 @@ namespace TGClothes.Controllers
                 item.Quantity = quantity;
                 var list = new List<CartItem>();
                 list.Add(item);
-                TempData["Success"] = "<script>alert('Sản phẩm đã được thêm vào giỏ hàng');</script>";
                 //gan vao session
                 Session[Common.CommonConstants.CartSession] = list;
 
             }
-            return Redirect(Request.UrlReferrer.ToString());
+            return Json(new { success = true, message = "Thêm vào giỏ hàng thành công." }, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult Update(string cartModel)
@@ -221,6 +220,43 @@ namespace TGClothes.Controllers
         #region VN Pay
         public ActionResult PaymentVnPay()
         {
+            var name = Request.Form["name"]; // Thay "customerName" bằng tên trường nhập tên khách hàng trong form của bạn
+            var email = Request.Form["email"]; // Thay "customerEmail" bằng tên trường nhập email khách hàng trong form của bạn
+            var phone = Request.Form["address"];
+            var address = Request.Form["address"];
+
+            //Thanh toán thành công
+            var user = (UserLogin)Session[Common.CommonConstants.USER_SESSION];
+            var order = new Order();
+            order.OrderDate = DateTime.Now;
+            order.CustomerId = user.UserId;
+            order.Name = name;
+            order.Email = email;
+            order.Phone = phone;
+            order.DeliveryAddress = address;
+            order.Status = (int)OrderStatus.PENDING;
+            order.PaymentMethod = (int)PaymentMethods.VNPAY;
+
+            var id = _orderService.Insert(order);
+            var cart = (List<CartItem>)Session[Common.CommonConstants.CartSession];
+            foreach (var item in cart)
+            {
+                var orderDetail = new OrderDetail();
+                orderDetail.ProductId = item.Product.Id;
+                orderDetail.OrderId = id;
+                orderDetail.SizeId = item.Size.Id;
+                orderDetail.Price = item.Product.PromotionPrice ?? item.Product.Price;
+                orderDetail.Quantity = item.Quantity;
+                orderDetail.TotalQuantity = TotalQuantity();
+                orderDetail.TotalPrice = Total();
+
+                var stock = _productSizeService.GetProductSizeByProductIdAndSizeId(item.Product.Id, item.Size.Id);
+                stock.Stock -= orderDetail.Quantity;
+                _productSizeService.Update(stock);
+
+                _orderDetailService.Insert(orderDetail);
+            }
+
             string url = ConfigurationManager.AppSettings["Url"];
             string returnUrl = ConfigurationManager.AppSettings["ReturnUrl"];
             string tmnCode = ConfigurationManager.AppSettings["TmnCode"];
@@ -240,8 +276,8 @@ namespace TGClothes.Controllers
             pay.AddRequestData("vnp_OrderInfo", "Thanh toán đơn hàng"); //Thông tin mô tả nội dung thanh toán
             pay.AddRequestData("vnp_OrderType", "other"); //topup: Nạp tiền điện thoại - billpayment: Thanh toán hóa đơn - fashion: Thời trang - other: Thanh toán trực tuyến
             pay.AddRequestData("vnp_ReturnUrl", returnUrl); //URL thông báo kết quả giao dịch khi Khách hàng kết thúc thanh toán
-            pay.AddRequestData("vnp_TxnRef", DateTime.Now.Ticks.ToString()); //mã hóa đơn
-
+            pay.AddRequestData("vnp_TxnRef", order.Id.ToString()); //mã hóa đơn
+            
             string paymentUrl = pay.CreateRequestUrl(url, hashSecret);
 
             return Redirect(paymentUrl);
@@ -258,7 +294,7 @@ namespace TGClothes.Controllers
                 //lấy toàn bộ dữ liệu được trả về
                 foreach (string s in vnpayData)
                 {
-                    if (!string.IsNullOrEmpty(s) && s.StartsWith("vnp_"))
+                    if (!string.IsNullOrEmpty(s) && s.StartsWith("vnp_") || s.StartsWith("vnp_Inv_"))
                     {
                         pay.AddResponseData(s, vnpayData[s]);
 
@@ -276,52 +312,18 @@ namespace TGClothes.Controllers
                 {
                     if (vnp_ResponseCode == "00")
                     {
-                        //Thanh toán thành công
-                        var user = (UserLogin)Session[TGClothes.Common.CommonConstants.USER_SESSION];
-                        var order = new Order();
-                        order.OrderDate = DateTime.Now;
-                        order.CustomerId = user.UserId;
-                        //order.Name = name;
-                        //order.Email = email;
-                        //order.Phone = phone;
-                        //order.DeliveryAddress = address;
-                        order.Status = (int)OrderStatus.PENDING;
-                        order.PaymentMethod = (int)PaymentMethods.VNPAY;
-
-                        var id = _orderService.Insert(order);
-                        var cart = (List<CartItem>)Session[TGClothes.Common.CommonConstants.CartSession];
-                        foreach (var item in cart)
-                        {
-                            var orderDetail = new OrderDetail();
-                            orderDetail.ProductId = item.Product.Id;
-                            orderDetail.OrderId = id;
-                            orderDetail.SizeId = item.Size.Id;
-                            orderDetail.Price = item.Product.PromotionPrice ?? item.Product.Price;
-                            orderDetail.Quantity = item.Quantity;
-                            orderDetail.TotalQuantity = TotalQuantity();
-                            orderDetail.TotalPrice = Total();
-
-                            var stock = _productSizeService.GetProductSizeByProductIdAndSizeId(item.Product.Id, item.Size.Id);
-                            stock.Stock -= orderDetail.Quantity;
-                            _productSizeService.Update(stock);
-
-                            _orderDetailService.Insert(orderDetail);
-                        }
-                        //string content = System.IO.File.ReadAllText(Server.MapPath("~/Assets/Client/template/neworder.html"));
-                        //content = content.Replace("{{CustomerName}}", name);
-                        //content = content.Replace("{{Phone}}", phone);
-                        //content = content.Replace("{{Email}}", email);
-                        //content = content.Replace("{{Address}}", address);
-                        //content = content.Replace("{{Total}}", Total().ToString("N0"));
-                        //var toEmail = ConfigurationManager.AppSettings["ToEmailAddress"];
-
-                        //new MailHelper().SendMail(email, "Đơn hàng mới từ TGClothes", content);
-                        //new MailHelper().SendMail(toEmail, "Đơn hàng mới từ TGClothes", content);
                         Session[TGClothes.Common.CommonConstants.CartSession] = null;
                         return Redirect("/hoan-thanh");
                     }
                     else
                     {
+                        var order = _orderService.GetOrderById(orderId);
+                        var orderDetail = _orderDetailService.GetOrderDetailByOrderId(order.Id);
+                        foreach (var item in orderDetail)
+                        {
+                            _orderDetailService.Delete(item);
+                        }
+                        _orderService.Delete(order.Id);
                         //Thanh toán không thành công. Mã lỗi: vnp_ResponseCode
                         TempData["PaymentFailure"] = "Có lỗi xảy ra trong quá trình xử lý hóa đơn " + orderId + " | Mã giao dịch: " + vnpayTranId + " | Mã lỗi: " + vnp_ResponseCode;
                         return RedirectToAction("OrderFailure");

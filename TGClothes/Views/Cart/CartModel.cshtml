@@ -3,16 +3,23 @@
 @{
     decimal total = 0;
 
-foreach (var item in Model)
-{
-    total += item.Quantity * item.Product.Price.GetValueOrDefault(0);
-}
+    foreach (var item in Model)
+    {
+        if (item.Product.Promotion == 0 || item.Product.Promotion == null)
+        {
+            total += item.Quantity * item.Product.Price.GetValueOrDefault(0);
+        }
+        else
+        {
+            total += item.Quantity * item.Product.PromotionPrice.GetValueOrDefault(0);
+        }
+    }
 }
 
 <div class="wrap-header-cart js-panel-cart">
     <div class="s-full js-hide-cart"></div>
 
-    <div class="header-cart flex-col-l p-l-65 p-r-25">
+    <div class="header-cart flex-col-l p-l-40 p-r-25">
         <div class="header-cart-title flex-w flex-sb-m p-b-8">
             <span class="mtext-103 cl2">
                 Giỏ hàng của bạn
@@ -23,7 +30,7 @@ foreach (var item in Model)
             </div>
         </div>
 
-        <div class="header-cart-content flex-w js-pscroll">
+        <div class="header-cart-content flex-w js-pscroll w-100">
             <ul class="header-cart-wrapitem w-full">
                 @foreach (var item in Model)
                 {
@@ -33,13 +40,27 @@ foreach (var item in Model)
                             <img src="@item.Product.Image" alt="@item.Product.Name">
                         </div>
 
-                        <div class="header-cart-item-txt p-t-8">
+                        <div class="header-cart-item-txt">
                             <div class="stext-110">@item.Product.Name</div>
                             <div>Size: @item.Size.Name, Số lượng: @item.Quantity</div>
 
-                            <span class="header-cart-item-info">
-                                @item.Product.Price.GetValueOrDefault(0).ToString("N0")
-                            </span>
+                            @if (item.Product.Promotion == 0 || item.Product.Promotion == null)
+                            {
+                                <span class="stext-105 cl3">
+                                    @item.Product.Price.Value.ToString("N0")
+                                </span>
+                            }
+                            else
+                            {
+                                <div>
+                                    <span class="stext-105 cl3 text-decoration-line-through">
+                                        @item.Product.Price.Value.ToString("N0")
+                                    </span>
+                                    <span class="stext-105 cl3 text-danger">
+                                        @item.Product.PromotionPrice.Value.ToString("N0")
+                                    </span>
+                                </div>
+                            }
                         </div>
                     </li>
 

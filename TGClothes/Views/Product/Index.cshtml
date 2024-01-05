@@ -1,7 +1,7 @@
 ﻿@model List<TGClothes.Models.ProductStockViewModel>
 
 <!-- Product -->
-<div class="bg0 m-t-23 p-b-140">
+<div class="bg0 m-t-23 p-b-70">
     <div class="container">
         <div class="flex-w flex-sb-m p-b-23">
             @{Html.RenderAction("ProductCategory", "Product");}
@@ -9,13 +9,13 @@
             <div class="flex-w flex-c-m m-tb-10">
                 <div class="flex-c-m stext-106 cl6 size-104 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4 js-show-filter">
                     <i class="icon-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-filter-list"></i>
-                    <i class="icon-close-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"></i>
+                    <i class="icon-close-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none" style="display:none;"></i>
                     Bộ lọc
                 </div>
 
                 <div class="flex-c-m stext-106 cl6 size-105 bor4 pointer hov-btn3 trans-04 m-tb-4 js-show-search">
                     <i class="icon-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-search"></i>
-                    <i class="icon-close-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"></i>
+                    <i class="icon-close-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none" style="display:none;"></i>
                     Tìm kiếm
                 </div>
             </div>
@@ -126,7 +126,7 @@
                     <div class="block2" data-productprice="@item.Product.Price">
                         <div class="block2-pic hov-img0 rounded">
                             <a href="@url"><img src="@item.Product.Image" alt="@item.Product.MetaTitle" style="object-fit: cover; height: 472px;"></a>
-                            @if (dayDiff <= 7)
+                            @if (dayDiff <= 30)
                             {
                                 <div class="product__sale">
                                     <span class="mtext-107 cl0">Mới</span>
@@ -145,14 +145,14 @@
                                 </div>
                             }
 
-                            <a href="#" data-product-id="@item.Product.Id" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
-                                Quick View
-                            </a>
+                        <a href="#" data-product-id="@item.Product.Id" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
+                            Xem nhanh
+                        </a>
                         </div>
 
                         <div class="block2-txt flex-w flex-t p-t-14">
                             <div class="block2-txt-child1 flex-col-l d-block text-truncate">
-                                <a href="@url" class="stext-104 cl2 hov-cl1 trans-04 js-name-b2 p-b-6">
+                                <a href="@url" class="stext-118 cl2 hov-cl1 trans-04 js-name-b2 p-b-6">
                                     @item.Product.Name
                                 </a>
 

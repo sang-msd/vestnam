@@ -35,11 +35,6 @@ namespace TGClothes.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (!slide.Status) // Nếu trường status không được gửi từ form (giá trị mặc định là false)
-                {
-                    slide.Status = true; // Gán giá trị mặc định là true
-                }
-
                 long id = _slideService.Insert(slide);
                 if (id > 0)
                 {
@@ -85,6 +80,16 @@ namespace TGClothes.Areas.Admin.Controllers
         {
             _slideService.Delete(id);
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public JsonResult ChangeStatus(long id)
+        {
+            var result = _slideService.ChangeStatus(id);
+            return Json(new
+            {
+                status = result
+            });
         }
     }
 }

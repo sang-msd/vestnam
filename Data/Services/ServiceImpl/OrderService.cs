@@ -39,7 +39,7 @@ namespace Data.Services.ServiceImpl
         public IEnumerable<Order> GetAllByDatePaging(DateTime fromDate, DateTime toDate, int page, int pageSize)
         {
             IQueryable<Order> model = db.Orders;
-            var data = model.OrderBy(x => x.OrderDate).ToList();
+            var data = model.OrderByDescending(x => x.OrderDate).ToList();
             return data.Where(x => x.OrderDate.Date >= fromDate && x.OrderDate.Date <= toDate).ToPagedList(page, pageSize);
         }
 
@@ -64,7 +64,7 @@ namespace Data.Services.ServiceImpl
         public IEnumerable<Order> GetAllPaging(int page, int pageSize)
         {
             IQueryable<Order> model = db.Orders;
-            return model.OrderBy(x => x.OrderDate).ToPagedList(page, pageSize);
+            return model.OrderByDescending(x => x.OrderDate).ToPagedList(page, pageSize);
         }
 
         public Order GetOrderById(long id)

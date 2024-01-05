@@ -25,6 +25,7 @@ namespace Data.Services
         //List<Product> ListFeatureProduct(int top);
         List<Product> ListRelateProduct(long productId);
         List<Product> ListSaleProduct(int top);
+        List<Product> ListSaleProducts();
         List<Product> ListTopProduct(int top);
         bool ChangeStatus(long id);
         double ProductStatistic();

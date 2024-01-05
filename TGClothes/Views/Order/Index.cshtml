@@ -49,10 +49,14 @@
                         }
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.OrderDate)
+                        @item.OrderDate.ToString("dd/MM/yyyy HH:mm:ss")
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.DeliveryDate)
+                        @if (item.DeliveryDate.HasValue)
+                {
+                        @item.DeliveryDate.Value.ToString("dd/MM/yyyy HH:mm:ss")
+
+                }
                     </td>
 
                     <td>

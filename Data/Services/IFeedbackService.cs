@@ -10,5 +10,6 @@ namespace Data.Services
     public interface IFeedbackService
     {
         long InsertFeedback(Feedback feedback);
+        List<Feedback> GetAll();
     }
 }

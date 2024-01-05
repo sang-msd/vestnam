@@ -23,7 +23,7 @@ namespace TGClothes.Controllers
         }
 
         [HttpPost]
-        public ActionResult Send(string name, string email, string phone, string address, string content)
+        public JsonResult Send(string name, string email, string phone, string address, string content)
         {
             var feedback = new Feedback();
             feedback.Name = name;

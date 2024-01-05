@@ -24,9 +24,23 @@ namespace TGClothes
            );
 
             routes.MapRoute(
+              name: "Order",
+              url: "don-hang",
+              defaults: new { controller = "Order", action = "Index", id = UrlParameter.Optional },
+              namespaces: new[] { "TGClothes.Controllers" }
+          );
+
+            routes.MapRoute(
                name: "Filter Product",
                url: "san-pham/filter",
                defaults: new { controller = "Product", action = "Filter", id = UrlParameter.Optional },
+               namespaces: new[] { "TGClothes.Controllers" }
+           );
+
+            routes.MapRoute(
+               name: "Sale Product",
+               url: "san-pham/sale",
+               defaults: new { controller = "Product", action = "SaleProducts", id = UrlParameter.Optional },
                namespaces: new[] { "TGClothes.Controllers" }
            );
 
@@ -99,6 +113,13 @@ namespace TGClothes
                 defaults: new { controller = "Product", action = "Detail", id = UrlParameter.Optional },
                 namespaces: new[] { "TGClothes.Controllers" }
             );
+
+            routes.MapRoute(
+               name: "Order Details",
+               url: "don-hang/chi-tiet-{Id}",
+               defaults: new { controller = "Order", action = "Details", id = UrlParameter.Optional },
+               namespaces: new[] { "TGClothes.Controllers" }
+           );
 
             routes.MapRoute(
                 name: "Cart",

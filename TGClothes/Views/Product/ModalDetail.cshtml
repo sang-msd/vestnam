@@ -94,7 +94,7 @@
                             <div class="flex-w flex-r-m p-b-10">
                                 <div class="size-204 flex-w flex-m respon6-next">
                                     <button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
-                                        <a href="/them-gio-hang?productId=@Model.Id&sizeId=...&quantity=1" id="addToCartLink" class="text-white">Add to cart</a>
+                                        <a href="/them-gio-hang?productId=@Model.Id&sizeId=...&quantity=1" id="addToCartLink" class="text-white">Thêm vào giỏ</a>
                                     </button>
                                 </div>
                             </div>
@@ -177,8 +177,28 @@
         const sizeId = selectedSize ? selectedSize.value : '';
 
         if (sizeId > 0) {
-            const href = `/them-gio-hang?productId=${productId}&sizeId=${sizeId}&quantity=1`;
-            window.location.href = href;
+            const url = `/them-gio-hang?productId=${productId}&sizeId=${sizeId}&quantity=1`;
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                success: function (response) {
+                    // Xử lý khi AJAX thành công
+                    if (response.success) {
+                        swal("Thành công", "Thêm vào giỏ hàng thành công.", "success");
+                        setTimeout(function () {
+                            window.location.href = window.location.href;
+                        }, 1000);
+                    }
+                    else {
+                        swal("Thất bại", "Sản phẩm không được vượt quá số lượng tồn.", "error");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Xử lý khi AJAX thất bại
+                    swal("Lỗi", "Có lỗi xảy ra trong quá trình thêm vào giỏ hàng!", "error");
+                }
+            });
 
         } else if (sizeId === '') {
             swal("Lỗi", "Vui lòng chọn size!", "error");

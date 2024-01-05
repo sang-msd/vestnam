@@ -68,6 +68,7 @@ namespace Data.Services.ServiceImpl
                 var data = db.Accounts.Find(user.Id);
                 data.Name = user.Name;
                 data.Email = user.Email;
+                data.Password = user.Password;
                 data.ModifiedDate = DateTime.Now;
                 data.ResetPasswordCode = user.ResetPasswordCode;
                 db.SaveChanges();
@@ -182,7 +183,12 @@ namespace Data.Services.ServiceImpl
             }
             else
             {
-                return data.Id;
+                if (data.Status == true)
+                {
+                    return data.Id;
+                }
+                else
+                    return -1;
             }
         }
 

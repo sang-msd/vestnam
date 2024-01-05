@@ -28,6 +28,7 @@ namespace Data.Services.ServiceImpl
         public long Insert(Slide slide)
         {
             slide.CreatedDate = DateTime.Now;
+            slide.Status = true;
             db.Slides.Add(slide);
             db.SaveChanges();
             return slide.Id;
@@ -66,6 +67,14 @@ namespace Data.Services.ServiceImpl
             {
                 return false;
             }
+        }
+
+        public bool ChangeStatus(long id)
+        {
+            var slide = db.Slides.Find(id);
+            slide.Status = !slide.Status;
+            db.SaveChanges();
+            return slide.Status;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Data.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,10 +9,18 @@ namespace TGClothes.Areas.Admin.Controllers
 {
     public class FeedbackController : Controller
     {
-        // GET: Admin/Contact
+        private readonly IFeedbackService _feedbackService;
+
+        public FeedbackController(IFeedbackService feedbackService)
+        {
+            _feedbackService = feedbackService;
+        }
+
+        // GET: Admin/Feedback
         public ActionResult Index()
         {
-            return View();
+            var model = _feedbackService.GetAll();
+            return View(model);
         }
     }
 }

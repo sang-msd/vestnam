@@ -69,7 +69,7 @@ namespace Data.Services.ServiceImpl
         {
             var result = (from o in db.Orders
                          join od in db.OrderDetails on o.Id equals od.OrderId
-                         where o.Status == 3 && o.OrderDate.Month == 11 && o.OrderDate.Year == DateTime.Now.Year
+                         where o.Status == 3 && o.OrderDate.Month == DateTime.Now.Month && o.OrderDate.Year == DateTime.Now.Year
                          select od).GroupBy(x => new { x.OrderId, x.TotalPrice });
             return result.Sum(x => x.Key.TotalPrice).HasValue ? result.Sum(x => x.Key.TotalPrice).Value : 0;
         }

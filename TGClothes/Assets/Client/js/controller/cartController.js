@@ -40,31 +40,36 @@
         });
 
         $('#btnDeleteAll').off('click').on('click', function () {
-            $.ajax({
-                url: 'Cart/DeleteAll',
-                dataType: 'json',
-                type: 'POST',
-                success: function (res) {
-                    if (res.status == true) {
-                        window.location.href = "/gio-hang"
+            if (confirm("Bạn có chắc chắn muốn xóa toàn bộ sản phẩm?")) {
+                $.ajax({
+                    url: 'Cart/DeleteAll',
+                    dataType: 'json',
+                    type: 'POST',
+                    success: function (res) {
+                        if (res.status == true) {
+                            window.location.href = "/gio-hang"
+                        }
                     }
-                }
-            });
+                });
+            }
         });
 
         $('.btn-delete').off('click').on('click', function (e) {
             e.preventDefault();
-            $.ajax({
-                url: 'Cart/Delete',
-                data: { productId: $(this).data('product-id'), sizeId: $(this).data('size-id') },
-                dataType: 'json',
-                type: 'POST',
-                success: function (res) {
-                    if (res.status == true) {
-                        window.location.href = "/gio-hang"
+
+            if (confirm("Bạn có chắc chắn muốn xóa sản phẩm này?")) {
+                $.ajax({
+                    url: 'Cart/Delete',
+                    data: { productId: $(this).data('product-id'), sizeId: $(this).data('size-id') },
+                    dataType: 'json',
+                    type: 'POST',
+                    success: function (res) {
+                        if (res.status == true) {
+                            window.location.href = "/gio-hang"
+                        }
                     }
-                }
-            });
+                });
+            }
         });
     }
 }

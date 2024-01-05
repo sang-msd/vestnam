@@ -42,7 +42,7 @@ namespace TGClothes.Areas.Admin.Controllers
             return View();
         }
 
-        #region Doang thu
+        #region Doanh thu
         public ActionResult Revenue()
         {
             ViewBag.TotalRevenue = RevenueStatistic();
@@ -75,7 +75,7 @@ namespace TGClothes.Areas.Admin.Controllers
             var data = (from p in _productService.GetAll()
                         join od in _orderDetailService.GetAll() on p.Id equals od.ProductId
                         join o in _orderService.GetAll() on od.OrderId equals o.Id
-                        where o.OrderDate.Month == 11 && o.OrderDate.Year == DateTime.Now.Year && o.Status == (int)OrderStatus.SUCCESSFUL
+                        where o.OrderDate.Month == DateTime.Now.Month && o.OrderDate.Year == DateTime.Now.Year && o.Status == (int)OrderStatus.SUCCESSFUL
                         group new { od, p } by od.ProductId into g
                         let totalQuantitySold = g.Sum(x => x.od.Quantity)
                         orderby totalQuantitySold descending

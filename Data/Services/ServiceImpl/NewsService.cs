@@ -131,7 +131,7 @@ namespace Data.Services.ServiceImpl
 
         public List<Content> GetAll()
         {
-            return db.Contents.OrderByDescending(x => x.CreatedDate).ToList();
+            return db.Contents.Where(x => x.Status == true).OrderByDescending(x => x.CreatedDate).ToList();
         }
 
         public IEnumerable<Content> GetAllPaging(string searchString, int page, int pageSize)
@@ -197,7 +197,7 @@ namespace Data.Services.ServiceImpl
         {
             var model = (from c in db.Contents
                          join cat in db.Categories on c.CategoryId equals cat.Id
-                         where cat.Id == categoryId
+                         where cat.Id == categoryId && c.Status == true
                          select new
                          {
                              Id = c.Id,

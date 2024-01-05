@@ -14,5 +14,6 @@ namespace Data.Services
         long Insert(Slide slide);
         bool Update(Slide slide);
         bool Delete(long id);
+        bool ChangeStatus(long id);
     }
 }

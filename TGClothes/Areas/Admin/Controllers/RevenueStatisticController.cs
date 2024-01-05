@@ -10,7 +10,7 @@ using TGClothes.Models;
 
 namespace TGClothes.Areas.Admin.Controllers
 {
-    public class RevenueStatisticController : Controller
+    public class RevenueStatisticController : BaseController
     {
         private readonly IOrderDetailService _orderDetailService;
         private readonly IOrderService _orderService;
@@ -35,7 +35,7 @@ namespace TGClothes.Areas.Admin.Controllers
 
                 var data = (from o in _orderService.GetAll()
                             join od in _orderDetailService.GetAll() on o.Id equals od.OrderId
-                            where o.OrderDate.Month == 11 && o.Status == (int)OrderStatus.SUCCESSFUL
+                            where o.OrderDate.Month == DateTime.Now.Month && o.Status == (int)OrderStatus.SUCCESSFUL
                             group o by o.OrderDate.Date into g
                             select new
                             {
@@ -75,7 +75,7 @@ namespace TGClothes.Areas.Admin.Controllers
                 var data = (from o in _orderService.GetAll()
                             join od in _orderDetailService.GetAll() on o.Id equals od.OrderId
                             join p in _productService.GetAll() on od.ProductId equals p.Id
-                            where o.OrderDate.Month == 11 && o.Status == (int)OrderStatus.SUCCESSFUL
+                            where o.OrderDate.Month == DateTime.Now.Month && o.Status == (int)OrderStatus.SUCCESSFUL
                             group new { od, p } by o.OrderDate.Date into g
                             select new
                             {
@@ -114,14 +114,14 @@ namespace TGClothes.Areas.Admin.Controllers
             }
         }
 
-        public ActionResult ProductStatistic(DateTime? fromDate, DateTime? toDate, string searchString, int page = 1, int pageSize = 10)
+        public ActionResult ProductStatistic(DateTime? fromDate, DateTime? toDate, int page = 1, int pageSize = 10)
         {
             if (!fromDate.HasValue && !toDate.HasValue)
             {
                 var result = (from o in _orderService.GetAll()
                             join od in _orderDetailService.GetAll() on o.Id equals od.OrderId
                             join p in _productService.GetAll() on od.ProductId equals p.Id
-                            where o.OrderDate.Month == 11 && o.Status == (int)OrderStatus.SUCCESSFUL && (string.IsNullOrEmpty(searchString) || p.Name.Contains(searchString))
+                            where o.OrderDate.Month == DateTime.Now.Month && o.Status == (int)OrderStatus.SUCCESSFUL
                               group new { od, p } by od.ProductId into g
                             select new ProductStatistic()
                             {
@@ -135,7 +135,6 @@ namespace TGClothes.Areas.Admin.Controllers
 
                 ViewBag.TotalProductSold = totalCount.Sum(x => x.ProductSold);
                 ViewBag.ProductSoldOfDay = data.Select(x => x.ProductSold);
-                ViewBag.SearchString = searchString;
                 return View(data);
             }
             else
@@ -143,7 +142,7 @@ namespace TGClothes.Areas.Admin.Controllers
                 var result = (from o in _orderService.GetAll()
                             join od in _orderDetailService.GetAll() on o.Id equals od.OrderId
                             join p in _productService.GetAll() on od.ProductId equals p.Id
-                            where o.OrderDate >= fromDate && o.OrderDate <= toDate && o.Status == (int)OrderStatus.SUCCESSFUL && (string.IsNullOrEmpty(searchString) || p.Name.Contains(searchString))
+                            where o.OrderDate >= fromDate && o.OrderDate <= toDate && o.Status == (int)OrderStatus.SUCCESSFUL
                             group new { od, p } by od.ProductId into g
                             select new ProductStatistic()
                             {
@@ -159,64 +158,6 @@ namespace TGClothes.Areas.Admin.Controllers
                 ViewBag.ProductSoldOfDay = data.Select(x => x.ProductSold);
                 return View(data);
             }
-        }
-
-        public ActionResult RevenueByDay(DateTime date, int page = 1, int pageSize = 5)
-        {
-            int totalRecord = 0;
-            int maxPage = 5;
-            int totalPage = 0;
-            var model = _orderService.GetAllOrderByDate(date, ref totalRecord, page, pageSize).Skip((page - 1) * pageSize).Take(pageSize);
-            var countOfOrder = model.Count();
-
-            ViewBag.TotalRecord = totalRecord;
-            ViewBag.Page = page;
-
-            totalPage = (int)Math.Ceiling((double)totalRecord / pageSize);
-            ViewBag.TotalPage = totalPage;
-            ViewBag.MaxPage = maxPage;
-            ViewBag.First = 1;
-            ViewBag.Last = totalPage;
-            ViewBag.Next = page + 1;
-            ViewBag.Prev = page - 1;
-            ViewBag.CountOfOrder = countOfOrder;
-            ViewBag.Date = date;
-
-            var profit = ProfitByDayStatistic();
-            return View("RevenueByDay", model);
-        }
-
-        public ActionResult RevenueByMonth(DateTime date, int page = 1, int pageSize = 5)
-        {
-            int totalRecord = 0;
-            int maxPage = 5;
-            int totalPage = 0;
-            var model = _orderService.GetAllOrderByMonth(date, ref totalRecord, page, pageSize).Skip((page - 1) * pageSize).Take(pageSize);
-            var countOfOrder = model.Count();
-
-            ViewBag.TotalRecord = totalRecord;
-            ViewBag.Page = page;
-
-            totalPage = (int)Math.Ceiling((double)totalRecord / pageSize);
-            ViewBag.TotalPage = totalPage;
-            ViewBag.MaxPage = maxPage;
-            ViewBag.First = 1;
-            ViewBag.Last = totalPage;
-            ViewBag.Next = page + 1;
-            ViewBag.Prev = page - 1;
-            ViewBag.CountOfOrder = countOfOrder;
-            ViewBag.Date = date;
-            return View("RevenueByMonth", model);
-        }
-
-        public decimal RevenueByDayStatistic()
-        {
-            return _orderDetailService.DailyRevenue();
-        }
-
-        public decimal ProfitByDayStatistic()
-        {
-            return _orderDetailService.DailyProfit();
         }
     }
 }

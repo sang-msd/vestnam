@@ -114,7 +114,7 @@ namespace TGClothes.Controllers
                 }
                 else if (result == -1)
                 {
-                    ModelState.AddModelError("", "Tài khoản đang bị khóa.");
+                    ModelState.AddModelError("", "Tài khoản đang bị khóa, vui lòng liên hệ quản trị hoặc đăng nhập bằng tài khoản khác.");
                 }
                 else if (result == -2)
                 {
@@ -181,9 +181,15 @@ namespace TGClothes.Controllers
                     userSession.Name = user.Name;
                     userSession.UserId = data;
                     Session.Add(CommonConstants.USER_SESSION, userSession);
+
+                    return Redirect("/");
+                }
+                else if (data == -1)
+                {
+                    ModelState.AddModelError("", "Tài khoản đang bị khóa, vui lòng liên hệ quản trị hoặc đăng nhập bằng tài khoản khác.");
                 }
             }
-            return Redirect("/");
+                return RedirectToAction("Login");
         }
 
         public async Task<ActionResult> LoginWithGoogle(string code)
@@ -249,17 +255,10 @@ namespace TGClothes.Controllers
 
             string subject = "";
             string body = "";
-            if (emailFor == "VerifyAccount")
-            {
-                subject = "Tai khoan da duoc tao thanh cong";
-                body = "chua lam";
-            }
-            else if (emailFor == "ResetPassword")
-            {
-                subject = "Reset password";
-                body = "Bạn vừa gửi link xác thực tài khoản, Hãy click vào link bên dưới để lấy lại mật khẩu<br>" +
-                    "<a href=" + link + ">Reset password</a>";
-            }
+
+            subject = "Đặt lại mật khẩu";
+            body = "Bạn vừa gửi link đặt lại mật khẩu, Hãy click vào link bên dưới để đặt lại<br>" +
+                "<a href=" + link + ">Đặt lại mật khẩu</a>";
 
             MailMessage mc = new MailMessage(ConfigurationManager.AppSettings["FromEmailAddress"].ToString(), email);
             mc.Subject = subject;
@@ -316,7 +315,7 @@ namespace TGClothes.Controllers
                     user.ResetPasswordCode = resetCode;
                     _userService.Update(user);
 
-                    message = "Reset password link đã được gửi đến email của bạn";
+                    message = "Link đặt lại mật khẩu đã được gửi đến email của bạn";
                 }
 
 

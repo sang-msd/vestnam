@@ -6,7 +6,7 @@
 }
 
 @section header {
-    Quản lý danh sách slide    
+    Quản lý danh sách slide
 }
 
 <div class="card shadow mb-4">
@@ -52,27 +52,26 @@
                                     {
                                         checkStatus = "text-danger";
                                     }
-                                <tr id="row_@item.Id">
-                                    <td>
-                                        <img src=" @Html.DisplayFor(modelItem => item.Image)" height="100px" />
-                                    </td>
-                                    <td>@item.DisplayOrder</td>
-                                    <td>@item.CreatedDate</td>
-                                    <td>@item.ModifiedDate</td>
-                                    <td><a href="#" class="btn-active @checkStatus" data-id="@item.Id">@(item.Status ? "Kích hoạt" : "Khóa")</a></td>
-                                    <td>@item.Link</td>
-                                    <td>@item.Description</td>
-                                    <td>
-                                        <a href="@Url.Action("Detail", "Slide", new { id = item.Id })" class="btn text-primary f1"><i class="fa-solid fa-eye"></i></a>
-                                        <a href="@Url.Action("Edit", "Slide", new { id = item.Id })" class="btn text-primary f1"><i class="fas fa-edit"></i></a>
-                                        @Ajax.ActionLink(" ", "Delete", new { @id = item.Id }, new AjaxOptions
-                                       {
-                                           Confirm = "Bạn có muốn xóa bản ghi này?",
-                                           OnComplete = "$('#row_" + @item.Id + "').remove()",
-                                           HttpMethod = "Delete"
-                                       }, new { @class = "btn text-primary f1 myActionLink" })
-                                    </td>
-                                </tr>
+                                    <tr id="row_@item.Id">
+                                        <td>
+                                            <img src=" @Html.DisplayFor(modelItem => item.Image)" height="100px" />
+                                        </td>
+                                        <td>@item.DisplayOrder</td>
+                                        <td>@item.CreatedDate</td>
+                                        <td>@item.ModifiedDate</td>
+                                        <td><a href="#" class="btn-active @checkStatus" data-id="@item.Id">@(item.Status ? "Kích hoạt" : "Khóa")</a></td>
+                                        <td>@item.Link</td>
+                                        <td>@item.Description</td>
+                                        <td>
+                                            <a href="@Url.Action("Edit", "Slide", new { id = item.Id })" class="btn text-primary f1"><i class="fas fa-edit"></i></a>
+                                            @Ajax.ActionLink(" ", "Delete", new { @id = item.Id }, new AjaxOptions
+                                           {
+                                               Confirm = "Bạn có muốn xóa bản ghi này?",
+                                               OnComplete = "$('#row_" + @item.Id + "').remove()",
+                                               HttpMethod = "Delete"
+                                           }, new { @class = "btn text-primary f1 myActionLink" })
+                                        </td>
+                                    </tr>
                                 }
                             </tbody>
                         </table>
@@ -83,8 +82,6 @@
     </div>
 </div>
 
-@section CustomJs{
-    <script>
-        $('.myActionLink').prepend("<i class='fa-solid fa-trash-can'></i> ");
-    </script>    
+@section CustomJs {
+    <script src="/Assets/Admin/js/controller/slideController.js"></script>
 }

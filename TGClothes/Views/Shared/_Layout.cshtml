@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Home</title>
+    <title>Tuna Clothes</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--===============================================================================================-->
@@ -40,8 +40,7 @@
     @RenderSection("customCSS", required: false)
     <!--===============================================================================================-->
     <!--Start of Fchat.vn-->
-    <!--Start of Fchat.vn-->
-    <script type="text/javascript" src="https://cdn.fchat.vn/assets/embed/webchat.js?id=658f7fdea880117efe5f6a72" async="async"></script><!--End of Fchat.vn-->
+    <script type="text/javascript" src="https://cdn.fchat.vn/assets/embed/webchat.js?id=659195da4779ed4f012c609e" async="async"></script><!--End of Fchat.vn-->
 </head>
 <body class="animsition">
 
@@ -74,22 +73,6 @@
                         @{Html.RenderAction("HeaderCart", "Home");}
                     </div>
                 </nav>
-            </div>
-        </div>
-
-        <!-- Modal Search -->
-        <div class="modal-search-header flex-c-m trans-04 js-hide-modal-search">
-            <div class="container-search-header">
-                <button class="flex-c-m btn-hide-modal-search trans-04 js-hide-modal-search">
-                    <img src="/Assets/Client/images/icons/icon-close2.png" alt="CLOSE">
-                </button>
-
-                <form class="wrap-search-header flex-w p-l-15">
-                    <button class="flex-c-m trans-04">
-                        <i class="zmdi zmdi-search"></i>
-                    </button>
-                    <input class="plh3" type="text" name="search" placeholder="Search...">
-                </form>
             </div>
         </div>
     </header>
@@ -125,18 +108,7 @@
 
     <!--===============================================================================================-->
     <script src="/Assets/Client/vendor/jquery/jquery-3.2.1.min.js"></script>
-    @*<script>
-            $(document).ready(function () {
-                $('.dropdownver2').hover(function () {
-                    $(this).find('.dropdown-menu')
-                        .stop(true, true).delay(100).fadeIn(200);
-                }, function () {
-                    $(this).find('.dropdown-menu')
-                        .stop(true, true).delay(100).fadeOut(200);
-                });
-            });
-        </script>*@
-
+ 
     <script src="/Assets/Client/js/jquery-ui.js"></script>
     <!--===============================================================================================-->
     <script src="/Assets/Client/vendor/animsition/js/animsition.min.js"></script>
@@ -152,7 +124,6 @@
                 dropdownParent: $(this).next('.dropDownSelect2')
             });
         })</script>
-
 
     <!--===============================================================================================-->
     <script src="/Assets/Client/vendor/daterangepicker/moment.min.js"></script>
@@ -206,14 +177,6 @@
             });
         });
     </script>
-
-
-    @*$('.js-addcart-detail').each(function () {
-            var nameProduct = $(this).parent().parent().parent().parent().find('.js-name-detail').html();
-            $(this).on('click', function () {
-                swal(nameProduct, "đã được thêm vào giỏ hàng !", "success");
-            });
-        });</script>*@
     <!--===============================================================================================-->
     <script src="/Assets/Client/vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script>
@@ -234,11 +197,6 @@
     <script src="/Assets/Client/js/main.js"></script>
     <script src="/Assets/Client/js/controller/baseController.js"></script>
     <!--===============================================================================================-->
-    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
-    <df-messenger intent="WELCOME"
-                  chat-title="TGClothes"
-                  agent-id="967172bf-1565-4fb0-a672-fca3569931c2"
-                  language-code="vi"></df-messenger>
     @RenderSection("jsFooter", required: false)
 </body>
 </html>

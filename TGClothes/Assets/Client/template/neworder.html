@@ -12,6 +12,11 @@
             border-radius: 5px;
         }
 
+        .detail-content {
+            max-width: 400px;
+            margin: auto;
+        }
+
         h1 {
             text-align: center;
             color: #333;
@@ -35,25 +40,27 @@
 <body>
     <div class="order-details">
         <h1>Thông tin đơn hàng mới</h1>
-        <div class="order-item">
-            <span class="label">Tên khách hàng:</span>
-            <span class="value">{{CustomerName}}</span>
-        </div>
-        <div class="order-item">
-            <span class="label">Điện thoại:</span>
-            <span class="value">{{Phone}}</span>
-        </div>
-        <div class="order-item">
-            <span class="label">Ngày đặt:</span>
-            <span class="value">{{OrderDate}}</span>
-        </div>
-        <div class="order-item">
-            <span class="label">Địa chỉ giao:</span>
-            <span class="value">{{Address}}</span>
-        </div>
-        <div class="order-item">
-            <span class="label">Tổng tiền:</span>
-            <span class="value">{{Total}}</span>
+        <div class="detail-content">
+            <div class="order-item">
+                <span class="label">Tên khách hàng:</span>
+                <span class="value">{{CustomerName}}</span>
+            </div>
+            <div class="order-item">
+                <span class="label">Điện thoại:</span>
+                <span class="value">{{Phone}}</span>
+            </div>
+            <div class="order-item">
+                <span class="label">Ngày đặt:</span>
+                <span class="value">{{OrderDate}}</span>
+            </div>
+            <div class="order-item">
+                <span class="label">Địa chỉ giao:</span>
+                <span class="value">{{Address}}</span>
+            </div>
+            <div class="order-item">
+                <span class="label">Tổng tiền:</span>
+                <span class="value">{{Total}}</span>
+            </div>
         </div>
     </div>
 </body>

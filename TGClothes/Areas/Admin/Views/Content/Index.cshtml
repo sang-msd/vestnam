@@ -65,7 +65,6 @@
                                         <td>@item.ModifiedDate</td>
                                         <td><a href="#" class="btn-active @checkStatus" data-id="@item.Id">@(item.Status ? "Kích hoạt" : "Khóa")</a></td>
                                         <td>
-                                            <a href="@Url.Action("Details", "Content", new { id = item.Id })" class="btn text-primary f2"><i class="fa-solid fa-eye"></i></a>
                                             <a href="@Url.Action("Edit", "Content", new { id = item.Id })" class="btn text-primary f2"><i class="fas fa-edit"></i></a>
                                             @Ajax.ActionLink(" ", "Delete", new { @id = item.Id }, new AjaxOptions
                                            {

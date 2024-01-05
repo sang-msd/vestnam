@@ -15,6 +15,11 @@ namespace Data.Services.ServiceImpl
             db = new TGClothesDbContext();
         }
 
+        public List<Feedback> GetAll()
+        {
+            return db.Feedbacks.ToList();
+        }
+
         public long InsertFeedback(Feedback feedback)
         {
             db.Feedbacks.Add(feedback);

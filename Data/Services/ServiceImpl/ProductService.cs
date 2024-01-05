@@ -83,7 +83,7 @@ namespace Data.Services.ServiceImpl
             {
                 var result = (from p in db.Products
                             join ps in db.ProductSizes on p.Id equals ps.ProductId
-                            where ps.Stock != 0 && p.CategoryId == item.Id
+                            where p.CategoryId == item.Id && p.Status == true
                             select p).Distinct();
                 products.AddRange(result);
             }
@@ -95,7 +95,7 @@ namespace Data.Services.ServiceImpl
         {
             var data = (from p in db.Products
                         join ps in db.ProductSizes on p.Id equals ps.ProductId
-                        where ps.Stock != 0
+                        where p.Status == true
                         select p).Distinct();
             totalRecord = data.Where(x => x.CategoryId == id).Count();
             return data.Where(x => x.CategoryId == id).OrderByDescending(x => x.CreatedDate).ToList();
@@ -125,7 +125,7 @@ namespace Data.Services.ServiceImpl
 
         public List<string> ListName(string keyword)
         {
-            return db.Products.Where(x => x.Name.Contains(keyword)).Select(x => x.Name).ToList();
+            return db.Products.Where(x => x.Name.Contains(keyword) && x.Status == true).Select(x => x.Name).ToList();
         }
 
         public List<Product> ListNewProduct(int top)
@@ -136,12 +136,17 @@ namespace Data.Services.ServiceImpl
         public List<Product> ListRelateProduct(long productId)
         {
             var product = db.Products.Find(productId);
-            return db.Products.Where(x => x.Id != productId && x.CategoryId == product.CategoryId).ToList();
+            return db.Products.Where(x => x.Id != productId && x.CategoryId == product.CategoryId && x.Status == true).ToList();
         }
 
         public List<Product> ListSaleProduct(int top)
         {
             return db.Products.Where(x => x.Promotion.HasValue).OrderByDescending(x => x.Promotion.Value).Take(top).ToList();
+        }
+
+        public List<Product> ListSaleProducts()
+        {
+            return db.Products.Where(x => x.Promotion.HasValue).OrderByDescending(x => x.Promotion.Value).ToList();
         }
 
         public List<Product> ListTopProduct(int top)

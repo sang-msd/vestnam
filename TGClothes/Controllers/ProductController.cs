@@ -55,7 +55,7 @@ namespace TGClothes.Controllers
             int totalPage = 0;
 
             var model = _productService.GetAll(ref totalRecord, page, pageSize);
-            var result = (from p in _productService.GetAll()
+            var result = (from p in _productService.GetAll().Where(x => x.Status == true)
                           join ps in _productSizeService.GetAll() on p.Id equals ps.ProductId into psGroup
                           from ps in psGroup.DefaultIfEmpty()
                           group new { p, ps } by p.Id into g
@@ -168,17 +168,33 @@ namespace TGClothes.Controllers
             return View(model);
         }
 
+        public ActionResult SaleProducts(int page = 1, int pageSize = 8)
+        {
+            var data = _productService.ListSaleProducts();
+            int totalRecord = data.Count();
+            var result = data.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            int maxPage = 5;
+            int totalPage = 0;
+
+            ViewBag.Category = data;
+            ViewBag.TotalRecord = totalRecord;
+            ViewBag.Page = page;
+
+            totalPage = (int)Math.Ceiling((double)totalRecord / pageSize);
+            ViewBag.TotalPage = totalPage;
+            ViewBag.MaxPage = maxPage;
+            ViewBag.First = 1;
+            ViewBag.Last = totalPage;
+            ViewBag.Next = page + 1;
+            ViewBag.Prev = page - 1;
+            return View(result);
+        }
+
         [ChildActionOnly]
         public PartialViewResult ProductCategory()
         {
             var model = _productCategoryService.GetAll();
             return PartialView(model);
-        }
-
-        public ActionResult Category(long productCategoryId)
-        {
-            var category = _productCategoryService.GetProductCategoryById(productCategoryId);
-            return View(category);
         }
 
         public ActionResult Detail(long id)
@@ -336,7 +352,7 @@ namespace TGClothes.Controllers
             int maxPage = 5;
             int totalPage = 0;
 
-            var result = (from p in _productService.GetAll()
+            var result = (from p in _productService.GetAll().Where(x => x.Status == true)
                           join ps in _productSizeService.GetAll() on p.Id equals ps.ProductId into psGroup
                           from ps in psGroup.DefaultIfEmpty()
                           group new { p, ps } by p.Id into g

@@ -579,8 +579,8 @@
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\BaseController.cs" />
     <Compile Include="Areas\Admin\Controllers\CategoryController.cs" />
-    <Compile Include="Areas\Admin\Controllers\FeedbackController.cs" />
     <Compile Include="Areas\Admin\Controllers\ContentController.cs" />
+    <Compile Include="Areas\Admin\Controllers\FeedbackController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\Controllers\LoginController.cs" />
     <Compile Include="Areas\Admin\Controllers\OrderController.cs" />
@@ -632,6 +632,7 @@
   <ItemGroup>
     <Content Include="Assets\Admin\css\sb-admin-2.css" />
     <Content Include="Assets\Admin\css\sb-admin-2.min.css" />
+    <Content Include="Assets\Admin\img\25853.jpg" />
     <Content Include="Assets\Admin\img\undraw_posting_photo.svg" />
     <Content Include="Assets\Admin\img\undraw_profile.svg" />
     <Content Include="Assets\Admin\img\undraw_profile_1.svg" />
@@ -642,6 +643,7 @@
     <Content Include="Assets\Admin\js\controller\contentController.js" />
     <Content Include="Assets\Admin\js\controller\productCategoryController.js" />
     <Content Include="Assets\Admin\js\controller\productController.js" />
+    <Content Include="Assets\Admin\js\controller\slideController.js" />
     <Content Include="Assets\Admin\js\controller\userController.js" />
     <Content Include="Assets\Admin\js\demo\chart-area-demo.js" />
     <Content Include="Assets\Admin\js\demo\chart-bar-demo.js" />
@@ -3485,7 +3487,6 @@
     <Content Include="Assets\Client\vendor\slick\slick.js" />
     <Content Include="Assets\Client\vendor\slick\slick.min.js" />
     <Content Include="Assets\Client\vendor\sweetalert\sweetalert.min.js" />
-    <Content Include="Code2Night.jpeg" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-grid.rtl.css" />
@@ -3941,7 +3942,6 @@
     <Content Include="DataManagement\Images\Women\SoMi\so-mi-tuxedo-2.png" />
     <Content Include="DataManagement\Images\Women\SoMi\so-mi-tuxedo-3.png" />
     <Content Include="DataManagement\Images\Women\SoMi\so-mi-tuxedo-4.png" />
-    <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Areas\Admin\Views\web.config" />
     <Content Include="Assets\Admin\scss\navs\_global.scss" />
@@ -4304,6 +4304,7 @@
     <Content Include="Assets\Admin\HM\HM Sans Latin Bold.ttf" />
     <Content Include="Assets\Admin\HM\HM Sans Latin Regular.ttf" />
     <Content Include="Assets\Admin\HM\HM Sans Latin SemiBold.ttf" />
+    <Content Include="Areas\Admin\Views\Feedback\Index.cshtml" />
     <None Include="Properties\PublishProfiles\tuna132-001-site1 - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\tuna132-001-site1 - FTP1.pubxml" />
     <None Include="Properties\PublishProfiles\tuna132-001-site1 - FTP2.pubxml" />
@@ -4369,7 +4370,6 @@
     <Content Include="Views\Product\Index.cshtml" />
     <Content Include="Views\Shared\Footer.cshtml" />
     <Content Include="Views\Product\Detail.cshtml" />
-    <Content Include="Views\Product\Category.cshtml" />
     <Content Include="Views\Product\ProductByCategory.cshtml" />
     <Content Include="Views\Cart\Index.cshtml" />
     <Content Include="Views\Shared\HeaderCart.cshtml" />
@@ -4386,7 +4386,6 @@
     <Content Include="Views\Order\Index.cshtml" />
     <Content Include="Views\Order\Details.cshtml" />
     <Content Include="Views\Cart\OrderFailure.cshtml" />
-    <Content Include="Views\Product\Search.cshtml" />
     <Content Include="Views\Content\Index.cshtml" />
     <Content Include="Views\Content\Detail.cshtml" />
     <Content Include="Views\Content\Tag.cshtml" />
@@ -4394,9 +4393,8 @@
     <Content Include="Views\Content\ContentCategory.cshtml" />
     <Content Include="Views\Content\ContentTag.cshtml" />
     <Content Include="Views\About\Index.cshtml" />
-    <Content Include="Views\Product\FilterByPrice.cshtml" />
-    <Content Include="Views\Product\CombineAll.cshtml" />
     <Content Include="Views\Product\Filter.cshtml" />
+    <Content Include="Views\Product\SaleProducts.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

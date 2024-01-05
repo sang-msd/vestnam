@@ -199,6 +199,7 @@ html *::-webkit-scrollbar-track {
   -webkit-transition: all 0.4s;
   -o-transition: all 0.4s;
   -moz-transition: all 0.4s;
+  border-radius: 50%;
 }
 
 .symbol-btn-back-to-top {
@@ -394,7 +395,7 @@ html *::-webkit-scrollbar-track {
 
 .main-menu > li > a {
   font-family: "HM Sans Latin SemiBold";
-  font-size: 16px;
+  font-size: 20px;
   color: #333;
   padding: 5px 0px;
   transition: all 0.4s;
@@ -1637,7 +1638,7 @@ button.mfp-close {
 
 .tab01 .nav-link {
     font-family: "HM Sans Latin Regular";
-    font-size: 15px;
+    font-size: 20px;
     color: #888;
     line-height: 1.2;
     padding: 0;
@@ -1775,9 +1776,14 @@ button.mfp-close {
   border-bottom: 1px solid transparent;
 }
 
+.filter-link.filter-link-active {
+    color: #6c7ae0;
+    border-bottom: 1px solid #6c7ae0;
+}
+
 .filter-link:hover {
-  color: #6c7ae0;
-  border-bottom: 1px solid #6c7ae0;
+    color: #6c7ae0;
+    border-bottom: 1px solid #6c7ae0;
 }
 
 .filter-link-active {
@@ -3191,6 +3197,7 @@ input.num-product::-webkit-inner-spin-button {
   border-color: #717fe0;
   background-color: #717fe0;
   color: #fff;
+  cursor: pointer;
 }
 
 .hov-btn3:hover i {

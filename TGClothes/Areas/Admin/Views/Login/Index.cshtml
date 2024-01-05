@@ -40,35 +40,23 @@
                             <div class="col-lg-6">
                                 <div class="p-5">
                                     <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
-                                    </div>
-                                    @using (Html.BeginForm("Index", "Login", FormMethod.Post))
-                                    {
-                                        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
-                                        <div class="form-group">
-                                            @Html.TextBoxFor(model => model.Email, new { @class = "form-control form-control-user", @autofocus = "autofocus" })
-                                        </div>
-                                        <div class="form-group">
-                                            @Html.PasswordFor(model => model.Password, new { @class = "form-control form-control-user" })
-                                        </div>
-                                        <button type="submit" class="btn btn-primary btn-user btn-block">
-                                            Đăng nhập
-                                        </button>
+                                        <h1 class="h4 text-gray-900 mb-4">Xin chào!</h1>
+                                        @using (Html.BeginForm("Index", "Login", FormMethod.Post))
+                                        {
+                                @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+                                                <div class="form-group">
+                                                    @Html.TextBoxFor(model => model.Email, new { @class = "form-control form-control-user", @autofocus = "autofocus" })
+                                                </div>
+                                                                <div class="form-group">
+                                                                    @Html.PasswordFor(model => model.Password, new { @class = "form-control form-control-user" })
+                                                                </div>
+                                                                                <button type="submit" class="btn btn-primary btn-user btn-block">
+                                                                                    Đăng nhập
+                                                                                </button>}
                                         <hr>
-                                        <a href="index.html" class="btn btn-google btn-user btn-block">
-                                            <i class="fab fa-google fa-fw"></i> Login with Google
-                                        </a>
-                                        <a href="index.html" class="btn btn-facebook btn-user btn-block">
-                                            <i class="fab fa-facebook-f fa-fw"></i> Login with Facebook
-                                        </a>
-                                        }
-                                    <hr>
-                                    <div class="text-center">
-                                        <a class="small" href="forgot-password.html">Forgot Password?</a>
+                                        <a href="/">Về trang chủ</a>
                                     </div>
-                                    <div class="text-center">
-                                        <a class="small" href="register.html">Create an Account!</a>
-                                    </div>
+
                                 </div>
                             </div>
                         </div>

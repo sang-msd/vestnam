@@ -68,13 +68,13 @@
             <p>@product.ModifiedDate</p>
         </dd>
 
-        <h3>Size và số lượng tồn:</h3>
+        <dt>Size và số lượng tồn</dt>
         <ul>
             @{ int totalQuantity = 0; }
             @foreach (var productSize in productSizes)
             {
 
-                <li>Size: @productSize.SizeName, Quantity: @productSize.Stock</li>
+                <li>Size: @productSize.SizeName, Số lượng: @productSize.Stock</li>
                 totalQuantity += productSize.Stock;
             }
         </ul>
