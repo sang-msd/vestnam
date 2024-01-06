@@ -36,6 +36,14 @@
                                 <td>@item.Content</td>
                                 <td>@item.CreatedDate</td>
                                 <td>
+                                    <a href="@Url.Action("Delete", "Feedback", new { id = item.Id })"
+                                       class="btn text-primary f1"
+                                       data-ajax="true"
+                                       data-ajax-method="delete"
+                                       data-ajax-confirm="Bạn có muốn xóa bản ghi này?"
+                                       data-ajax-complete="false">
+                                        <i class='fa-solid fa-trash-can'></i>
+                                    </a>
                                 </td>
                             </tr>
                         }

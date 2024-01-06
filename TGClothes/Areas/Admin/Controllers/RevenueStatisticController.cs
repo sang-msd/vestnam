@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using TGClothes.Common;
+using Common;
 using TGClothes.Models;
 
 namespace TGClothes.Areas.Admin.Controllers
@@ -122,7 +122,7 @@ namespace TGClothes.Areas.Admin.Controllers
                             join od in _orderDetailService.GetAll() on o.Id equals od.OrderId
                             join p in _productService.GetAll() on od.ProductId equals p.Id
                             where o.OrderDate.Month == DateTime.Now.Month && o.Status == (int)OrderStatus.SUCCESSFUL
-                              group new { od, p } by od.ProductId into g
+                            group new { od, p } by od.ProductId into g
                             select new ProductStatistic()
                             {
                                 ProductSold = g.Sum(x => x.od.Quantity),
@@ -131,7 +131,7 @@ namespace TGClothes.Areas.Admin.Controllers
                             });
 
                 var totalCount = result.ToList();
-                var data = result.ToPagedList(page, pageSize);
+                var data = result.OrderByDescending(x => x.ProductSold).ToPagedList(page, pageSize);
 
                 ViewBag.TotalProductSold = totalCount.Sum(x => x.ProductSold);
                 ViewBag.ProductSoldOfDay = data.Select(x => x.ProductSold);
@@ -152,7 +152,7 @@ namespace TGClothes.Areas.Admin.Controllers
                             });
 
                 var totalCount = result.ToList();
-                var data = result.ToPagedList(page, pageSize);
+                var data = result.OrderByDescending(x => x.ProductSold).ToPagedList(page, pageSize);
 
                 ViewBag.TotalProductSold = totalCount.Sum(x => x.ProductSold);
                 ViewBag.ProductSoldOfDay = data.Select(x => x.ProductSold);

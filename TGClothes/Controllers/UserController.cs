@@ -15,7 +15,7 @@ using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using TGClothes.Common;
+using Common;
 using TGClothes.Models;
 
 namespace TGClothes.Controllers
@@ -71,7 +71,7 @@ namespace TGClothes.Controllers
                     {
                         ViewBag.Success = "Đăng ký tài khoản thành công";
                         model = new RegisterModel();
-                        return RedirectToAction("Login");
+                        return View(model);
                     }
                     else
                     {
@@ -266,7 +266,6 @@ namespace TGClothes.Controllers
             mc.IsBodyHtml = true;
             SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
             smtp.Timeout = 1000000;
-            //smtp.Timeout = 1000;
             smtp.EnableSsl = true;
             smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
             NetworkCredential nc = new NetworkCredential(ConfigurationManager.AppSettings["FromEmailAddress"].ToString(), ConfigurationManager.AppSettings["FromEmailPassword"].ToString());

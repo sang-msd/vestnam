@@ -1,12 +1,12 @@
 ﻿@model Data.EF.Order
-@using TGClothes.Common
+@using Common
 @{
     ViewBag.Title = "Edit";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
 @{
-    var today = DateTime.Today.ToString("yyyy-MM-dd");
+    var today = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
 }
 
 @section header {
@@ -58,7 +58,7 @@
             <div class="form-group">
                 <label class="control-label col-md-2">Ngày Đặt</label>
                 <div class="col-md-10">
-                    <div class="form-control">@Model.OrderDate</div>
+                    <input type="text" value="@Model.OrderDate.ToString("dd/MM/yyyy HH:mm:ss")" readonly />
                     @Html.ValidationMessageFor(model => model.OrderDate, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -66,7 +66,7 @@
             <div class="form-group">
                 <label class="control-label col-md-2">Ngày giao</label>
                 <div class="col-md-10">
-                    <input type="date" name="date" value="@today" required />
+                    <input type="text" name="date" value="@today" readonly />
                     @Html.ValidationMessageFor(model => model.DeliveryDate, "", new { @class = "text-danger" })
                 </div>
             </div>

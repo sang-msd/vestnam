@@ -22,5 +22,12 @@ namespace TGClothes.Areas.Admin.Controllers
             var model = _feedbackService.GetAll();
             return View(model);
         }
+
+        [HttpDelete]
+        public ActionResult Delete(long id)
+        {
+            _feedbackService.Delete(id);
+            return RedirectToAction("Index");
+        }
     }
 }

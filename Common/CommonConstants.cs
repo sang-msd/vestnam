@@ -10,5 +10,8 @@ namespace Common
     {
         public static string ADMIN_GROUP = "ADMIN";
         public static string MEMBER_GROUP = "MEMBER";
+        public static string USER_SESSION = "USER_SESSION";
+        public static string SESSION_CREDENTIAL = "SESSION_CREDENTIAL";
+        public static string CART_SESSION = "CART_SESSION";
     }
 }

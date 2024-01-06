@@ -590,14 +590,6 @@
     <Compile Include="Areas\Admin\Controllers\SizeController.cs" />
     <Compile Include="Areas\Admin\Controllers\SlideController.cs" />
     <Compile Include="Areas\Admin\Controllers\UserController.cs" />
-    <Compile Include="Common\CommonConstants.cs" />
-    <Compile Include="Common\Encryptor.cs" />
-    <Compile Include="Common\EnumExtensions.cs" />
-    <Compile Include="Common\HasCredentialAttribute.cs" />
-    <Compile Include="Common\OrderStatus.cs" />
-    <Compile Include="Common\PaymentMethods.cs" />
-    <Compile Include="Common\Payment\VnPayLibrary.cs" />
-    <Compile Include="Common\UserLogin.cs" />
     <Compile Include="Controllers\AboutController.cs" />
     <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
@@ -610,6 +602,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\CartItem.cs" />
+    <Compile Include="Models\CartModel.cs" />
+    <Compile Include="Models\CustomerInfo.cs" />
     <Compile Include="Models\CustomerPerchasedModel.cs" />
     <Compile Include="Models\GoogleUserInfo.cs" />
     <Compile Include="Models\LoginModel.cs" />
@@ -4277,8 +4271,6 @@
     <Content Include="Areas\Admin\Views\Category\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\Category\Create.cshtml" />
     <Content Include="Areas\Admin\Views\Home\Revenue.cshtml" />
-    <Content Include="Areas\Admin\Views\About\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\About\Create.cshtml" />
     <Content Include="Areas\Admin\Views\RevenueStatistic\Index.cshtml" />
     <Content Include="Areas\Admin\Views\RevenueStatistic\RevenueByDay.cshtml" />
     <Content Include="Areas\Admin\Views\RevenueStatistic\OrderStatistic.cshtml" />

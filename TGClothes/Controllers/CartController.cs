@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Payment;
 using Data.EF;
 using Data.Services;
 using System;
@@ -7,8 +8,6 @@ using System.Configuration;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
-using TGClothes.Common;
-using TGClothes.Common.Payment;
 using TGClothes.Models;
 
 namespace TGClothes.Controllers
@@ -38,7 +37,7 @@ namespace TGClothes.Controllers
         // GET: Cart
         public ActionResult Index()
         {
-            var cart = Session[Common.CommonConstants.CartSession];
+            var cart = Session[CommonConstants.CART_SESSION];
             var list = new List<CartItem>();
             if (cart != null)
             {
@@ -49,24 +48,24 @@ namespace TGClothes.Controllers
             return View(list);
         }
 
-        public ActionResult AddToCart(long productId, long sizeId, int quantity)
+        public ActionResult AddToCart(CartModel model)
         {
-            var product = _productService.GetProductById(productId);
-            var size = _sizeService.GetSizeById(sizeId);
-            var cart = Session[Common.CommonConstants.CartSession];
+            var product = _productService.GetProductById(model.ProductId);
+            var size = _sizeService.GetSizeById(model.SizeId);
+            var cart = Session[CommonConstants.CART_SESSION];
             if (cart != null)
             {
                 var list = (List<CartItem>)cart;
-                if (list.Exists(x => x.Product.Id == productId && x.Size.Id == sizeId))
+                if (list.Exists(x => x.Product.Id == model.ProductId && x.Size.Id == model.SizeId))
                 {
                     foreach (var item in list)
                     {
                         var stock = _productSizeService.GetStock(item.Product.Id, item.Size.Id);
-                        if (item.Product.Id == productId && item.Size.Id == sizeId)
+                        if (item.Product.Id == model.ProductId && item.Size.Id == model.SizeId)
                         {
                             if (item.Quantity < stock && stock > 0)
                             {
-                                item.Quantity += quantity;
+                                item.Quantity += model.Quantity;
                                 return Json(new { success = true, message = "Thêm vào giỏ hàng thành công." }, JsonRequestBehavior.AllowGet);
                             }
 
@@ -83,12 +82,12 @@ namespace TGClothes.Controllers
                     var item = new CartItem();
                     item.Product = product;
                     item.Size = size;
-                    item.Quantity = quantity;
+                    item.Quantity = model.Quantity;
                     list.Add(item);
                     return Json(new { success = true, message = "Thêm vào giỏ hàng thành công." }, JsonRequestBehavior.AllowGet);
                 }
                 //gan vao session
-                Session[Common.CommonConstants.CartSession] = list;
+                Session[CommonConstants.CART_SESSION] = list;
 
             }
             else
@@ -97,11 +96,11 @@ namespace TGClothes.Controllers
                 var item = new CartItem();
                 item.Product = product;
                 item.Size = size;
-                item.Quantity = quantity;
+                item.Quantity = model.Quantity;
                 var list = new List<CartItem>();
                 list.Add(item);
                 //gan vao session
-                Session[Common.CommonConstants.CartSession] = list;
+                Session[CommonConstants.CART_SESSION] = list;
 
             }
             return Json(new { success = true, message = "Thêm vào giỏ hàng thành công." }, JsonRequestBehavior.AllowGet);
@@ -110,7 +109,7 @@ namespace TGClothes.Controllers
         public JsonResult Update(string cartModel)
         {
             var jsonCart = new JavaScriptSerializer().Deserialize<List<CartItem>>(cartModel);
-            var sessionCart = (List<CartItem>)Session[Common.CommonConstants.CartSession];
+            var sessionCart = (List<CartItem>)Session[CommonConstants.CART_SESSION];
             
             foreach (var item in sessionCart)
             {
@@ -123,9 +122,10 @@ namespace TGClothes.Controllers
                 else
                 {
                     TempData["msg"] = "<script>alert('Sản phẩm không được vượt quá số lượng tồn');</script>";
+                    break;
                 }
             }
-            Session[Common.CommonConstants.CartSession] = sessionCart;
+            Session[CommonConstants.CART_SESSION] = sessionCart;
             return Json(new
             {
                 status = true
@@ -134,9 +134,9 @@ namespace TGClothes.Controllers
 
         public JsonResult Delete(long productId, long sizeId)
         {
-            var sessionCart = (List<CartItem>)Session[Common.CommonConstants.CartSession];
+            var sessionCart = (List<CartItem>)Session[CommonConstants.CART_SESSION];
             sessionCart.RemoveAll(x => x.Product.Id == productId && x.Size.Id == sizeId);
-            Session[Common.CommonConstants.CartSession] = sessionCart;
+            Session[CommonConstants.CART_SESSION] = sessionCart;
             return Json(new
             {
                 status = true
@@ -145,7 +145,7 @@ namespace TGClothes.Controllers
 
         public JsonResult DeleteAll()
         {
-            Session[Common.CommonConstants.CartSession] = null;
+            Session[CommonConstants.CART_SESSION] = null;
             return Json(new
             {
                 status = true
@@ -154,11 +154,11 @@ namespace TGClothes.Controllers
 
         public ActionResult Payment()
         {
-            if(Session[Common.CommonConstants.USER_SESSION] == null || Session[Common.CommonConstants.USER_SESSION].ToString() == "")
+            if(Session[CommonConstants.USER_SESSION] == null || Session[CommonConstants.USER_SESSION].ToString() == "")
             {
                 return RedirectToAction("Login", "User");
             }
-            var cart = Session[Common.CommonConstants.CartSession];
+            var cart = Session[CommonConstants.CART_SESSION];
             var list = new List<CartItem>();
             if (cart != null)
             {
@@ -166,25 +166,26 @@ namespace TGClothes.Controllers
             }
             ViewBag.SubTotal = SubTotal();
             ViewBag.Promotion = Promotion();
-            return View(list);
+            return View();
         }
 
         #region COD
         [HttpPost]
-        public ActionResult PaymentCOD(string name, string email, string phone, string address)
+        public ActionResult PaymentCOD(CustomerInfo model)
         {
-            var user = (UserLogin)Session[Common.CommonConstants.USER_SESSION];
+            var user = (UserLogin)Session[CommonConstants.USER_SESSION];
             var order = new Order();
             order.OrderDate = DateTime.Now;
             order.CustomerId = user.UserId;
-            order.Name = name;
-            order.Phone = phone;
-            order.DeliveryAddress = address;
+            order.Name = model.Name;
+            order.Email = model.Email;
+            order.Phone = model.Phone;
+            order.DeliveryAddress = model.Address;
             order.Status = (int)OrderStatus.PENDING;
             order.PaymentMethod = (int)PaymentMethods.COD;
 
             var id = _orderService.Insert(order);
-            var cart = (List<CartItem>)Session[Common.CommonConstants.CartSession];
+            var cart = (List<CartItem>)Session[CommonConstants.CART_SESSION];
             foreach (var item in cart)
             {
                 var orderDetail = new OrderDetail();
@@ -203,16 +204,14 @@ namespace TGClothes.Controllers
                 _orderDetailService.Insert(orderDetail);
             }
             string content = System.IO.File.ReadAllText(Server.MapPath("~/Assets/Client/template/neworder.html"));
-            content = content.Replace("{{CustomerName}}", name);
-            content = content.Replace("{{Phone}}", phone);
-            content = content.Replace("{{OrderDate}}", DateTime.Now.ToString());
-            content = content.Replace("{{Address}}", address);
+            content = content.Replace("{{CustomerName}}", model.Name);
+            content = content.Replace("{{Phone}}", model.Phone);
+            content = content.Replace("{{OrderDate}}", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"));
+            content = content.Replace("{{Address}}", model.Address);
             content = content.Replace("{{Total}}", Total().ToString("N0"));
-            var toEmail = ConfigurationManager.AppSettings["ToEmailAddress"];
 
-            new MailHelper().SendMail(email, "Đơn hàng mới từ TGClothes", content);
-            new MailHelper().SendMail(toEmail, "Đơn hàng mới từ TGClothes", content);
-            Session[Common.CommonConstants.CartSession] = null;
+            new MailHelper().SendMail(model.Email, "Đơn hàng mới từ TGClothes", content);
+            Session[CommonConstants.CART_SESSION] = null;
             return Redirect("/hoan-thanh");
         }
         #endregion
@@ -220,13 +219,13 @@ namespace TGClothes.Controllers
         #region VN Pay
         public ActionResult PaymentVnPay()
         {
-            var name = Request.Form["name"]; // Thay "customerName" bằng tên trường nhập tên khách hàng trong form của bạn
-            var email = Request.Form["email"]; // Thay "customerEmail" bằng tên trường nhập email khách hàng trong form của bạn
+            var name = Request.Form["name"]; 
+            var email = Request.Form["email"]; 
             var phone = Request.Form["address"];
             var address = Request.Form["address"];
 
             //Thanh toán thành công
-            var user = (UserLogin)Session[Common.CommonConstants.USER_SESSION];
+            var user = (UserLogin)Session[CommonConstants.USER_SESSION];
             var order = new Order();
             order.OrderDate = DateTime.Now;
             order.CustomerId = user.UserId;
@@ -238,7 +237,7 @@ namespace TGClothes.Controllers
             order.PaymentMethod = (int)PaymentMethods.VNPAY;
 
             var id = _orderService.Insert(order);
-            var cart = (List<CartItem>)Session[Common.CommonConstants.CartSession];
+            var cart = (List<CartItem>)Session[CommonConstants.CART_SESSION];
             foreach (var item in cart)
             {
                 var orderDetail = new OrderDetail();
@@ -312,7 +311,7 @@ namespace TGClothes.Controllers
                 {
                     if (vnp_ResponseCode == "00")
                     {
-                        Session[TGClothes.Common.CommonConstants.CartSession] = null;
+                        Session[CommonConstants.CART_SESSION] = null;
                         return Redirect("/hoan-thanh");
                     }
                     else
@@ -354,7 +353,7 @@ namespace TGClothes.Controllers
         [ChildActionOnly]
         public PartialViewResult CartModel()
         {
-            var cart = Session[TGClothes.Common.CommonConstants.CartSession];
+            var cart = Session[CommonConstants.CART_SESSION];
             var list = new List<CartItem>();
             if (cart != null)
             {
@@ -366,7 +365,7 @@ namespace TGClothes.Controllers
         private decimal SubTotal()
         {
             decimal subtotal = 0;
-            List<CartItem> cart = Session[TGClothes.Common.CommonConstants.CartSession] as List<CartItem>;
+            List<CartItem> cart = Session[CommonConstants.CART_SESSION] as List<CartItem>;
             if (cart != null)
             {
                 subtotal = cart.Sum(n => n.Quantity * n.Product.Price.Value);
@@ -377,7 +376,7 @@ namespace TGClothes.Controllers
         private decimal Promotion()
         {
             decimal promotion = 0;
-            List<CartItem> cart = Session[TGClothes.Common.CommonConstants.CartSession] as List<CartItem>;
+            List<CartItem> cart = Session[CommonConstants.CART_SESSION] as List<CartItem>;
             if (cart != null)
             {
                 promotion = cart.Sum(n => n.Quantity * n.Product.Price.Value * (n.Product.Promotion.HasValue ? n.Product.Promotion.Value : 0) / 100);
@@ -388,7 +387,7 @@ namespace TGClothes.Controllers
         private int TotalQuantity()
         {
             int total = 0;
-            List<CartItem> cart = Session[TGClothes.Common.CommonConstants.CartSession] as List<CartItem>;
+            List<CartItem> cart = Session[CommonConstants.CART_SESSION] as List<CartItem>;
             if (cart != null)
             {
                 total = cart.Sum(n => n.Quantity);
@@ -399,7 +398,7 @@ namespace TGClothes.Controllers
         private decimal Total()
         {
             decimal total = 0;
-            List<CartItem> cart = Session[TGClothes.Common.CommonConstants.CartSession] as List<CartItem>;
+            List<CartItem> cart = Session[CommonConstants.CART_SESSION] as List<CartItem>;
             if (cart != null)
             {
                 foreach (var item in cart)

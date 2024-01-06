@@ -15,6 +15,12 @@ namespace Data.Services.ServiceImpl
             db = new TGClothesDbContext();
         }
 
+        public void Delete(long id)
+        {
+            var data = db.Feedbacks.Find(id);
+            db.Feedbacks.Remove(data);
+        }
+
         public List<Feedback> GetAll()
         {
             return db.Feedbacks.ToList();

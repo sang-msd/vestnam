@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Web;
 
-namespace TGClothes.Common
+namespace Common
 {
     public static class EnumExtensions
     {

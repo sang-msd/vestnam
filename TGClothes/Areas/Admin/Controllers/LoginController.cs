@@ -1,6 +1,6 @@
-﻿using Data.Services;
+﻿using Common;
+using Data.Services;
 using System.Web.Mvc;
-using TGClothes.Common;
 using TGClothes.Models;
 
 namespace TGClothes.Areas.Admin.Controllers
@@ -32,8 +32,6 @@ namespace TGClothes.Areas.Admin.Controllers
                     var userSession = new UserLogin();
                     userSession.Email = user.Email;
                     userSession.UserId = user.Id;
-                    //var listCredentials = _user.GetListCredential(user.Email);
-                    //Session.Add(CommonConstants.SESSION_CREDENTIAL, listCredentials);
                     Session.Add(CommonConstants.USER_SESSION, userSession);
                     return RedirectToAction("Index", "Home");
                 }

@@ -1,5 +1,5 @@
-﻿@model IEnumerable<Data.EF.Order>
-@using TGClothes.Common;
+﻿@model List<Data.EF.Order>
+@using Common;
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -16,67 +16,76 @@
                 <th>Ngày giao</th>
                 <th>Thao tác</th>
             </tr>
-
-            @foreach (var item in Model)
+            @if (Model.Count > 0)
             {
-                <tr class="mtext-107">
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Id)
-                    </td>
-                    <td>
-                        @Enum.GetName(typeof(PaymentMethods), item.PaymentMethod)
-                    </td>
-                    <td>
-                        @if (item.Status == (int)OrderStatus.PENDING)
-                        {
-                            <div style="color: #007bff;">Chờ xử lý</div>
-                        }
-                        else if (item.Status == (int)OrderStatus.PROCESSING)
-                        {
-                            <div style="color: orange;">Đang xử lý</div>
-                        }
-                        else if (item.Status == (int)OrderStatus.TRANSPORTING)
-                        {
-                            <div style="color: forestgreen;">Đang vận chuyển</div>
-                        }
-                        else if (item.Status == (int)OrderStatus.SUCCESSFUL)
-                        {
-                            <div style="color: green;">Giao thành công</div>
-                        }
-                        else if (item.Status == (int)OrderStatus.CANCELLED)
-                        {
-                            <div style="color: red;">Đã hủy</div>
-                        }
-                    </td>
-                    <td>
-                        @item.OrderDate.ToString("dd/MM/yyyy HH:mm:ss")
-                    </td>
-                    <td>
-                        @if (item.DeliveryDate.HasValue)
+                foreach (var item in Model)
                 {
-                        @item.DeliveryDate.Value.ToString("dd/MM/yyyy HH:mm:ss")
+                    <tr class="mtext-107">
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Id)
+                        </td>
+                        <td>
+                            @Enum.GetName(typeof(PaymentMethods), item.PaymentMethod)
+                        </td>
+                        <td>
+                            @if (item.Status == (int)OrderStatus.PENDING)
+                            {
+                                <div style="color: #007bff;">Chờ xử lý</div>
+                            }
+                            else if (item.Status == (int)OrderStatus.PROCESSING)
+                            {
+                                <div style="color: orange;">Đang xử lý</div>
+                            }
+                            else if (item.Status == (int)OrderStatus.TRANSPORTING)
+                            {
+                                <div style="color: forestgreen;">Đang vận chuyển</div>
+                            }
+                            else if (item.Status == (int)OrderStatus.SUCCESSFUL)
+                            {
+                                <div style="color: green;">Giao thành công</div>
+                            }
+                            else if (item.Status == (int)OrderStatus.CANCELLED)
+                            {
+                                <div style="color: red;">Đã hủy</div>
+                            }
+                        </td>
+                        <td>
+                            @item.OrderDate.ToString("dd/MM/yyyy HH:mm:ss")
+                        </td>
+                        <td>
+                            @if (item.DeliveryDate.HasValue)
+                            {
+                                @item.DeliveryDate.Value.ToString("dd/MM/yyyy HH:mm:ss")
 
+                            }
+                        </td>
+
+                        <td>
+                            @Html.ActionLink("Xem chi tiết", "Details", new { id = item.Id }) |
+
+                            @if (item.Status == (int)OrderStatus.PENDING)
+                            {
+                                @Ajax.ActionLink("Hủy", "CancelOrder", new { @id = item.Id }, new AjaxOptions
+                           {
+                               Confirm = "Bạn có muốn hủy đơn hàng này?",
+                               OnSuccess = "window.location.reload()",
+                               HttpMethod = "Delete"
+                           }, new { @class = "cl13" })
+                            }
+
+                        </td>
+                    </tr>
                 }
-                    </td>
-
-                    <td>
-                        @Html.ActionLink("Xem chi tiết", "Details", new { id = item.Id }) |
-
-                        @if (item.Status == (int)OrderStatus.PENDING)
-                        {
-                            @Ajax.ActionLink("Hủy", "CancelOrder", new { @id = item.Id }, new AjaxOptions
-                       {
-                           Confirm = "Bạn có muốn hủy đơn hàng này?",
-                           OnSuccess = "window.location.reload()",
-                           HttpMethod = "Delete"
-                       }, new { @class = "cl13" })
-                        }
-
-                    </td>
+            }
+            else
+            {
+                <tr>
+                    <td>Bạn chưa mua đơn hàng nào, vui lòng mua sắm.</td>
                 </tr>
             }
-            <div class="text-danger">@Html.Raw(TempData["thongbao"])</div>
         </table>
+
+        <div class="text-danger">@Html.Raw(TempData["thongbao"])</div>
     </div>
 </div>
 

@@ -1,11 +1,10 @@
-﻿using Data.EF;
+﻿using Common;
+using Data.EF;
 using Data.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using TGClothes.Common;
 using TGClothes.Models;
 
 namespace TGClothes.Controllers

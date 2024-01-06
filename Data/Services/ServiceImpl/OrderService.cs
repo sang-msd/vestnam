@@ -74,11 +74,12 @@ namespace Data.Services.ServiceImpl
 
         public List<Order> GetOrderByUserId(long userId)
         {
-            var result = from o in db.Orders
+            var result = (from o in db.Orders
                          join u in db.Accounts on o.CustomerId equals u.Id
                          where u.Id == userId
-                         select o;
-            return result.ToList();
+                         orderby o.OrderDate descending
+                         select o).ToList();
+            return result;
         }
 
         public long Insert(Order order)

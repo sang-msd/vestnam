@@ -1,4 +1,4 @@
-﻿
+﻿@model TGClothes.Models.CustomerInfo
 @{
     ViewBag.Title = "Payment";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -12,40 +12,60 @@
             <div class="col-lg-10 col-xl-7 bor10 m-l-25 m-r--38">
                 <div class="m-lr-0-xl m-tb-30">
                     <h4 class="mtext-105 cl2 txt-center p-b-30">
-                        Thông tin khách hàng
+                        Thông tin người nhận
                     </h4>
                     @using (Html.BeginForm())
                     {
-                        <div class="bor8 m-b-20 how-pos4-parent">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="bor8 m-t-20 how-pos4-parent">
                             <span class="how-pos4 pointer-none lnr lnr-user"></span>
-                            <input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="text" name="name" placeholder="Nhập tên người nhận" required>
+                            @Html.TextBoxFor(model => model.Name, new { @class = "stext-111 cl2 plh3 size-116 p-l-62 p-r-30", @placeholder = "Nhập tên người nhận" })
                         </div>
+                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger stext-111 plh3 size-116" })
 
-                        <div class="bor8 m-b-20 how-pos4-parent">
+                        <div class="bor8 m-t-20 how-pos4-parent">
                             <span class="how-pos4 pointer-none lnr lnr-envelope"></span>
-                            <input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="email" name="email" placeholder="Nhập email" required>
+                            @Html.TextBoxFor(model => model.Email, new { @class = "stext-111 cl2 plh3 size-116 p-l-62 p-r-30", @placeholder = "Nhập email" })
                         </div>
-                        <div class="bor8 m-b-20 how-pos4-parent">
+                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger stext-111 plh3 size-116" })
+
+                        <div class="bor8 m-t-20 how-pos4-parent">
                             <span class="how-pos4 pointer-none lnr lnr-phone-handset"></span>
-                            <input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="text" name="phone" placeholder="Nhập số điện thoại" required>
+                            @Html.TextBoxFor(model => model.Phone, new { @class = "stext-111 cl2 plh3 size-116 p-l-62 p-r-30", @placeholder = "Nhập số điện thoại", @maxlength="11" })
                         </div>
-                        <div class="bor8 m-b-20 how-pos4-parent">
+                        @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger stext-111 plh3 size-116" })
+
+                        <div class="bor8 m-t-20 how-pos4-parent">
                             <span class="how-pos4 pointer-none lnr lnr-map-marker"></span>
-                            <input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="text" name="address" placeholder="Nhập địa chỉ giao hàng" required>
+                            @Html.TextBoxFor(model => model.Address, new { @class = "stext-111 cl2 plh3 size-116 p-l-62 p-r-30", @placeholder = "Nhập địa chỉ" })
                         </div>
+                        @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger stext-111 plh3 size-116" })
+
+                        @*<div class="bor8 m-b-20 how-pos4-parent">
+                                <span class="how-pos4 pointer-none lnr lnr-envelope"></span>
+                                <input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="email" name="email" placeholder="Nhập email" required>
+                            </div>
+                            <div class="bor8 m-b-20 how-pos4-parent">
+                                <span class="how-pos4 pointer-none lnr lnr-phone-handset"></span>
+                                <input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="text" name="phone" placeholder="Nhập số điện thoại" required>
+                            </div>
+                            <div class="bor8 m-b-20 how-pos4-parent">
+                                <span class="how-pos4 pointer-none lnr lnr-map-marker"></span>
+                                <input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="text" name="address" placeholder="Nhập địa chỉ giao hàng" required>
+                            </div>*@
 
                         <h4 class="mtext-105 cl2 txt-center p-b-30">
                             Hình thức thanh toán
                         </h4>
                         <div class="p-l-268">
                             <div class="m-b-20">
-                                <input type="radio" id="cash" name="payment" style="display:inline-block">
+                                <input type="radio" id="cash" name="payment" style="display:inline-block" required checked>
                                 <label for="cash" class="mtext-110 cl2" style="display:inline-block">
                                     Trả tiền khi nhận hàng
                                 </label>
                             </div>
                             <div class="m-b-20">
-                                <input type="radio" id="vnpay" name="payment" style="display:inline-block">
+                                <input type="radio" id="vnpay" name="payment" style="display:inline-block" required>
                                 <img src="/Assets/Client/images/icons/icon-vnpay.png" alt="ICON-PAY" style="width:20px">
                                 <label for="vnpay" class="mtext-110 cl2" style="display:inline-block">
                                     Thanh toán qua VNPay
@@ -141,6 +161,10 @@
 </section>
 
 @section jsFooter{
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+
     <script>
         function myFunction() {
             if (document.getElementById('cash').checked) {

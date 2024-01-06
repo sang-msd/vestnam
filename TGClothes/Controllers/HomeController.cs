@@ -1,10 +1,7 @@
-﻿using Data.Services;
-using System;
+﻿using Common;
+using Data.Services;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using TGClothes.Common;
 using TGClothes.Models;
 
 namespace TGClothes.Controllers
@@ -46,7 +43,7 @@ namespace TGClothes.Controllers
         [ChildActionOnly]
         public ActionResult TopMenu()
         {
-            var session = (TGClothes.Common.UserLogin)Session[TGClothes.Common.CommonConstants.USER_SESSION];
+            var session = (UserLogin)Session[CommonConstants.USER_SESSION];
             return PartialView();
         }
 
@@ -60,7 +57,7 @@ namespace TGClothes.Controllers
         [ChildActionOnly]
         public PartialViewResult HeaderCart()
         {
-            var cart = Session[CommonConstants.CartSession];
+            var cart = Session[CommonConstants.CART_SESSION];
             var list = new List<CartItem>();
             if (cart != null)
             {

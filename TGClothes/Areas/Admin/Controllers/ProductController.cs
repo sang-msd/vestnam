@@ -147,15 +147,6 @@ namespace TGClothes.Areas.Admin.Controllers
                 {
                     ModelState.AddModelError("", "Thêm mới sản phẩm không thành công.");
                 }
-            } else
-            {
-                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-                {
-                    // Xử lý lỗi
-                    var errorMessage = error.ErrorMessage;
-
-                    // ...
-                }
             }
             return View("Index");
         }

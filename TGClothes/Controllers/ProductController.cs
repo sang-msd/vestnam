@@ -8,7 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using Data.EF;
 using Data.Services;
-using TGClothes.Common;
+using Common;
 using TGClothes.Models;
 
 namespace TGClothes.Controllers

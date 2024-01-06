@@ -1,10 +1,8 @@
-﻿using Data.Services;
+﻿using Common;
+using Data.Services;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using TGClothes.Common;
 using TGClothes.Models;
 
 namespace TGClothes.Areas.Admin.Controllers
@@ -84,7 +82,6 @@ namespace TGClothes.Areas.Admin.Controllers
         {
             var order = _orderService.GetOrderById(id);
             var orderStatus = status;
-            var deliveryDate = String.Format("{0:MM/dd/yyyy}", date);
             order.Id = id;
             if (!Enum.IsDefined(typeof(OrderStatus), status))
             {
@@ -93,7 +90,7 @@ namespace TGClothes.Areas.Admin.Controllers
             else
             {
                 order.Status = (int)orderStatus;
-                order.DeliveryDate = DateTime.Parse(deliveryDate);
+                order.DeliveryDate = date;
                 _orderService.Update(order);
 
                 if (order.Status == (int)OrderStatus.CANCELLED)

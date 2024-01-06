@@ -1,11 +1,11 @@
-﻿using Data.EF;
+﻿using Common;
+using Data.EF;
 using Data.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using TGClothes.Common;
 using TGClothes.Models;
 
 namespace TGClothes.Areas.Admin.Controllers
@@ -31,7 +31,6 @@ namespace TGClothes.Areas.Admin.Controllers
         // GET: Admin/Home
         public ActionResult Index()
         {
-            ViewBag.TotalRevenue = RevenueStatistic();
             ViewBag.MonthlyRevenue = MonthlyRevenue();
             ViewBag.AnnualRevenue = AnnualRevenue();
             ViewBag.TotalCustomer = CustomerStatistic();
@@ -43,23 +42,6 @@ namespace TGClothes.Areas.Admin.Controllers
         }
 
         #region Doanh thu
-        public ActionResult Revenue()
-        {
-            ViewBag.TotalRevenue = RevenueStatistic();
-            return View();
-        }
-
-        public ActionResult DayRevenue(Order order)
-        {
-            var deliveryDate = order.DeliveryDate;
-            return View();
-        }
-
-        public decimal RevenueStatistic()
-        {
-            return _orderDetailService.TotalRevenue();
-        }
-
         public decimal MonthlyRevenue()
         {
             return _orderDetailService.MonthlyRevenue();
@@ -68,6 +50,21 @@ namespace TGClothes.Areas.Admin.Controllers
         public decimal AnnualRevenue()
         {
             return _orderDetailService.AnnualRevenue();
+        }
+
+        public double CustomerStatistic()
+        {
+            return _userService.CustomerStatistic();
+        }
+
+        public double OrderStatistic()
+        {
+            return _orderService.OrderStatistic();
+        }
+
+        public double ProductStatistic()
+        {
+            return _productService.ProductStatistic();
         }
 
         public List<Top10Product> Top10Product()
@@ -104,21 +101,6 @@ namespace TGClothes.Areas.Admin.Controllers
             ViewBag.RateSuccess = rateSuccess;
             ViewBag.RateFailure = rateFailure;
             return true;
-        }
-
-        public double CustomerStatistic()
-        {
-            return _userService.CustomerStatistic();
-        }
-
-        public double OrderStatistic()
-        {
-            return _orderService.OrderStatistic();
-        }
-
-        public double ProductStatistic()
-        {
-            return _productService.ProductStatistic();
         }
         #endregion
     }

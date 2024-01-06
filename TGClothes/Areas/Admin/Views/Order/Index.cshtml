@@ -1,6 +1,6 @@
 ﻿@model PagedList.IPagedList<Data.EF.Order>
 @using PagedList.Mvc;
-@using TGClothes.Common;
+@using Common;
 @{
     ViewBag.Title = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
@@ -76,8 +76,9 @@
                                             <div style="color: red;">Đã hủy</div>
                                         }
                                     </td>
-                                    <td>@item.OrderDate</td>
-                                    <td>@item.DeliveryDate</td>
+                                    <td>@item.OrderDate.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                    <td>@if (item.DeliveryDate.HasValue)
+                                    {@item.DeliveryDate.Value.ToString("dd/MM/yyyy HH:mm:ss")}</td>
                                     <td>
                                         <a href="@Url.Action("Details", "Order", new { id = item.Id })" class="btn text-primary f2"><i class="fa-solid fa-eye"></i></a>
                                         @if (item.Status == (int)OrderStatus.SUCCESSFUL || item.Status == (int)OrderStatus.CANCELLED)
